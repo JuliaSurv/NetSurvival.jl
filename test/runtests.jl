@@ -1,6 +1,3 @@
-using NetSurvival
-using Test
+using TestItemRunner
 
-@testset "NetSurvival.jl" begin
-    # Write your tests here.
-end
+@run_package_tests
