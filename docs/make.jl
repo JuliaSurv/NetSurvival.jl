@@ -1,10 +1,17 @@
 using NetSurvival
 using Documenter
+using DocumenterCitations
 
 DocMeta.setdocmeta!(NetSurvival, :DocTestSetup, :(using NetSurvival); recursive=true)
 
+bib = CitationBibliography(
+    joinpath(@__DIR__,"src","assets","references.bib"),
+    style=:numeric
+)
+
 makedocs(;
     modules=[NetSurvival],
+    plugins=[bib],
     authors="Oskar Laverny <oskar.laverny@univ-amu.fr> and contributors",
     sitename="NetSurvival.jl",
     format=Documenter.HTML(;
