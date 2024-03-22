@@ -1,0 +1,3 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+NetSurvival = "8f9d5d0e-dd2e-4568-92d4-f8c5d34f25cf"
