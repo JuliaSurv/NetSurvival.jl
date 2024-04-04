@@ -1,0 +1,51 @@
+# Do not run this workflow on pull request since this workflow has permission to modify contents.
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  # deployments permission to deploy GitHub pages website
+  deployments: write
+  # contents permission to update benchmark contents in gh-pages branch
+  contents: write
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
+      - name: Run benchmark
+        run: |
+          cd benchmark
+          julia --project --color=yes -e '
+            using Pkg;
+            Pkg.instantiate();
+            include("benchmarks.jl")'
+      - name: Download previous benchmark data
+        uses: actions/cache@v4
+        with:
+          path: ./cache
+          key: ${{ runner.os }}-benchmark
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'julia'
+          output-file-path: benchmark/output.json
+          # Use personal access token instead of GITHUB_TOKEN due to https://github.community/t/github-action-not-triggering-gh-pages-upon-push/16096
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          # Show alert with commit comment on detecting possible performance regression
+          alert-threshold: '200%'
+          # Enable alert commit comment
+          comment-on-alert: false
+          # Do not fail on alert. 
+          fail-on-alert: false
+          # Enable Job Summary for PRs
+          summary-always: true
+          # alert-comment-cc-users: '@lrnv' # could be added to get notifications. 
+          # Change output directory in the gh-pages: 
+          benchmark-data-dir-path: "benchmarks"
