@@ -18,13 +18,15 @@ jobs:
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
+      - uses: julia-actions/cache@v1
+      - uses: julia-actions/julia-buildpkg@v1
       - name: Run benchmark
         run: |
-          cd benchmark
-          julia --project --color=yes -e '
+          julia --project=benchmark --color=yes -e '
             using Pkg;
+            Pkg.develop(PackageSpec(path=pwd()))
             Pkg.instantiate();
-            include("benchmarks.jl")'
+            include("benchmark/benchmarks.jl")'
       - name: Download previous benchmark data
         uses: actions/cache@v4
         with:
