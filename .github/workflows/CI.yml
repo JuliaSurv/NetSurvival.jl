@@ -50,7 +50,6 @@ jobs:
         env:
           R_HOME: "/opt/R/4.2.1/lib/R"
           LD_LIBRARY_PATH: /opt/R/4.2.1/lib/R/lib
-      - uses: julia-actions/julia-processcoverage@v1
       - uses: julia-actions/julia-runtest@v1
         env:
           R_HOME: "/opt/R/4.2.1/lib/R"
