@@ -31,7 +31,12 @@ end
     ########## R version
     R"""
     packages <- c("survival", "relsurv")
-    install.packages(setdiff(packages, rownames(installed.packages())), repos='http://cran.us.r-project.org')
+    install.packages(
+        setdiff(packages, rownames(installed.packages())), 
+        quiet = FALSE, 
+        verbose = TRUE,
+        repos='http://cran.us.r-project.org'
+    )
     rez = relsurv::rs.surv(
         survival::Surv(time, stat) ~1, 
         rmap=list(age = age, sex = sex, year = diag), 
