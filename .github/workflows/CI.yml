@@ -48,6 +48,8 @@ jobs:
       - uses: julia-actions/cache@v1
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
+          env:
+            R_HOME: "/opt/R/4.2.1/lib/R"
   docs:
     name: Documentation
     runs-on: ubuntu-latest
@@ -79,6 +81,7 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-docdeploy@v1
         env:
+          R_HOME: "/opt/R/4.2.1/lib/R"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
       - name: Run doctests
