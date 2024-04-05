@@ -65,6 +65,4 @@ end
     @test all(abs.(err_S) .<= 0.01)
     @test all(abs.(err_σ) .<= 0.01)
 
-
-
 end
