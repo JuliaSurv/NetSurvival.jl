@@ -48,8 +48,8 @@ jobs:
       - uses: julia-actions/cache@v1
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
-          env:
-            R_HOME: "/opt/R/4.2.1/lib/R"
+        env:
+          R_HOME: "/opt/R/4.2.1/lib/R"
   docs:
     name: Documentation
     runs-on: ubuntu-latest
