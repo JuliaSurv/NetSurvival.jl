@@ -26,9 +26,8 @@ end
 
 @testitem "trying RCall" begin
     
-    using RCall
-
     # R version
+    using RCall
     R"""
     rez = relsurv::rs.surv(
         survival::Surv(time, stat) ~1, 
