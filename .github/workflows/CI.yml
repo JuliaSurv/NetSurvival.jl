@@ -36,8 +36,11 @@ jobs:
         with:
           r-version: '4.2.1'
       - name: Install R packages survival & relsurv
-        run: install.packages(c("survival","relsurv"))
-        shell: Rscript {0}
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::survival
+            any::relsurv
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
@@ -58,8 +61,11 @@ jobs:
         with:
           r-version: '4.2.1'
       - name: Install R packages survival & relsurv
-        run: install.packages(c("survival","relsurv"))
-        shell: Rscript {0}
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::survival
+            any::relsurv
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
