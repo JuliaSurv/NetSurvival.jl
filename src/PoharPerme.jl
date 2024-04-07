@@ -17,8 +17,9 @@ function _Λ(T, Δ, age, year, sex, ratetable, grid)
         Tᵢ = searchsortedlast(grid, T[i]) # index of the time of event (death or censored) in the grid
         wₚ = 1.0
         sΛₚ = 0.0
+        rtᵢ = ratetable[sex[i]] # other predictors for this individual have to go here.
         for j in 1:Tᵢ
-            λₚ           = λ(ratetable, age[i] + grid[j], year[i] + grid[j], sex[i])
+            λₚ           = daily_hazard(rtᵢ, age[i] + grid[j], year[i] + grid[j])
             Λₚ           = λₚ * (grid[j+1]-grid[j]) # λₚ * ∂t 
             sΛₚ         += Λₚ
             wₚ           = exp(sΛₚ)
