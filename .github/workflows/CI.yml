@@ -100,3 +100,39 @@ jobs:
           using NetSurvival
           DocMeta.setdocmeta!(NetSurvival, :DocTestSetup, :(using NetSurvival); recursive=true)
           doctest(NetSurvival)
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
+      - uses: julia-actions/cache@v1
+      - uses: julia-actions/julia-buildpkg@v1
+      - name: Run benchmark
+        run: |
+          julia --project=benchmark --color=yes -e '
+            using Pkg;
+            Pkg.develop(PackageSpec(path=pwd()))
+            Pkg.instantiate();
+            include("benchmark/benchmarks.jl")'
+      - name: Download previous benchmark data
+        uses: actions/cache@v4
+        with:
+          path: ./cache
+          key: benchmark
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'julia'
+          output-file-path: output.json
+          external-data-json-path: ./cache/benchmark-data.json
+          fail-on-alert: false
+          # GitHub API token to make a commit comment
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Enable alert commit comment
+          comment-on-alert: true
+          # Enable Job Summary for PRs
+          summary-always: true
+          # Mention @rhysd in the commit comment
+          # alert-comment-cc-users: '@rhysd'
