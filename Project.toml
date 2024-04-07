@@ -19,6 +19,7 @@ CSV = "0.10"
 DataFrames = "1"
 Distributions = "0.25"
 LinearAlgebra = "1.6"
+RateTables = "0.1"
 RCall = "0.14"
 StatsAPI = "1"
 StatsBase = "0.34"
@@ -27,8 +28,7 @@ Tables = "1"
 Test = "1.6"
 TestItemRunner = "0.2"
 julia = "1.9"
-RCall = "0.14"
-RateTables = "0.1"
+
 
 [extras]
 RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
