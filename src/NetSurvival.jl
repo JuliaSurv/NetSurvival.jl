@@ -9,9 +9,8 @@ using StatsModels
 using Tables
 using Base.Cartesian
 using CSV
+using RateTables
 
-include("FastFetchingVectors.jl")
-include("RateTableV2.jl")
 include("fetch_datasets.jl")
 include("Surv.jl")
 include("nonparamfit.jl")
