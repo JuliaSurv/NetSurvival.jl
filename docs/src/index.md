@@ -18,19 +18,6 @@ The package is available on Julia's general registry, and can be installed eithe
 ] add NetSurvival
 ```
 
-```@example
-1 == 1
-```
-
-```@example 1
-a = 2
-```
-
-```@example 1
-a
-```
-
-
 ```@index
 ```
 
