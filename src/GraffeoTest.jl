@@ -42,20 +42,22 @@ struct GraffeoTest
         R .= ifelse.(sum(D,dims=2) .== 0, 0, D ./ sum(D,dims=2))
         ∂Z .= ∂N .- R .* sum(∂N,dims=2)
         
-        # Compute test variance on each strata&group (s,g)
+        # Compute test variance on each strata
         for s in eachindex(stratas)
-            for g in eachindex(groups)
-                for h in eachindex(groups)
-                    for ℓ in eachindex(groups)
-                        ∂VZ[s, g, h,:] .+= ((g==ℓ) .- R[s, g, :]) .* ((h==ℓ) .- R[s, h, :]) .* ∂V[s, ℓ, :]
+            for ℓ in eachindex(groups)
+                for g in eachindex(groups)
+                    for h in eachindex(groups)
+                        for t in eachindex(grid)
+                            ∂VZ[s, g, h,t] += ((g==ℓ) - R[s, g, t]) * ((h==ℓ) - R[s, h, t]) .* ∂V[s, ℓ, t]
+                        end
                     end
                 end
             end
         end
 
-        # Cumulate accross time and stratas: (but not last time value)
-        Z =  dropdims(sum(∂Z[:,:,1:end-1], dims=(1,3)), dims=(1,3))
-        VZ = dropdims(sum(∂VZ[:,:,:,1:end-1], dims=(1,4)), dims=(1,4))
+        # Cumulate accross time and stratas
+        Z =  dropdims(sum(∂Z, dims=(1,3)), dims=(1,3))
+        VZ = dropdims(sum(∂VZ, dims=(1,4)), dims=(1,4))
 
         # Finally compute the stat and p-values:
         stat = dot(Z[1:end-1],(VZ[1:end-1,1:end-1] \ Z[1:end-1])) # test statistic
