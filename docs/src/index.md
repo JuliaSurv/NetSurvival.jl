@@ -39,4 +39,6 @@ Modules = [NetSurvival]
 ```
 
 ```@bibliography
+Pages = ["index.md"]
+Canonical = false
 ```
