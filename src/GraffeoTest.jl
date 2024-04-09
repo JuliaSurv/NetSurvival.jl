@@ -72,3 +72,36 @@ function Base.show(io::IO, test::GraffeoTest)
 end
 
 # The fitting and formula interfaces should be here. 
+
+function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTableV2) where {E<:GraffeoTest}
+    column_names = names(df)
+    expected_columns = String.(keys(rt.axes))
+
+    missing_columns = filter(name -> !(name in column_names), expected_columns)
+    if !isempty(missing_columns)
+        throw(ArgumentError("Missing columns in data: $missing_columns"))
+    end
+
+    formula = apply_schema(formula,schema(df))
+    pred_names = StatsModels.termvars(formula)
+    resp = modelcols(formula.lhs,df)
+
+    g = term(1) ~ foldl(+,term.(keys(rt.axes)))
+    g = apply_schema(g,schema(df))
+    pred_g = modelcols(g.rhs, df)
+    sex = [x == 1 ? :male : :female for x in pred_g[:,3]]
+
+    pred_names = String.(pred_names)
+    group_index = findfirst(names(df) .== pred_names[1])
+    group = df[:,group_index]
+    if length(pred_names) > 1
+        for pred_name in pred_names
+            strata_index = findfirst(names(df) .== pred_name)
+            strata = df[:,strata_index]
+        end
+    else
+        strata = ones(nrow(df))
+    end
+
+    return GraffeoTest(resp[:,1], resp[:,2], pred_g[:,1], pred_g[:,2], sex, strata, group, rt)
+end

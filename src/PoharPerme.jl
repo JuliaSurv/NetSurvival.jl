@@ -41,7 +41,10 @@ end
 """
     PoharPerme
 
-BlaBlaBLa
+This method was newly introduced in 2012 and it has been globally recognized since as the more effective method out of the net survival estimators.
+To call this function : 
+
+    fit(PoharPerme, @formula(Surv(time,status)~covariable1 + covariable2), data, ratetable)
 """
 struct PoharPerme <: NonparametricEstimator
     Sₑ::Vector{Float64}
@@ -57,17 +60,39 @@ struct PoharPerme <: NonparametricEstimator
     end
 end
 
-function StatsAPI.confint(pp::PoharPerme; level::Real=0.05)
+"""
+    EdererII
+
+To call this function : 
+
+    fit(EdererII, @formula(Surv(time,status)~covariable1 + covariable2), data, ratetable)
+"""
+
+struct EdererII <: NonparametricEstimator
+    Sₑ::Vector{Float64}
+    ∂Λₑ::Vector{Float64}
+    σₑ::Vector{Float64}
+    grid::Vector{Float64}
+    function EdererII(T, Δ, age, year, sex, ratetable)
+        grid = mk_grid(T,1) # precision is always 1 ? 
+        ∂Λₑ, ∂σₑ = Λ(T, Δ, age, year, sex, ratetable, grid)
+        Sₑ = cumprod(1 .- ∂Λₑ)
+        σₑ = sqrt.(cumsum(∂σₑ))
+        return new(Sₑ, ∂Λₑ, σₑ, grid)
+    end
+end
+
+function StatsAPI.confint(npe::E; level::Real=0.05) where E <: NonparametricEstimator
     χ = sqrt(quantile(Chisq(1),1-level))
-    return map(pp.Sₑ, pp.σₑ) do Sₑ,σₑ
+    return map(npe.Sₑ, npe.σₑ) do Sₑ,σₑ
         ci_low = exp.(log.(Sₑ) - σₑ * χ)
         ci_up = exp.(log.(Sₑ) + σₑ * χ)
         ci_low, ci_up
     end
 end
-function Base.show(io::IO, pp::PoharPerme)
-    lower_bounds = [lower[1] for lower in confint(pp; level = 0.05)]
-    upper_bounds = [upper[2] for upper in confint(pp; level = 0.05)]
-    df = DataFrame(Sₑ = pp.Sₑ, ∂Λₑ = pp.∂Λₑ, σₑ=pp.σₑ, lower_95_CI = lower_bounds, upper_95_CI = upper_bounds)
+function Base.show(io::IO, npe::E) where E <: NonparametricEstimator
+    lower_bounds = [lower[1] for lower in confint(npe; level = 0.05)]
+    upper_bounds = [upper[2] for upper in confint(npe; level = 0.05)]
+    df = DataFrame(Sₑ = npe.Sₑ, ∂Λₑ = npe.∂Λₑ, σₑ=npe.σₑ, lower_95_CI = lower_bounds, upper_95_CI = upper_bounds)
     show(io, df)
 end
