@@ -90,6 +90,7 @@ function StatsAPI.confint(npe::E; level::Real=0.05) where E <: NonparametricEsti
         ci_low, ci_up
     end
 end
+
 function Base.show(io::IO, npe::E) where E <: NonparametricEstimator
     lower_bounds = [lower[1] for lower in confint(npe; level = 0.05)]
     upper_bounds = [upper[2] for upper in confint(npe; level = 0.05)]
