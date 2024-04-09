@@ -28,10 +28,11 @@ T = modelcols(t.T, d)
 return hcat(T,Δ) ############ <<<<<----
 end
 
-function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTableV2) where {E<:NonparametricEstimator}
+function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:NonparametricEstimator}
     column_names = names(df)
-    expected_columns = String.(keys(rt.axes))
+    rate_predictors =RateTables.predictors(rt)
 
+    expected_columns = String.(rate_predictors)
     missing_columns = filter(name -> !(name in column_names), expected_columns)
     if !isempty(missing_columns)
         throw(ArgumentError("Missing columns in data: $missing_columns"))
@@ -40,9 +41,9 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
     formula = apply_schema(formula,schema(df))
     pred_names = StatsModels.termvars(formula)
     new_df = groupby(df, pred_names)
-    pred_names = String.(pred_names)
+    pred_names = String.(pred_names) # <<<---- is this really needed ? Typing the same variable two different time in a function makes things really slow (cause type instability). 
 
-    g = term(1) ~ foldl(+,term.(keys(rt.axes)))
+    g = term(1) ~ term(:age) + term(:year) + foldl(+,term.(rate_predictors)) # age and year are not in the predictors anymore, but this in on purpose. 
     g = apply_schema(g,schema(df))
     pred_g = modelcols(g.rhs, df)
 
@@ -53,7 +54,7 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
     if nrow(unique(df[!,pred_names])) == 0 
         resp = modelcols(formula.lhs, df)
         pred_g = modelcols(g.rhs, df)
-        push!(pp,PoharPerme(resp[:,1], resp[:,2], pred_g[:,1], pred_g[:,2], temp, rt))
+        push!(pp,PoharPerme(resp[:,1], resp[:,2], pred_g[:,1], pred_g[:,2], temp, rt))   # <<<- Here, what if there are more predictors for the rate table ? this is not generic enough. 
     else
         for i in 1:nrow(unique(df[!,pred_names]))        
             resp = modelcols(formula.lhs, new_df[i])

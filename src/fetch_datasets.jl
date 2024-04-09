@@ -13,35 +13,3 @@ colrec = let
         site = colrec.site,
     )
 end
-
-
-
-slopop = let
-    # Load the data from R to Julia
-    df = CSV.read(
-        joinpath(@__DIR__,"..","data","slopop.csv"), 
-        DataFrames.DataFrame
-    )
-
-    df.age = Int.(trunc.(df.age .* 365.241))
-    df.year = Int.(trunc.(df.year .* 365.241))
-    df.sex = Symbol.(df.sex)
-
-    RateTableV2(df, description="This ratetable corresponds to the `relsurv::slopop` ratetable from R. It is based on data collected on the population of Slovenia. Both age and year categories are in days.")
-end
-
-
-
-frpop = let
-
-    df = CSV.read(
-        joinpath(@__DIR__,"..","data","frpop.csv"), 
-        DataFrames.DataFrame
-    )
-
-    df.age = Int.(trunc.(df.age .* 365.241))
-    df.year = Int.(trunc.(df.year .* 365.241))
-    df.sex = Symbol.(df.sex)
-
-    RateTableV2(df, description="This ratetable corresponds to the `frpop.r` structure defined in R. It is based on data collected on the population of France. Both age and year categories are in days.")
-end
