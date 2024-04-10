@@ -20,8 +20,8 @@ include("GraffeoTest.jl")
 export PoharPerme
 export fit, confint
 export GraffeoTest
-export Surv
-export colrec, frpop, slopop
+export Surv, Strata
+export colrec
 export @formula
 
 end
