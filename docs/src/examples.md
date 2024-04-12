@@ -35,14 +35,15 @@ test4 = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)+Strata(sit
 
 For the sake of comparison, the examples below detail the difference in performance between `NetSurvival.jl` and `relsurv` on R : 
 
-```
+```@example 1
+using RCall
 @time fit(PoharPerme, @formula(Surv(time,status)~1), colrec, slopop);
 @time R"""
 rez = relsurv::rs.surv(survival::Surv(time, stat) ~1, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop, method = "pohar-perme", add.times=1:8149)
 """
 ```
 
-```
+```@example 1
 @time fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop);
 @time R"""
 rez = relsurv::rs.diff(survival::Surv(time, stat) ~ stage, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
