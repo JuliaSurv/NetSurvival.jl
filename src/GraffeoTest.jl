@@ -8,7 +8,7 @@ struct GraffeoTest
     stat::Float64
     df::Int64
     pval::Float64
-    function GraffeoTest(T, Δ, age, year, sex, strata, group, ratetable)
+    function GraffeoTest(T, Δ, age, year, rate_preds, strata, group, ratetable)
 
         # This version of the test is HIGHLY INNEFICIENT. 
         # We should avoid allocating that much memory. 
@@ -34,7 +34,7 @@ struct GraffeoTest
         for s in eachindex(stratas)
             for g in eachindex(groups)
                 idx = (group .== groups[g]) .&& (strata .== stratas[s])
-                ∂N[s, g, :], ∂V[s, g, :], D[s, g, :] = _Λ(T[idx], Δ[idx], age[idx], year[idx], sex[idx], ratetable, grid)
+                ∂N[s, g, :], ∂V[s, g, :], D[s, g, :] = _Λ(T[idx], Δ[idx], age[idx], year[idx], rate_preds[idx,:], ratetable, grid)
             end
         end
 
@@ -72,3 +72,50 @@ function Base.show(io::IO, test::GraffeoTest)
 end
 
 # The fitting and formula interfaces should be here. 
+
+function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:GraffeoTest}
+    rate_predictors = String.([RateTables.predictors(rt)...])
+
+    expected_columns = [rate_predictors...,"age","year"]
+    missing_columns = filter(name -> !(name in names(df)), expected_columns)
+    if !isempty(missing_columns)
+        throw(ArgumentError("Missing columns in data: $missing_columns"))
+    end
+
+    strata = ones(nrow(df))
+    group = ones(nrow(df))
+    strata_terms = []
+    group_terms = []
+
+    if typeof(formula.rhs) == Term
+        group = select(df, StatsModels.termvars(formula.rhs))
+        group = [join(row, " ") for row in eachrow(group)]
+    elseif typeof(formula.rhs) <: FunctionTerm{typeof(Strata)}
+        strata = select(df, StatsModels.termvars(formula.rhs))
+        strata = [join(row, " ") for row in eachrow(strata)]
+    else
+        for myterm in formula.rhs
+            is_strata = typeof(myterm) <: FunctionTerm{typeof(Strata)}
+            if is_strata
+                append!(strata_terms, StatsModels.termvars(myterm))
+            else
+                push!(group_terms, Symbol(myterm))
+            end
+        end
+    end
+
+    if !isempty(group_terms)
+        group = select(df, group_terms)
+        group = [join(row, " ") for row in eachrow(group)]
+    end
+
+    if !isempty(strata_terms)
+        strata = select(df, strata_terms)
+        strata = [join(row, " ") for row in eachrow(strata)]
+    end
+
+    formula = apply_schema(formula,schema(df))
+    resp = modelcols(formula.lhs,df)
+
+    return GraffeoTest(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), strata, group, rt)
+end
