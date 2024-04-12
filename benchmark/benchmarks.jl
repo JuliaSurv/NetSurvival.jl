@@ -1,4 +1,5 @@
 using NetSurvival
+using Ratetables
 using BenchmarkTools
 
 
