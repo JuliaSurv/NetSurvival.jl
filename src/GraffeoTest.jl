@@ -73,3 +73,51 @@ end
 
 # The fitting and formula interfaces should be here. 
 
+function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:GraffeoTest}
+    rate_predictors = String.([RateTables.predictors(rt)...])
+
+    expected_columns = [rate_predictors...,"age","year"]
+    missing_columns = filter(name -> !(name in names(df)), expected_columns)
+    if !isempty(missing_columns)
+        throw(ArgumentError("Missing columns in data: $missing_columns"))
+    end
+
+    strata = ones(nrow(df))
+    group = ones(nrow(df))
+    strata_terms = []
+    group_terms = []
+
+    if typeof(formula.rhs) == Term
+        group = select(df, StatsModels.termvars(formula.rhs))
+        group = [join(row, " ") for row in eachrow(group)]
+    elseif typeof(formula.rhs) <: FunctionTerm{typeof(Strata)}
+        strata = select(df, StatsModels.termvars(formula.rhs))
+        strata = [join(row, " ") for row in eachrow(strata)]
+    else
+        for myterm in formula.rhs
+            is_strata = typeof(myterm) <: FunctionTerm{typeof(Strata)}
+            if is_strata
+                push!(strata_terms, Symbol(myterm))
+            else
+                push!(group_terms, Symbol(myterm))
+            end
+        end
+    end
+
+    if !isempty(group_terms)
+        group = select(df, group_terms)
+        group = [join(row, " ") for row in eachrow(group)]
+    end
+
+    if !isempty(strata_terms)
+        strata = select(df, strata_terms)
+        strata = [join(row, " ") for row in eachrow(strata)]
+    end
+
+    @show group
+
+    formula = apply_schema(formula,schema(df))
+    resp = modelcols(formula.lhs,df)
+
+    return GraffeoTest(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), strata, group, rt)
+end
