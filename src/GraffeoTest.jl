@@ -97,7 +97,7 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
         for myterm in formula.rhs
             is_strata = typeof(myterm) <: FunctionTerm{typeof(Strata)}
             if is_strata
-                push!(strata_terms, Symbol(myterm))
+                append!(strata_terms, StatsModels.termvars(myterm))
             else
                 push!(group_terms, Symbol(myterm))
             end
@@ -113,8 +113,6 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
         strata = select(df, strata_terms)
         strata = [join(row, " ") for row in eachrow(strata)]
     end
-
-    @show group
 
     formula = apply_schema(formula,schema(df))
     resp = modelcols(formula.lhs,df)
