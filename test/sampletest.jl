@@ -98,7 +98,7 @@ end
     err_p = R_pvalue == 0.0 ? 0.0 : (R_pvalue - graffeo.pval) / R_pvalue
     err_df = (R_df - graffeo.df) / R_df
 
-    @test all(abs.(err_F) .<= 0.5)
+    @test all(abs.(err_F) .<= 0.01)
     @test all(abs.(err_p) .<= 0.001)
     @test all(abs.(err_df) .<= 0.01)
 
