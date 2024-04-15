@@ -102,6 +102,8 @@ Finally, the asymptotic distribution under $H_0$:
 
 $$U^w(t) \sim \chi^2(k-1)$$
 
+We reject the $H_0$ hypothesis when the p-value obtained is under $0.05$, and therefore, admitting the notable difference between the groups. 
+
 
 ```@bibliography
 Pages = ["theory.md"]
