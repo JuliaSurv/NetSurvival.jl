@@ -1,3 +1,4 @@
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 NetSurvival = "8f9d5d0e-dd2e-4568-92d4-f8c5d34f25cf"
+RateTables = "d40fb65e-c2ee-4113-9e14-cb96ca0acb32"
