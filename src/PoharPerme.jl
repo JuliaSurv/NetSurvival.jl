@@ -48,6 +48,9 @@ It is defined as an abstract type "NonparametricEstimator" and is used in the fi
 To fit the Pohar Perme to your data based on a certain rate table, apply the example below to your code : 
 
     fit(PoharPerme, @formula(Surv(time,status)~covariable1 + covariable2), data, ratetable)
+
+    References: 
+* [PoharPerme2014](@cite) Perme, Maja Pohar and Stare, Janez and Estève, Jacques (2012). On Estimation in Relative Survival.
 """
 struct PoharPerme <: NonparametricEstimator
     Sₑ::Vector{Float64}
