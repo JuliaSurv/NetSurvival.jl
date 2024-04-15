@@ -1,3 +1,17 @@
+"""
+    GraffeoTest
+
+The Grafféo log-rank type test was introduced in 2016 and it is typically used in net survival analysis to determine the impact of certain covariates in the study.
+
+To apply the test to your data based on a certain rate table, apply the example below to your code : 
+
+    fit(GraffeoTest, @formula(Surv(time,status)~covariable1 + covariable2), data, ratetable)
+
+If you wish to stratify a covariate:
+
+    fit(GraffeoTest, @formula(Surv(time,status)~covariable1 + Strata(covariable2)), data, ratetable)
+"""
+
 struct GraffeoTest
     ∂N::Array{Float64, 3}
     ∂V::Array{Float64, 3}

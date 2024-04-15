@@ -42,7 +42,10 @@ end
     PoharPerme
 
 This method was newly introduced in 2012 and it has been globally recognized since as the more effective method out of the net survival estimators.
-To call this function : 
+
+It is defined as an abstract type "NonparametricEstimator" and is used in the fitting function to indicate the method used.
+
+To fit the Pohar Perme to your data based on a certain rate table, apply the example below to your code : 
 
     fit(PoharPerme, @formula(Surv(time,status)~covariable1 + covariable2), data, ratetable)
 """
