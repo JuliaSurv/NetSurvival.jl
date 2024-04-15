@@ -46,6 +46,20 @@ $$\hat{S}_R(t) = \frac{\hat{S}_O(t)}{\hat{S}_P(t)}$$
 
 With $\hat{S}_O(t)$ being the estimated overall survival defined by the overall cumulative hazard $\Lambda_{O_i}(t) = \int_0^t \frac{dN(s)}{Y(s)}$, and $\hat{S}_P(t) = \frac{1}{n} \sum_i S_{P_i}(t)$.
 
+## Ederer I
+
+For the Ederer I [Ederer1961](@cite) estimator, the net survival is estimated using:
+
+$$\hat{S}_{E}(t) = \int_0^t \frac{dN(u)}{Y(u)} - \int_0^t \frac{\sum_i S_{P_i}(u)\lambda_{P_i}(u)}{\sum_i S_{P_i}(u)}du$$
+
+## Ederer II
+
+As for the Ederer II [Ederer1959](@cite) estimator:
+
+$$\hat{S}_{E}(t) = \int_0^t \frac{dN(u)}{Y(u)} - \int_0^t \frac{\sum_i Y_i(u)\lambda_{P_i}(u)}{\sum_i Y_i(u)}du$$
+
+## Hakulinen
+
 ## Pohar Perme
 
 The Pohar Perme[PoharPerme2012](@cite) is a statistical method used in survival analysis to estimate net survival probabilities, particularly designed to handle situations where covariates may change over time. The net survival function is defined as:
@@ -62,27 +76,32 @@ $$\hat{VAR}(\hat{\Lambda}_E(t)) = \int_0^t \frac{J(u)}{(\sum_i \frac{Y_i(u)}{S_{
 
 where $J(t) = I(Y(t) > 0)$.
 
-## Ederer I
-
-For the Ederer I [Ederer1961](@cite) estimator, the net survival is estimated using:
-
-$$\hat{S}_{E}(t) = \int_0^t \frac{dN(u)}{Y(u)} - \int_0^t \frac{\sum_i S_{P_i}(u)\lambda_{P_i}(u)}{\sum_i S_{P_i}(u)}du$$
-
-## Ederer II
-
-As for the Ederer II estimator:
-
-$$\hat{S}_{E}(t) = \int_0^t \frac{dN(u)}{Y(u)} - \int_0^t \frac{\sum_i Y_i(u)\lambda_{P_i}(u)}{\sum_i Y_i(u)}du$$
-
-## Hakulinen
-
 ## Grafféo Log-Rank Test
 
 The Grafféo Log-Rank Test [GraffeoTest](@cite) was constructed as a complement to the Pohar Perme estimator, aiming to compare the net survival functions provided by the latter. The test  is designed to compare these functions across multiple groups, including stratified covariables, and to ultimately determine, with the given p-value, which covariables are impactful to the study. 
 
-For this test, we first define the number of deaths caused by the event studied for a time $s$ within the group $h$ noted $N_{E,h}(s)$ and the process of individuals at risk within the same group $h$ at time $s$ noted $Y_h(s)$. Both of these values are weighted with the populational estimated survival for the given patient, same as in Pohar Perme. 
+For this test, we first define the number of deaths caused by the event studied for a time $s$ within the group $h$ noted $N_{E,h}^w(s)$ and the process of individuals at risk within the same group $h$ at time $s$ noted $Y_h^w(s)$. Both of these values are weighted with the populational estimated survival for the given patient, same as in Pohar Perme. 
 
-The $(H_0)$ hypothesis tested 
+Thus, we define $\forall h \in [1;k]$:
+
+$$Z_h^w(T) = \int_0^T \mathbf{1}(Y_.^w(s) > 0)dN_{E,h}^w(s) - \int_0^T \mathbf{1}(Y_.^w(s) > 0)\frac{Y_h^w(s)}{Y_.^w(s)}dN_{E,.}^w(s)$$
+
+With $Y_.^w(s) = \sum_{h=i}^k Y_h^w(s)$ and $dN_{E,.}^w(s) = \sum_{h=i}^k dN_{E,h}^w(s)$.
+
+The test statistic is then given by:
+
+$$U^w(T) = (Z_1^w(T), ..., Z_{k-1}^w(T)) \hat{\Sigma}_0^w(T)^{-1} (Z_1^w(T), ..., Z_{k-1}^w(T))^t$$
+
+Knowing that $\hat{\Sigma}_0^w(T) = (\hat{\sigma}^w_{hj}(T))_{hj}$ for $(h,j) \in [1;k-1]^2$
+
+The null $(H_0)$ hypothesis tests the following assumption:
+
+$$\forall t \in [0,T], \; \; \Lambda_{E,1}(t) = \Lambda_{E,2}(t) = ... = \Lambda_{E,k}(t)$$
+
+Finally, the asymptotic distribution under $H_0$:
+
+$$U^w(t) \sim \chi^2(k-1)$$
+
 
 ```@bibliography
 Pages = ["theory.md"]
