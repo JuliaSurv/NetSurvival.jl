@@ -13,7 +13,7 @@ For years, the Hakulinen estimator (1987) [Hakulinen1977](@cite) and the Ederer 
 Some key features in `NetSurvival.jl` are:
 
 - Fitting different non-parametric estimators (Ederer II [Ederer1959](@cite), Pohar Perme [PoharPerme2012](@cite), ...)
-- Applying Grafféo's log-rank test [GraffeoTest](@cite) on different groups, including stratified covariables 
+- Applying Grafféo's log-rank test [Graffeo2016](@cite) on different groups, including stratified covariables 
 - ... 
 
 ## Installation

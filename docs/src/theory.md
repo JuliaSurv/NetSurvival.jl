@@ -74,7 +74,7 @@ $$\partial\hat{\sigma}_E^2(t) =  \frac{J(u)}{(\sum_i \frac{Y_i(u)}{S_{p_i}(u)})^
 
 ## Grafféo Log-Rank Test
 
-The Grafféo Log-Rank Test [GraffeoTest](@cite) was constructed as a complement to the Pohar Perme estimator, aiming to compare the net survival functions provided by the latter. The test  is designed to compare these functions across multiple groups, including stratified covariables, and to ultimately determine, with the given p-value, which covariables are impactful to the study. The null $(H_0)$ hypothesis tests the following assumption:
+The Grafféo Log-Rank Test [Graffeo2016](@cite) was constructed as a complement to the Pohar Perme estimator, aiming to compare the net survival functions provided by the latter. The test  is designed to compare these functions across multiple groups, including stratified covariables, and to ultimately determine, with the given p-value, which covariables are impactful to the study. The null $(H_0)$ hypothesis tests the following assumption:
 
 $$\forall t \in [0,T], \; \; \Lambda_{E,1}(t) = \Lambda_{E,2}(t) = ... = \Lambda_{E,k}(t)$$
 
