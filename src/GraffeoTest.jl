@@ -9,7 +9,7 @@ The null hypothesis ``H_0`` tests the following assumption:
 \\forall t \\in [0,T], \\Lambda_{E,1}(t) = \\Lambda_{E,2}(t) = ... = \\Lambda_{E,k}(t)$$
 ```
 
-For this test, we first define the number of deaths caused by the event studied for a time ``s`` within the group ``h`` noted ``N_{E,h}^w(s)`` and the process of individuals at risk within the same group $h$ at time $s$ noted $Y_h^w(s)$. Both of these values are weighted with the populational estimated survival for the given patient, same as in Pohar Perme. 
+For this test, we first define the number of deaths caused by the event studied for a time ``s`` within the group ``h`` noted ``N_{E,h}^w(s)`` and the process of individuals at risk within the same group ``h`` at time ``s`` noted ``Y_h^w(s)``. Both of these values are weighted with the populational estimated survival for the given patient, same as in Pohar Perme. 
 
 Thus, we define ``\\forall h \\in [1;k]``:
 
