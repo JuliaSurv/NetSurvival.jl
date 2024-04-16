@@ -8,7 +8,7 @@ This package provides the necessary tools to perform net survival analysis, a sp
 
 By integrating observed data with population mortality data, this method extracts insights into the hazard associated with a particular disease. The concept of relative survival analysis dates back several decades to the seminal article by Ederer, Axtell, and Cutler in 1961 [Ederer1961](@cite) and the one in 1959 by Ederer and Heise [Ederer1959](@cite). 
 
-For years, the Hakulinen estimator (1987) and the Ederer I and II estimators were widely regarded as the gold standard for non-parametric survival curve estimation. However, the introduction of the Pohar-Perme, Stare, and Estève estimator in 2012 [PoharPerme2012](@cite) resolved several issues inherent in previous estimators, providing a reliable and consistent non-parametric estimator for net survival analysis.
+For years, the Hakulinen estimator (1987) [Hakulinen1977](@cite) and the Ederer I and II estimators were widely regarded as the gold standard for non-parametric survival curve estimation. However, the introduction of the Pohar-Perme, Stare, and Estève estimator in 2012 [PoharPerme2012](@cite) resolved several issues inherent in previous estimators, providing a reliable and consistent non-parametric estimator for net survival analysis.
 
 Some key features in `NetSurvival.jl` are:
 

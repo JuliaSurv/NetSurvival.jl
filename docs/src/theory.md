@@ -52,13 +52,13 @@ $$\partial\hat{\Lambda}_E(t) = \frac{dN(u)}{Y(u)} - \frac{\sum_i Y_i(u)d\Lambda_
 
 ## Hakulinen
 
-The Hakulinen method was later introduced and estimates the net survival using:
+The Hakulinen method [Hakulinen1977](@cite) was later introduced and estimates the net survival using:
 
 $$\partial\hat{\Lambda}_E(t) = \frac{dN(u)}{Y(u)} - \frac{\sum_i \frac{Y_i(u)}{ S_{P_i}(u)}d\Lambda_{P_i}(u)}{\sum_i \frac{Y_i(u)}{ S_{P_i}(u)}}$$
 
 The variance is estimated in the same way for all three previous methods:
 
-$$\partial\hat{\sigma}_E^2(t) =  \frac{J(u)}{(\sum_i Y_i(u))^2}\sum_{i=1}^ndN_i(u)$$
+$$\partial\hat{\sigma}_E^2(t) =  J(u)\frac{\sum_i N_i(u)}{(\sum_i Y_i(u))^2}$$
 
 where $J(t) = I(Y(t) > 0)$.
 
