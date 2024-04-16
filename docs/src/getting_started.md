@@ -6,8 +6,12 @@ CurrentModule = NetSurvival
 
 ## Fitting the non parametric estimators
 
-```@autodocs
-Modules = [NetSurvival]
+```@docs
+PoharPerme
 ```
 
 ## Applying the Grafféo log-rank test
+
+```@docs
+GraffeoTest
+```

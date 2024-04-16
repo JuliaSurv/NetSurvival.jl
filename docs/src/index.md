@@ -24,6 +24,8 @@ The package is available on Julia's general registry, and can be installed with 
 ] add NetSurvival
 ```
 
+# References
+
 ```@bibliography
 Pages = ["index.md"]
 Canonical = false

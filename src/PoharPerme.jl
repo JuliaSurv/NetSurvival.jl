@@ -41,16 +41,18 @@ end
 """
     PoharPerme
 
-This method was newly introduced in 2012 and it has been globally recognized since as the more effective method out of the net survival estimators.
+This method estimates net survival probabilities by applying the following estimation:
 
-It is defined as an abstract type "NonparametricEstimator" and is used in the fitting function to indicate the method used.
+```math
+\\partial\\hat{\\Lambda}_E(t) = \\frac{\\sum_i \\frac{dN_i(u)}{S_{P_i}(u)} - \\sum_i \\frac{Y_i(u)}{S_{P_i}(u)}d\\Lambda_{P_i}(u)}{\\sum_i \\frac{Y_i(u)}{S_{P_i}(u)}}
+```
 
 To fit the Pohar Perme to your data based on a certain rate table, apply the example below to your code : 
 
     fit(PoharPerme, @formula(Surv(time,status)~covariable1 + covariable2), data, ratetable)
 
-    References: 
-* [PoharPerme2014](@cite) Perme, Maja Pohar and Stare, Janez and Estève, Jacques (2012). On Estimation in Relative Survival.
+References: 
+* [PoharPerme2012](@cite) Perme, Maja Pohar and Stare, Janez and Estève, Jacques (2012). On Estimation in Relative Survival.
 """
 struct PoharPerme <: NonparametricEstimator
     Sₑ::Vector{Float64}

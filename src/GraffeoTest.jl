@@ -1,7 +1,37 @@
 """
     GraffeoTest
 
-The Grafféo log-rank type test was introduced in 2016 and it is typically used in net survival analysis to determine the impact of certain covariates in the study.
+The Grafféo test is a log-rank type test and is typically used in net survival analysis to determine the impact of certain covariates in the study.
+
+The null hypothesis ``H_0`` tests the following assumption:
+
+```math
+\\forall t \\in [0,T], \\Lambda_{E,1}(t) = \\Lambda_{E,2}(t) = ... = \\Lambda_{E,k}(t)$$
+```
+
+For this test, we first define the number of deaths caused by the event studied for a time ``s`` within the group ``h`` noted ``N_{E,h}^w(s)`` and the process of individuals at risk within the same group $h$ at time $s$ noted $Y_h^w(s)$. Both of these values are weighted with the populational estimated survival for the given patient, same as in Pohar Perme. 
+
+Thus, we define ``\\forall h \\in [1;k]``:
+
+```math
+Z_h^w(T) = \\int_0^T \\mathbf{1}(Y_.^w(s) > 0)dN_{E,h}^w(s) - \\int_0^T \\mathbf{1}(Y_.^w(s) > 0)\\frac{Y_h^w(s)}{Y_.^w(s)}dN_{E,.}^w(s)
+```
+
+With ``Y_.^w(s) = \\sum_{h=i}^k Y_h^w(s)`` and ``dN_{E,.}^w(s) = \\sum_{h=i}^k dN_{E,h}^w(s)``.
+
+The test statistic, defined under ``H_0``, is then given by:
+
+```math
+U^w(T) = (Z_1^w(T), ..., Z_{k-1}^w(T)) \\hat{\\Sigma}_0^w(T)^{-1} (Z_1^w(T), ..., Z_{k-1}^w(T))^t
+```
+
+Knowing that ``\\hat{\\Sigma}_0^w(T) = (\\hat{\\sigma}^w_{hj}(T))_{hj}`` for ``(h,j) \\in [1;k-1]^2``
+
+Finally, the asymptotic distribution of the test statistic under ``H_0``:
+
+```math
+U^w(t) \\sim \\chi^2(k-1)
+```
 
 To apply the test to your data based on a certain rate table, apply the example below to your code : 
 
@@ -14,7 +44,6 @@ If you wish to stratify a covariate:
 References: 
 * [GraffeoTest](@cite) Grafféo, Nathalie and Castell, Fabienne and Belot, Aurélien and Giorgi, Roch (2016). A Log-Rank-Type Test to Compare Net Survival Distributions.  
 """
-
 struct GraffeoTest
     ∂N::Array{Float64, 3}
     ∂V::Array{Float64, 3}
