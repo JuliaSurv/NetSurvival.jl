@@ -27,7 +27,7 @@ Consider a study that consists of censored survival times from a specific cause.
 | ``C``              | "Censoring" time               | ✘ |
 | ``\mathbf D``      | Vector of covariates           | ✔ |
 | ``T = O \wedge C`` | Event time                     | ✔ |
-| ``\Delta = \mathbf{1}\{T \leq C\}$`` | Event status | ✔ |
+| ``\Delta = \mathbf{1}\{T \leq C\}`` | Event status | ✔ |
 
 It is important to note that we do not observe a a potential indicator $\mathbf{1}\{E \geq P\}$. This is one of the key differences between net survival and standard survival. The standard Net survival analysis solves this problem by assuming that the underlying times $E$ and $P$ are independent from each other.
 
