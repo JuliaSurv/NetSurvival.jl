@@ -35,7 +35,7 @@ One central hypothesis in net survival (on top of non-informative censoring) is 
 
 The population hazard for each individual $\lambda_{P_i}$ is usally drawn from a reference life table, and may depend on covariates $\mathbf D_i$ such as age and date, sex, country, race, etc... See the [RateTables.jl](https://github.com/JuliaSurv/RateTables.jl) package for more details on the potential covariates. On the other hand, the excess mortality is assumed to be i.i.d. between individuals and not to depend on covariates at all. Thus, we mostly omit these covariates from our notations.
 
-The estimation of net survival is usually discussed in terms of the estimation of the excess hazard $\partial \Lambda_E(t)$. Here, we use the following counting processes notations, similar to standard survival analysis: 
+The estimation of net survival is usually discussed in terms of the estimation of the cumulative excess hazard $\Lambda_E(t)$ and/or the instantaneous hazard $\lambda_E = \partial\Lambda_E$. To describe the estimators, we use the following counting processes notations, similar to standard survival analysis:
 * The uncensored event indicatrix $\partial N_i(t)$ for individual $i$ at time $t$ 
 * The total number of uncensored events process $\partial N(t) = \sum_i \partial N_i(t)$ at time $t$
 * The at-risk indicatrix $Y_i(t)$, for whether an individual is still at risk 
