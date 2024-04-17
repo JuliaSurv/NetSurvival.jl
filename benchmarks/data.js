@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713186059206,
+  "lastUpdate": 1713358575506,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -166,6 +166,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "GraffeoTest/colrec x slopop - explicit",
             "value": 231889250,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=11565600\nallocs=54071\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "113822034+rimhajal@users.noreply.github.com",
+            "name": "rimhajal",
+            "username": "rimhajal"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "333858ffd26de86784a6b0e75673dbf22fd983f7",
+          "message": "documentation (#23)\n\n* net survival (excluding test)\r\n\r\n* might be better to explain the theory in one place and the interface in another\r\n\r\n* adding refs Ederer II\r\n\r\n* test doc\r\n\r\n* p-value\r\n\r\n* autodocs updtae\r\n\r\n* ref autodocs ?\r\n\r\n* some improvements\r\n\r\n* merging examples with getting started\r\n\r\n* fix error\r\n\r\n* fix error\r\n\r\n* ref + example\r\n\r\n* Better name for Graffeo Reference\r\n\r\n* fixup index a bit\r\n\r\n* Theory partial rewrite\r\n\r\n* grammar\r\n\r\n* update\r\n\r\n* error\r\n\r\n* bold marks for observations\r\n\r\n* typo\r\n\r\n* point on covariates\r\n\r\n* rephrase\r\n\r\n* adding refs\r\n\r\n* fix\r\n\r\n* some changes\r\n\r\n* maybe better\r\n\r\n* remove repetition\r\n\r\n---------\r\n\r\nCo-authored-by: Oskar Laverny <oskar.laverny@univ-amu.fr>",
+          "timestamp": "2024-04-17T14:54:43+02:00",
+          "tree_id": "a2efc2a32c5ec871bb4b85c688705d803e7bf2d2",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/333858ffd26de86784a6b0e75673dbf22fd983f7"
+        },
+        "date": 1713358573961,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 226259651,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4345472\nallocs=53859\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 241020434.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7693760\nallocs=101290\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 227632389,
             "unit": "ns",
             "extra": "gctime=0\nmemory=11565600\nallocs=54071\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
