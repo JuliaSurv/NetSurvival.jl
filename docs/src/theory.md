@@ -52,7 +52,7 @@ With these definitions and assumptions in mind, we will now present the four dif
 
 where, in the variances, it is understood that when no more individuals are at risk $0/0$ gives $0$. 
 
-The Pohar Perme[PoharPerme2012](@cite) is the newest addition to relative survival analysis between the four methods, particularly designed to handle situations where covariates may change over time. It is trusted from the field (see e.g. [PermePavlik2018](@cite) and [CharvatBelot2021](@cite)) that only this estimator should really be used, the other ones being included mostly for historical reasons and comparisons. 
+The Pohar Perme estimator [PoharPerme2012](@cite) is the newest addition to relative survival analysis between the four methods, particularly designed to handle situations where covariates may change over time. It is trusted from the field (see e.g. [PermePavlik2018](@cite) and [CharvatBelot2021](@cite)) that only this estimator should really be used, the other ones being included mostly for historical reasons and comparisons. 
 
 
 ## Grafféo Log-Rank Test
