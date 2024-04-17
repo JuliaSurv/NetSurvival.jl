@@ -29,19 +29,19 @@ Consider a study that consists of censored survival times from a specific cause.
 | ``T = O \wedge C`` | Event time                     | ✓ |
 | ``\Delta = \mathbf{1}\{T \leq C\}$`` | Event status | ✓ |
 
-It is important to note that we do not observed a a potential indicator $\mathbf{1}\{E \geq P\}$. This is one of the key differences between net survival and standard survival. The standard Net survival analysis solves this problem by assuming that the underlying times $E$ and $P$ are independent from each other.
+It is important to note that we do not observe a a potential indicator $\mathbf{1}\{E \geq P\}$. This is one of the key differences between net survival and standard survival. The standard Net survival analysis solves this problem by assuming that the underlying times $E$ and $P$ are independent from each other.
 
-One central hypothesis in net survival (on top of non-informative censoring) is that $P$ and $E$ are independent. This independence can be writtent in terms of hazard rates as $\lambda_O(t) = \lambda_P(t) + \lambda_E(t)$, or in terms of survival functions as $S_O(t) = S_P(t)S_E(t)$.
+One central hypothesis in net survival (on top of non-informative censoring) is that $P$ and $E$ are independent. This independence can be written in terms of hazard rates $\lambda_O(t) = \lambda_P(t) + \lambda_E(t)$, or in terms of survival functions $S_O(t) = S_P(t)S_E(t)$.
 
-The population hazard for each individuals $\lambda_{P_i}$ is usally drawn from a reference life table, and may depend on covariates $\mathbf D_i$ surch as age and date, sex, country, race, etc... See the [RateTables.jl](https://github.com/JuliaSurv/RateTables.jl) package for more details on the potential covariates. 
+The population hazard for each individual $\lambda_{P_i}$ is usally drawn from a reference life table, and may depend on covariates $\mathbf D_i$ such as age and date, sex, country, race, etc... See the [RateTables.jl](https://github.com/JuliaSurv/RateTables.jl) package for more details on the potential covariates. 
 
-The estimation of net survival is usually discussed in term of the estimation of the excess hazard $\partial \Lambda_E(t)$. We use in this page the following counting processes notations, similar to standard survival analysis: 
+The estimation of net survival is usually discussed in terms of the estimation of the excess hazard $\partial \Lambda_E(t)$. Here, we use the following counting processes notations, similar to standard survival analysis: 
 * The uncensored event indicatrix $\partial N_i(t)$ for individual $i$ at time $t$ 
 * The total number of uncensored events process $\partial N(t) = \sum_i \partial N_i(t)$ at time $t$
 * The at-risk indicatrix $Y_i(t)$, for whether an individual is still at risk 
 * The total number at risk process $Y(t) = \sum_i Y_i(t)$ at time $t$
 
-With these definitions and assumptions in mind, we will now present four different methods, commonly used in the litterature, implemented in this package, to estimate the excess hazard function $\partial\Lambda_E(t)$ and its variance. Recall that we estimate the variance as $\sigma_E^2(t) = \int_{0}^t \partial\sigma_E^2(s)$. 
+With these definitions and assumptions in mind, we will now present the four different methods implemented in this package, commonly used in literature, to estimate the excess hazard function $\partial\Lambda_E(t)$ and its variance. Recall that we estimate the variance as $\sigma_E^2(t) = \int_{0}^t \partial\sigma_E^2(s)$. 
 
 | Name        | Reference               | Proposed (partial) Excess Hazard $\partial\hat{\Lambda}_E(s)$ | Proposed (partial) Variance $\partial\hat{\sigma}_E^2(s)$ |
 | :---------- | :---------------------- | :------------------------------------ | :---------------------------------------- | 
@@ -52,7 +52,7 @@ With these definitions and assumptions in mind, we will now present four differe
 
 where in the variances it is understood that, when no more individuals are at risk, $0/0$ gives $0$. 
 
-The Pohar Perme[PoharPerme2012](@cite) is the newest addition to relative survival analysis between the four methods, particularly designed to handle situations where covariates may change over time. It is trusted from the field (ref??) that only this estimator shoudl really be used, the other ones being included mostly for historical reasons and comparisons. 
+The Pohar Perme[PoharPerme2012](@cite) is the newest addition to relative survival analysis between the four methods, particularly designed to handle situations where covariates may change over time. It is trusted from the field (ref??) that only this estimator should really be used, the other ones being included mostly for historical reasons and comparisons. 
 
 
 ## Grafféo Log-Rank Test
@@ -63,8 +63,8 @@ The null $(H_0)$ hypothesis tests the following assumption:
 
 $$\forall t \in [0,T], \; \; \Lambda_{E,g_1}(t) = \Lambda_{E,g_2}(t) = ... = \Lambda_{E,g_k}(t),$$
 
-where $G = \{g_1,...,g_k\}$ is a partition of $1,...,n$ formed of disjoint groups of individuals that we wish to compare to each others. 
-For all group $g \in G$, let's denote the numerator and deneominator of the Pohar Perme (partial) excess hazard estimators, restricted to individuals in the group, by 
+where $G = \{g_1,...,g_k\}$ is a partition of $1,...,n$ consisting of disjoint groups of individuals that we wish to compare to each other. 
+For all group $g \in G$, let's denote the numerator and denominator of the Pohar Perme (partial) excess hazard estimators, restricted to individuals in the group, by: 
 
 * ``\partial N_{E,g}(s) = \sum_{i \in g} \frac{\partial N_i(s)}{S_{P_i}(s)} - \frac{Y_i(s)}{S_{P_i}(s)}\partial\Lambda_{P_i}(s)``
 * ``Y_{E,g}(s) = \sum_{i \in g} \frac{Y_i(s)}{S_{P_i}(s)}``
@@ -78,11 +78,11 @@ The test statistic is then given by:
 
 $$U(T) = \mathbf Z(T)'\hat{\Sigma}_Z^{-1} \mathbf Z(T)$$
 
-where the entries of the $\hat{\Sigma}_Z$ matrix are given by 
+where the entries of the $\hat{\Sigma}_Z$ matrix are given by: 
 
 $$\sigma_{g,h}(T) = \int_0^T \sum_{\ell \in G} \left(\delta_{g,\ell} - R_g(t) \right)\left(\delta_{h,\ell} - R_h(t)\right) \left(\sum_{i\in\ell} \frac{\partial N_i(s)}{S^2_{P_i}}\right)$$
 
-Under $H_0$, the statistic $U(T)$ is assymptotically $\chi^2(k-1)$-distributed. We thus reject the $H_0$ hypothesis when the p-value obtained is under $0.05$, admitting the notable difference between the groups. 
+Under $H_0$, the statistic $U(T)$ is asymptotically $\chi^2(k-1)$-distributed. We thus reject the $H_0$ hypothesis when the p-value obtained is under $0.05$, admitting the notable difference between the groups. 
 
 ## References
 
