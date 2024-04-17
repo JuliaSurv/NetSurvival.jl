@@ -13,9 +13,7 @@ For years, the Hakulinen estimator (1977) [Hakulinen1977](@cite) and the Ederer 
 
 ## Features
 
-Standard tools nowadays are composed of R packages, with underlying C and C++ routines, that are hard to read, maintain, and use. This package is an attempt to provide a fast, reliable, and most importantly easily maintainable package to implement standard estimators and routines from the field onto the `StatsModels.jl` API. Our hope is that the junction with classical modeling API in Julia will allow later extensions of the existing modeling methods, with a simple interface for the practitioners.
-
-This package is an attempt to bring standard relative survival analysis modeling routines to Julia, while providing an interface that is close to the `relsurv` standard, albeit significantly faster and easier to maintain in the future.
+Standard tools nowadays are composed of R packages, with underlying C and C++ routines, that are hard to read, maintain, and use. This package is an attempt to bring standard relative survival analysis modeling routines to Julia, while providing an interface that is close to the `relsurv` standard, albeit significantly faster and easier to maintain in the future. Our hope is that the junction with classical modeling API in Julia will allow later extensions of the existing modeling methods, with a simple interface for the practitioners.
 
 Some key features in `NetSurvival.jl` are:
 
