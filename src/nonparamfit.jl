@@ -64,8 +64,8 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
         pp = Vector{PoharPerme}()
         new_df = groupby(df, pred_names)
         for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-            resp = modelcols(formula.lhs, new_df[i])
-            push!(pp,PoharPerme(resp[:,1], resp[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
+            resp2 = modelcols(formula.lhs, new_df[i])
+            push!(pp,PoharPerme(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
         end
     end 
     return pp

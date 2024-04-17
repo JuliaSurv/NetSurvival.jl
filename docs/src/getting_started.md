@@ -4,29 +4,49 @@ CurrentModule = NetSurvival
 
 # Getting Started
 
-## Pohar Perme
+## Fitting the non parametric estimators
 
-The Pohar Perme[PoharPerme2012](@cite) is a statistical method used in survival analysis to estimate net survival probabilities, particularly designed to handle situations where covariates may change over time. The net survival function is defined as:
+```@docs
+PoharPerme
+```
 
-$$S_{E}(t) = exp(-\int_0^t\lambda_{E}(u)du)$$
+### Example
 
-The $\lambda_E$ is the associated hazard given by : 
+We will illustrate with an example using the dataset `colrec`, which comprises $5971$ patients diagnosed with colon or rectal cancer  between 1994 and 2000. This dataset is sourced from the Slovenia cancer registry. Given the high probability that the patients are Slovenian, we will be using the Slovenian mortality table `slopop` as reference for the populational rates. Subsequently, we can apply various non-parametric estimators for net survival analysis.
 
-$$\lambda_E (t) = \frac{\sum_{i=1}^{N}S_{E_i}(t)\lambda_{E_i}(t)}{\sum_{i=1}^{N}S_{E_i}(t)}$$
+!!! note "N.B." 
+    Mortality tables may vary in structure, with options such as the addition or removal of specific covariates. To confirm that the mortality table is in the correct format, please refer to the documentation of `RateTables.jl`, or directly extract it from there.
 
-This weighted average is thus based on the likelihood that an individual remains alive in a hypothetical scenario where the disease is the sole cause of death. 
+By examining `slopop`, we notice it contains information regarding `age` and `year`, as expected for mortality tables. Additionally, it incorporates the covariate sex, which has two possible entries (`:male` or `:female`).
 
-## Ederer II
+**Pohar Perme**
+```@example 1
+using NetSurvival, RateTables
+pp1 = fit(PoharPerme, @formula(Surv(time,status)~1), colrec, slopop)
+```
 
-## Grafféo Log-Rank Test
+## Applying the Grafféo log-rank test
 
-The Grafféo Log-Rank Test [GraffeoTest](@cite) was constructed as a complement to the Pohar Perme estimator, aiming to compare the net survival functions provided by the latter. The test  is designed to compare these functions across multiple groups, including stratified covariables, and to ultimately determine, with the given p-value, which covariables are impactful to the study. 
+```@docs
+GraffeoTest
+```
 
-For this test, we first define the number of deaths caused by the event studied for a time $s$ within the group $h$ noted $N_{E,h}(s)$ and the process of individuals at risk within the same group $h$ at time $s$ noted $Y_h(s)$. Both of these values are weighted with the populational estimated survival for the given patient, same as in Pohar Perme. 
+### Example
 
-The $(H_0)$ hypothesis tested 
+When applying the test to the same data as before, we get:
 
-```@bibliography
-Pages = ["getting_started.md"]
-Canonical = false
+```@example 1
+test1 = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
+```
+
+The p-value is well under $0.05$, meaning that the different groups identified by the `stage` variable have different survival probabilities. Thus, it should be taken into consideration in the study.
+
+```@example 1
+test2 = fit(GraffeoTest, @formula(Surv(time,status)~sex), colrec, slopop)
+```
+
+For the `sex` variable, we notice that the p-value is above $0.05$ indicating that there isn't a difference between male and female patients.
+
+```@example 1
+test4 = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, slopop)
 ```
