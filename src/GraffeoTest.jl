@@ -9,7 +9,7 @@ The null ``(H_0)`` hypothesis tests the following assumption:
 \\forall t \\in [0,T], \\Lambda_{E,g_1}(t) = \\Lambda_{E,g_2}(t) = ... = \\Lambda_{E,g_k}(t)
 ```
 
-where ``G = \{g_1,...,g_k\}`` is a partition of ``1,...,n`` consisting of disjoint groups of individuals that we wish to compare to each other. 
+where ``G = {g_1,...,g_k}`` is a partition of ``1,...,n`` consisting of disjoint groups of individuals that we wish to compare to each other. 
 For all group ``g \\in G``, let's denote the numerator and denominator of the Pohar Perme (partial) excess hazard estimators, restricted to individuals in the group, by: 
 
 * ``\\partial N_{E,g}(s) = \\sum_{i \\in g} \\frac{\\partial N_i(s)}{S_{P_i}(s)} - \\frac{Y_i(s)}{S_{P_i}(s)}\\partial\\Lambda_{P_i}(s)``
@@ -34,7 +34,7 @@ where the entries of the ``\\hat{\\Sigma}_Z`` matrix are given by:
 \\sigma_{g,h}(T) = \\int_0^T \\sum_{\\ell \\in G} \\left(\\delta_{g,\\ell} - R_g(t) \\right)\\left(\\delta_{h,\\ell} - R_h(t)\\right) \\left(\\sum_{i\\in\\ell} \\frac{\\partial N_i(s)}{S^2_{P_i}}\\right)
 ```
 
-Under ``H_0``, the statistic ``U(T)`` is asymptotically ``\chi^2(k-1)``-distributed.
+Under ``H_0``, the statistic ``U(T)`` is asymptotically ``\\chi^2(k-1)``-distributed.
 
 To apply the test to your data based on a certain rate table, apply the example below to your code : 
 
