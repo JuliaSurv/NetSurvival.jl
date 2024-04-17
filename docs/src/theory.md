@@ -35,7 +35,7 @@ One central hypothesis in net survival (on top of non-informative censoring) is 
 
 The population hazard for each individual $\lambda_{P_i}$ is usally drawn from a reference life table, and may depend on covariates $\mathbf D_i$ such as age and date, sex, country, race, etc... See the [RateTables.jl](https://github.com/JuliaSurv/RateTables.jl) package for more details on the potential covariates. On the other hand, the excess mortality is assumed to be i.i.d. between individuals and not to depend on covariates at all. Thus, we mostly omit these covariates from our notations.
 
-The estimation of net survival is usually discussed in terms of the estimation of the cumulative excess hazard $\Lambda_E(t)$ and/or the instantaneous hazard $\lambda_E = \partial\Lambda_E$. To describe the estimators, we use the following counting processes notations, similar to standard survival analysis:
+The estimation of net survival is usually discussed in terms of the estimation of the cumulative excess hazard $\Lambda_E(t)$ and/or the instantaneous hazard $\lambda_E = \partial\Lambda_E$. To describe the estimators, we use the following counting processes notations, similar to standard survival analysis(see e.g. [FlemingHarington2013](@cite) or [ABGK1993](@cite)). 
 * The uncensored event indicatrix $\partial N_i(t)$ for individual $i$ at time $t$ 
 * The total number of uncensored events process $\partial N(t) = \sum_i \partial N_i(t)$ at time $t$
 * The at-risk indicatrix $Y_i(t)$, for whether an individual is still at risk 
@@ -50,9 +50,9 @@ With these definitions and assumptions in mind, we will now present the four dif
 | Hakulinen   | [Hakulinen1977](@cite)  | $\frac{\sum_i N_i(s)}{\sum_i Y_i(s)} - \frac{\sum_i \frac{Y_i(s)}{ S_{P_i}(s)}\partial\Lambda_{P_i}(s)}{\sum_i \frac{Y_i(s)}{ S_{P_i}(s)}}$ | $\frac{\sum_i N_i(s)}{\left(\sum_i Y_i(s)\right)^2}$ |
 | Pohar Perme | [PoharPerme2012](@cite) | $\frac{\sum_i \frac{\partial N_i(s)}{S_{P_i}(s)} - \sum_i \frac{Y_i(s)}{S_{P_i}(s)}\partial\Lambda_{P_i}(s)}{\sum_i \frac{Y_i(s)}{S_{P_i}(s)}}$ | $\frac{\sum_{i=1}^n \frac{\partial N_i(s)}{S^2_{P_i}}}{\left(\sum_i \frac{Y_i(s)}{S_{p_i}(s)}\right)^2}$ |
 
-where in the variances it is understood that, when no more individuals are at risk, $0/0$ gives $0$. 
+where, in the variances, it is understood that when no more individuals are at risk $0/0$ gives $0$. 
 
-The Pohar Perme[PoharPerme2012](@cite) is the newest addition to relative survival analysis between the four methods, particularly designed to handle situations where covariates may change over time. It is trusted from the field (ref??) that only this estimator should really be used, the other ones being included mostly for historical reasons and comparisons. 
+The Pohar Perme[PoharPerme2012](@cite) is the newest addition to relative survival analysis between the four methods, particularly designed to handle situations where covariates may change over time. It is trusted from the field (see e.g. [PermePavlik2018](@cite) and [CharvatBelot2021](@cite)) that only this estimator should really be used, the other ones being included mostly for historical reasons and comparisons. 
 
 
 ## Grafféo Log-Rank Test
