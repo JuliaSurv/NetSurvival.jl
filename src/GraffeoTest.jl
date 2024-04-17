@@ -3,35 +3,38 @@
 
 The Grafféo test is a log-rank type test and is typically used in net survival analysis to determine the impact of certain covariates in the study.
 
-The null hypothesis ``H_0`` tests the following assumption:
+The null ``(H_0)`` hypothesis tests the following assumption:
 
 ```math
-\\forall t \\in [0,T], \\Lambda_{E,1}(t) = \\Lambda_{E,2}(t) = ... = \\Lambda_{E,k}(t)
+\\forall t \\in [0,T], \\Lambda_{E,g_1}(t) = \\Lambda_{E,g_2}(t) = ... = \\Lambda_{E,g_k}(t)
 ```
 
-For this test, we first define the number of deaths caused by the event studied for a time ``s`` within the group ``h`` noted ``N_{E,h}^w(s)`` and the process of individuals at risk within the same group ``h`` at time ``s`` noted ``Y_h^w(s)``. Both of these values are weighted with the populational estimated survival for the given patient, same as in Pohar Perme. 
+where ``G = \{g_1,...,g_k\}`` is a partition of ``1,...,n`` consisting of disjoint groups of individuals that we wish to compare to each other. 
+For all group ``g \\in G``, let's denote the numerator and denominator of the Pohar Perme (partial) excess hazard estimators, restricted to individuals in the group, by: 
 
-Thus, we define ``\\forall h \\in [1;k]``:
+* ``\\partial N_{E,g}(s) = \\sum_{i \\in g} \\frac{\\partial N_i(s)}{S_{P_i}(s)} - \\frac{Y_i(s)}{S_{P_i}(s)}\\partial\\Lambda_{P_i}(s)``
+* ``Y_{E,g}(s) = \\sum_{i \\in g} \\frac{Y_i(s)}{S_{P_i}(s)}``
+* ``R_{g}(s) = \\frac{Y_{E,g}(s)}{\\sum_{g\\in G} Y_{E,g}(s)}``
+
+Then, define the vector ``\\mathbf Z = \\left(Z_{g_r}: r \\in 1,...,k-1 \\right)`` with entries: 
 
 ```math
-Z_h^w(T) = \\int_0^T \\mathbf{1}(Y_.^w(s) > 0)dN_{E,h}^w(s) - \\int_0^T \\mathbf{1}(Y_.^w(s) > 0)\\frac{Y_h^w(s)}{Y_.^w(s)}dN_{E,.}^w(s)
+Z_g(T) = N_{E,g}(s) - \\int_{0}^T Y_{E,g}(s) \\partial\\hat{\\Lambda}_E(s)
 ```
 
-With ``Y_.^w(s) = \\sum_{h=i}^k Y_h^w(s)`` and ``dN_{E,.}^w(s) = \\sum_{h=i}^k dN_{E,h}^w(s)``.
-
-The test statistic, defined under ``H_0``, is then given by:
+The test statistic is then given by:
 
 ```math
-U^w(T) = (Z_1^w(T), ..., Z_{k-1}^w(T)) \\hat{\\Sigma}_0^w(T)^{-1} (Z_1^w(T), ..., Z_{k-1}^w(T))^t
+U(T) = \\mathbf Z(T)'\\hat{\\Sigma}_Z^{-1} \\mathbf Z(T)
 ```
 
-Knowing that ``\\hat{\\Sigma}_0^w(T) = (\\hat{\\sigma}^w_{hj}(T))_{hj}`` for ``(h,j) \\in [1;k-1]^2``
-
-Finally, the asymptotic distribution of the test statistic under ``H_0``:
+where the entries of the ``\\hat{\\Sigma}_Z`` matrix are given by: 
 
 ```math
-U^w(t) \\sim \\chi^2(k-1)
+\\sigma_{g,h}(T) = \\int_0^T \\sum_{\\ell \\in G} \\left(\\delta_{g,\\ell} - R_g(t) \\right)\\left(\\delta_{h,\\ell} - R_h(t)\\right) \\left(\\sum_{i\\in\\ell} \\frac{\\partial N_i(s)}{S^2_{P_i}}\\right)
 ```
+
+Under ``H_0``, the statistic ``U(T)`` is asymptotically ``\chi^2(k-1)``-distributed.
 
 To apply the test to your data based on a certain rate table, apply the example below to your code : 
 
