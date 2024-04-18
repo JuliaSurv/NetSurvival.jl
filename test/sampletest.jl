@@ -33,6 +33,7 @@ end
 
     colrec.country = rand(keys(hmd_countries),nrow(colrec))
     fit(PoharPerme, @formula(Surv(time,status)~sex), colrec, frpop)
+    fit(EdererI, @formula(Surv(time,status)~sex), colrec, frpop)
     fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, frpop)
     fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
 
@@ -77,6 +78,7 @@ end
     @test all(abs.(err_σ) .<= 0.01)
 
 end
+
 
 @testitem "Comparing log rank test with R" begin
     

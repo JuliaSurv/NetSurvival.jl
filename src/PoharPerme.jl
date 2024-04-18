@@ -68,28 +68,6 @@ struct PoharPerme <: NonparametricEstimator
     end
 end
 
-"""
-    EdererII
-
-To call this function : 
-
-    fit(EdererII, @formula(Surv(time,status)~covariable1 + covariable2), data, ratetable)
-"""
-
-# struct EdererII <: NonparametricEstimator
-#     Sₑ::Vector{Float64}
-#     ∂Λₑ::Vector{Float64}
-#     σₑ::Vector{Float64}
-#     grid::Vector{Float64}
-#     function EdererII(T, Δ, age, year, sex, ratetable)
-#         grid = mk_grid(T,1) # precision is always 1 ? 
-#         ∂Λₑ, ∂σₑ = Λ(T, Δ, age, year, sex, ratetable, grid)
-#         Sₑ = cumprod(1 .- ∂Λₑ)
-#         σₑ = sqrt.(cumsum(∂σₑ))
-#         return new(Sₑ, ∂Λₑ, σₑ, grid)
-#     end
-# end
-
 function StatsAPI.confint(npe::E; level::Real=0.05) where E <: NonparametricEstimator
     χ = sqrt(quantile(Chisq(1),1-level))
     return map(npe.Sₑ, npe.σₑ) do Sₑ,σₑ

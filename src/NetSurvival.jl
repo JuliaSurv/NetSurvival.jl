@@ -15,9 +15,10 @@ include("fetch_datasets.jl")
 include("Surv.jl")
 include("nonparamfit.jl")
 include("PoharPerme.jl")
+include("EdererI.jl")
 include("GraffeoTest.jl")
 
-export PoharPerme
+export PoharPerme, EdererI
 export fit, confint
 export GraffeoTest
 export Surv, Strata

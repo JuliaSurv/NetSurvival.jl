@@ -56,18 +56,36 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
 
     formula = apply_schema(formula,schema(df))
     pred_names = StatsModels.termvars(formula)
-    
-    if nrow(unique(df[!,String.(pred_names)])) == 0 
-        resp = modelcols(formula.lhs, df)
-        return PoharPerme(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
-    else
-        pp = Vector{PoharPerme}()
-        new_df = groupby(df, pred_names)
-        for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-            resp2 = modelcols(formula.lhs, new_df[i])
-            push!(pp,PoharPerme(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
+
+    if E == PoharPerme    
+        if nrow(unique(df[!,String.(pred_names)])) == 0 
+            resp = modelcols(formula.lhs, df)
+            return PoharPerme(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
+        else
+            pp = Vector{PoharPerme}()
+            new_df = groupby(df, pred_names)
+            for i in 1:nrow(unique(df[!,String.(pred_names)]))      
+                resp2 = modelcols(formula.lhs, new_df[i])
+                push!(pp,PoharPerme(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
+                return pp
+            end
         end
-    end 
-    return pp
+    elseif E == EdererI
+        if nrow(unique(df[!,String.(pred_names)])) == 0 
+            resp = modelcols(formula.lhs, df)
+            return EdererI(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
+        else
+            edI = Vector{EdererI}()
+            new_df = groupby(df, pred_names)
+            for i in 1:nrow(unique(df[!,String.(pred_names)]))      
+                resp2 = modelcols(formula.lhs, new_df[i])
+                push!(edI,EdererI(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
+                return edI
+            end
+        end
+    # elseif E == EdererII
+
+    # elseif E == Hakulinen
+    end
 end
 
