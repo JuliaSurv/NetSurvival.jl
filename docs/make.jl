@@ -23,7 +23,7 @@ makedocs(;
         "Home" => "index.md",
         "theory.md",
         "getting_started.md",
-        "benchmarks.md",
+        "benches.md",
         "references.md",
     ],
 )
