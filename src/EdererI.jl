@@ -3,26 +3,25 @@ function Λₑ₁(T, Δ, age, year, rate_preds, ratetable, grid)
     num_excess   = zero(grid)
     num_pop      = zero(grid)
     num_variance = zero(grid)
-    den          = zero(grid)
-    Yᵢ           = 0.0
-    Nᵢ           = 0.0
 
     # Loop over individuals
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])
-        Sₚᵢ = 1.0
+        Sₚᵢ = 0.0
+        sΛₚ = 0.0
+        Yᵢ           = length(T)
         
         rtᵢ = ratetable[rate_preds[i,:]...] # other predictors for this individual have to go here.
         for j in Tᵢ
             λₚ           = daily_hazard(rtᵢ, age[i] + grid[i], year[i] + grid[i])
             Λₚ           = λₚ * (grid[j+1]-grid[j]) 
+            sΛₚ          += sΛₚ
             Sₚᵢ          = exp(Λₚ)
-            num_pop[j]   += (Sₚᵢ * Λₚ) / Sₚᵢ
-            Yᵢ += (Δ[i] == 0) ? 1 : 0
-        end
-
+            num_pop[j]   += (Sₚᵢ * sΛₚ) / Sₚᵢ
+            Yᵢ -= sum(Δ[i]==1) 
+        end 
         num_excess[Tᵢ]   += Δ[i] / Yᵢ
-        num_variance[Tᵢ] += Δ[i] / Yᵢ^2
+        num_variance[Tᵢ] += Δ[i] / Yᵢ^2  
     end
     return num_excess .- num_pop, num_variance
 end
