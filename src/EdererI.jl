@@ -2,32 +2,32 @@ function Λₑ₁(T, Δ, age, year, rate_preds, ratetable, grid)
     # Initialize vectors: 
     num_excess   = zero(grid)
     num_pop      = zero(grid)
-    num_variance = zero(grid)
-    den          = zero(grid)
-    Yᵢ           = length(T)
+    den_pop      = zero(grid)
+    den_excess   = zero(grid)
     
+    Tmax= Int(maximum(T))
     # Loop over individuals
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])
-        sΛₚ = 0.0
-        Yᵢ           = length(T)
+        Λₚ = 0.0
         
         rtᵢ = ratetable[rate_preds[i,:]...] # other predictors for this individual have to go here.
-        for j in Tᵢ
-            λₚ           = daily_hazard(rtᵢ, age[i] + grid[i], year[i] + grid[i])
-            Λₚ           = λₚ * (grid[j+1]-grid[j]) 
-            sΛₚ         += Λₚ
-            wₚ           = exp(Λₚ)
-            den[j]      += wₚ
-            num_pop[j]  = (den[j] * sΛₚ) / den[j]
-            Yᵢ -= sum(Δ[i]==1)
+        for j in 1:Tmax
+            λₚ          = daily_hazard(rtᵢ, age[i] + grid[j], year[i] + grid[j])
+            ∂Λₚ         = λₚ * (grid[j+1]-grid[j]) 
+            Λₚ         += ∂Λₚ
+            Sₚ          = exp(-Λₚ)
+            num_pop[j] += (Sₚ * ∂Λₚ)
+            den_pop[j] += Sₚ
         end
-        
-        num_excess[Tᵢ]   += Δ[i] / Yᵢ
-        num_variance[Tᵢ] += Δ[i] / Yᵢ^2 
+        for j in 1:Tᵢ
+            den_excess[j] += 1
+        end
+        num_excess[Tᵢ]   += Δ[i]  
     end
-    return num_excess .- num_pop, num_variance
+    return (num_excess ./ den_excess) .- (num_pop ./ den_pop), num_excess ./ (den_excess.^2)
 end
+
 
 """
     EdererI
