@@ -5,7 +5,6 @@ function Λₕₖ(T, Δ, age, year, rate_preds, ratetable, grid)
     den_pop      = zero(grid)
     den_excess   = zero(grid)
     
-    Tmax= Int(maximum(T))
     # Loop over individuals
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i]) # index of the time of event (death or censored) in the grid
