@@ -1,6 +1,3 @@
-
-
-# Make the final function: 
 function mk_grid(times,prec)
     M = maximum(times)+1
     return unique(sort([(1:prec:M)..., times..., M]))

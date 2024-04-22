@@ -2,10 +2,8 @@ function Λₑ₂(T, Δ, age, year, rate_preds, ratetable, grid)
     # Initialize vectors: 
     num_excess   = zero(grid)
     num_pop      = zero(grid)
-    den_pop      = zero(grid)
     den_excess   = zero(grid)
     
-    Tmax= Int(maximum(T))
     # Loop over individuals
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])
@@ -42,6 +40,6 @@ struct EdererII <: NonparametricEstimator
         ∂Λₑ, ∂σₑ = Λₑ₂(T, Δ, age, year, rate_preds, ratetable, grid)
         Sₑ = cumprod(1 .- ∂Λₑ)
         σₑ = sqrt.(cumsum(∂σₑ))
-        return new(Sₑ, ∂Λₑ, σₑ)
+        return new(Sₑ, ∂Λₑ, σₑ, grid)
     end
 end

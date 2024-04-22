@@ -43,6 +43,6 @@ struct Hakulinen <: NonparametricEstimator
         ∂Λₑ, ∂σₑ = Λₕₖ(T, Δ, age, year, rate_preds, ratetable, grid)
         Sₑ = cumprod(1 .- ∂Λₑ)
         σₑ = sqrt.(cumsum(∂σₑ))
-        return new(Sₑ, ∂Λₑ, σₑ)
+        return new(Sₑ, ∂Λₑ, σₑ, grid)
     end
 end
