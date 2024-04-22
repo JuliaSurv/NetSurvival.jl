@@ -16,9 +16,11 @@ include("Surv.jl")
 include("nonparamfit.jl")
 include("PoharPerme.jl")
 include("EdererI.jl")
+include("EdererII.jl")
+include("Hakulinen.jl")
 include("GraffeoTest.jl")
 
-export PoharPerme, EdererI
+export PoharPerme, EdererI, EdererII, Hakulinen
 export fit, confint
 export GraffeoTest
 export Surv, Strata

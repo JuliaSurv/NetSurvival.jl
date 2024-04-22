@@ -83,9 +83,32 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
                 return edI
             end
         end
-    # elseif E == EdererII
-
-    # elseif E == Hakulinen
+    elseif E == EdererII
+        if nrow(unique(df[!,String.(pred_names)])) == 0 
+            resp = modelcols(formula.lhs, df)
+            return EdererII(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
+        else
+            edII = Vector{EdererII}()
+            new_df = groupby(df, pred_names)
+            for i in 1:nrow(unique(df[!,String.(pred_names)]))      
+                resp2 = modelcols(formula.lhs, new_df[i])
+                push!(edII,EdererII(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
+                return edII
+            end
+        end
+    elseif E == Hakulinen
+        if nrow(unique(df[!,String.(pred_names)])) == 0 
+            resp = modelcols(formula.lhs, df)
+            return Hakulinen(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
+        else
+            hak = Vector{Hakulinen}()
+            new_df = groupby(df, pred_names)
+            for i in 1:nrow(unique(df[!,String.(pred_names)]))      
+                resp2 = modelcols(formula.lhs, new_df[i])
+                push!(hak,Hakulinen(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
+                return hak
+            end
+        end
     end
 end
 
