@@ -59,100 +59,15 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
 
     if nrow(unique(df[!,String.(pred_names)])) == 0 
         resp = modelcols(formula.lhs, df)
-        if E == PoharPerme
-            return PoharPerme(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
-        elseif E == EdererI
-            return EdererI(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
-        elseif E == EdererII
-            return EdererII(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
-        elseif E == Hakulinen
-            return Hakulinen(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
-        end
+        return E(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
     else
         new_df = groupby(df, pred_names)
-        if E == PoharPerme
-            pp = Vector{PoharPerme}()
-            for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-                resp2 = modelcols(formula.lhs, new_df[i])
-                push!(pp,PoharPerme(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-                return pp
-            end
-        elseif E == EdererI
-            edI = Vector{EdererI}()
-            for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-                resp2 = modelcols(formula.lhs, new_df[i])
-                push!(edI,EdererI(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-                return edI
-            end
-        elseif E == EdererII
-            edII = Vector{EdererII}()
-            for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-                resp2 = modelcols(formula.lhs, new_df[i])
-                push!(edII,EdererII(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-                return edII
-            end
-        elseif E == Hakulinen
-            hak = Vector{Hakulinen}()
-            for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-                resp2 = modelcols(formula.lhs, new_df[i])
-                push!(hak,Hakulinen(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-                return hak
-            end
+        pp = Vector{E}()
+        for i in 1:nrow(unique(df[!,String.(pred_names)]))      
+            resp2 = modelcols(formula.lhs, new_df[i])
+            push!(pp,E(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
+            return pp
         end
     end
-
-    # if E == PoharPerme    
-    #     if nrow(unique(df[!,String.(pred_names)])) == 0 
-    #         resp = modelcols(formula.lhs, df)
-    #         return PoharPerme(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
-    #     else
-    #         pp = Vector{PoharPerme}()
-    #         new_df = groupby(df, pred_names)
-    #         for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-    #             resp2 = modelcols(formula.lhs, new_df[i])
-    #             push!(pp,PoharPerme(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-    #             return pp
-    #         end
-    #     end
-    # elseif E == EdererI
-    #     if nrow(unique(df[!,String.(pred_names)])) == 0 
-    #         resp = modelcols(formula.lhs, df)
-    #         return EdererI(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
-    #     else
-    #         edI = Vector{EdererI}()
-    #         new_df = groupby(df, pred_names)
-    #         for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-    #             resp2 = modelcols(formula.lhs, new_df[i])
-    #             push!(edI,EdererI(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-    #             return edI
-    #         end
-    #     end
-    # elseif E == EdererII
-    #     if nrow(unique(df[!,String.(pred_names)])) == 0 
-    #         resp = modelcols(formula.lhs, df)
-    #         return EdererII(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
-    #     else
-    #         edII = Vector{EdererII}()
-    #         new_df = groupby(df, pred_names)
-    #         for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-    #             resp2 = modelcols(formula.lhs, new_df[i])
-    #             push!(edII,EdererII(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-    #             return edII
-    #         end
-    #     end
-    # elseif E == Hakulinen
-    #     if nrow(unique(df[!,String.(pred_names)])) == 0 
-    #         resp = modelcols(formula.lhs, df)
-    #         return Hakulinen(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
-    #     else
-    #         hak = Vector{Hakulinen}()
-    #         new_df = groupby(df, pred_names)
-    #         for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-    #             resp2 = modelcols(formula.lhs, new_df[i])
-    #             push!(hak,Hakulinen(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-    #             return hak
-    #         end
-    #     end
-    # end
 end
 
