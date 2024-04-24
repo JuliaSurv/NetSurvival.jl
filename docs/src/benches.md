@@ -31,5 +31,5 @@ ratio = time(minimum(R_bench)) / time(minimum(jl_bench))
 The folloiwng charts provide a glimpse of `NetSurvival.jl`'s performance along time: 
 
 ```@raw html
-<iframe src="NetSurvival.jl/benchmarks/" style="height:500px;width:100%;"></iframe>
+<iframe src="../../benchmarks/" style="height:500px;width:100%;"></iframe>
 ```
