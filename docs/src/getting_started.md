@@ -8,6 +8,9 @@ CurrentModule = NetSurvival
 
 ```@docs
 PoharPerme
+EdererI
+EdererII
+Hakulinen
 ```
 
 ### Example

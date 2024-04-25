@@ -12,12 +12,17 @@ using CSV
 using RateTables
 
 include("fetch_datasets.jl")
-include("Surv.jl")
-include("nonparamfit.jl")
+include("Surv_and_Strata.jl")
+
+include("NPNSEstimator.jl")
 include("PoharPerme.jl")
+include("EdererI.jl")
+include("EdererII.jl")
+include("Hakulinen.jl")
+
 include("GraffeoTest.jl")
 
-export PoharPerme
+export PoharPerme, EdererI, EdererII, Hakulinen
 export fit, confint
 export GraffeoTest
 export Surv, Strata
