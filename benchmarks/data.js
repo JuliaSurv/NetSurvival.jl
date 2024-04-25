@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713971789387,
+  "lastUpdate": 1714039975605,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -336,6 +336,48 @@ window.BENCHMARK_DATA = {
             "value": 234640136,
             "unit": "ns",
             "extra": "gctime=0\nmemory=11565600\nallocs=54071\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "113822034+rimhajal@users.noreply.github.com",
+            "name": "rimhajal",
+            "username": "rimhajal"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6d3d3400bdafbaa9ae779af9b677da18a4c7b309",
+          "message": "adding non param methods (#25)\n\n* this is wrong\r\n\r\n* matches with R output\r\n\r\n* ederer1\r\n\r\n* ederer1 bon\r\n\r\n* hakulinen\r\n\r\n* edererII\r\n\r\n* which is cleaner in your opinion?\r\n\r\n* test (hakulinen fails)\r\n\r\n* problem with hakulinen\r\n\r\n* Make a common type to increase code reuse\r\n\r\n* Try to fix code instability\r\n\r\n* adding entries to the docs\r\n\r\n* fix ABGK ref\r\n\r\n---------\r\n\r\nCo-authored-by: Oskar Laverny <oskar.laverny@univ-amu.fr>",
+          "timestamp": "2024-04-25T12:11:25+02:00",
+          "tree_id": "09df8a2fb51dfa9439512664a1db96c07205604d",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/6d3d3400bdafbaa9ae779af9b677da18a4c7b309"
+        },
+        "date": 1714039974407,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 226318689,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4345472\nallocs=53859\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 128477075.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4144664\nallocs=53463\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 229676463,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
         ]
       }
