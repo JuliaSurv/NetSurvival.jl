@@ -1,9 +1,3 @@
-function mk_grid(times,prec)
-    M = maximum(times)+1
-    return unique(sort([(1:prec:M)..., times..., M]))
-end
-
-
 abstract type NonParametricEstimator <: StatisticalModel end # maybe this one is superfluous now. 
 
 
@@ -21,6 +15,10 @@ struct NPNSEstimator{Method} <: NonParametricEstimator
     end
 end
 
+function mk_grid(times,prec)
+    M = maximum(times)+1
+    return unique(sort([(1:prec:M)..., times..., M]))
+end
 function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M
     num_excess   = zero(grid)
     num_pop      = zero(grid)
@@ -41,17 +39,24 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
         throw(ArgumentError("Missing columns in data: $missing_columns"))
     end
 
-    formula = apply_schema(formula,schema(df))
-    pred_names = StatsModels.termvars(formula)
+    formula_applied = apply_schema(formula,schema(df))
 
-    if nrow(unique(df[!,String.(pred_names)])) == 0 
-        resp = modelcols(formula.lhs, df)
+    if isa(formula.rhs, ConstantTerm)
+        # then there is no predictors.
+        resp = modelcols(formula_applied.lhs, df)
         return E(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
     else
+        nms = StatsModels.termnames(formula.rhs)
+        if isa(nms, String)
+            pred_names = [nms]
+        else
+            pred_names = nms
+        end
+
         new_df = groupby(df, pred_names)
         pp = Vector{E}()
-        for i in 1:nrow(unique(df[!,String.(pred_names)]))      
-            resp2 = modelcols(formula.lhs, new_df[i])
+        for i in 1:nrow(unique(df[!,pred_names]))
+            resp2 = modelcols(formula_applied.lhs, new_df[i])
             push!(pp,E(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
             return pp
         end

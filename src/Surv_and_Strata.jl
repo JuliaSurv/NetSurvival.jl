@@ -6,12 +6,16 @@
 struct SurvTerm{X, Y} <: AbstractTerm
     T::X
     Δ::Y
+    function SurvTerm(T,Δ)
+        return new{typeof(T),typeof(Δ)}(T, Δ)
+    end
 end
 # Base.show(io::IO, t::Surv) = print(io, string(t.T,  t.Δ == 1 ? "+" : ""))
 Base.show(io::IO, t::SurvTerm) = print(io, "Surv($((t.T, t.Δ)))")
 
-Surv(T::Symbol, Δ::Symbol) = SurvTerm(term(T), term(Δ))
-Surv(T::Float64,Δ::Bool) = (T,Δ)
+
+# Surv(T::Symbol, Δ::Symbol) = SurvTerm(term(T), term(Δ))
+Surv(T::Float64, Δ::Bool) = (T, Δ)
 
 Strata(x) = x
 struct StrataTerm{X} <: AbstractTerm
@@ -22,6 +26,7 @@ Base.show(io::IO, t::StrataTerm) = print(io, "Strata($((t.Covariable)))")
 Strata(Covariables::Vector) = StrataTerm(term(Covariables))
 
 StatsModels.termvars(p::StrataTerm) = StatsModels.termvars(p.Covariable)
+
 
 function StatsModels.apply_schema(t::FunctionTerm{typeof(Surv)},
     sch::StatsModels.Schema,
@@ -35,9 +40,9 @@ function StatsModels.apply_schema(t::FunctionTerm{typeof(Strata)},
     return apply_schema(StrataTerm(t.args...), sch, Mod) 
 end
 
-function StatsModels.apply_schema(t::SurvTerm,
+function StatsModels.apply_schema(t::SurvTerm{X,Y},
     sch::StatsModels.Schema,
-    Mod::Type{<:Any})
+    Mod::Type{<:Any}) where {X,Y}
     T = apply_schema(t.T, sch, Mod)
     Δ = apply_schema(t.Δ, sch, Mod)
     isa(T, ContinuousTerm) || throw(ArgumentError("Surv only works with continuous terms (got $T)"))
