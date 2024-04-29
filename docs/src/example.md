@@ -2,7 +2,10 @@
 
 ## Data 
 
-For standard relative survival analysis, it is required to have two different datasets: the cohort we wish to study and the population mortality table. In this practice, we will be re-using the dataset in [Getting Started](getting_started.md), `colrec`, as well as the same mortality table, `slopop`.
+We will illustrate with an example using the dataset `colrec`, which comprises $5971$ patients diagnosed with colon or rectal cancer  between 1994 and 2000. This dataset is sourced from the Slovenia cancer registry. Given the high probability that the patients are Slovenian, we will be using the Slovenian mortality table `slopop` as reference for the populational rates. Subsequently, we can apply various non-parametric estimators for net survival analysis.
+
+!!! note "N.B." 
+    Mortality tables may vary in structure, with options such as the addition or removal of specific covariates. To confirm that the mortality table is in the correct format, please refer to the documentation of `RateTables.jl`, or directly extract it from there.
 
 ### Cohort
 
@@ -67,7 +70,7 @@ We will be using the mortality table `slopop` taken from the `RateTables.jl` pac
 slopop
 ``` 
 
-This command allows us to check what other covariates the mortality table has besides `age` and `year`, both expressed in days and not years. The ratetable is then three dimensional, with the covariate `sex` added. For example, the daily hazard rate for a woman turning $45$ on the January 1st $2006$ can be accessed through the following command:
+By examining `slopop`, we notice it contains information regarding `age` and `year`, as expected for mortality tables. Additionally, it incorporates the covariate sex, which has two possible entries (`:male` or `:female`). The ratetable is then three dimensional, with the covariate `sex` added. For example, the daily hazard rate for a woman turning $45$ on the January 1st $2006$ can be accessed through the following command:
 
 ```@example 2
 daily_hazard(slopop, 45*365.241, 2006*365.241; sex=:female)
