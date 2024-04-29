@@ -62,7 +62,7 @@ Out of the $5971$ patients, $4979$ have died. This is a very high mortality rate
 
 In other terms, the censorship rate is of 16.6%, meaning the event, in this case death, was not observed for only 16.6% of the patients. This is a low censorship rate and thus the quality of the signal will be pretty good. 
 
-### Mortalility table
+### Mortality table
 
 We will be using the mortality table `slopop` taken from the `RateTables.jl` package as the study is done on Slovenian patients. 
 
