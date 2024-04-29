@@ -1,8 +1,10 @@
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DocumenterCitations = "daee34ce-89f3-4625-b898-19384cb65244"
 LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
 NetSurvival = "8f9d5d0e-dd2e-4568-92d4-f8c5d34f25cf"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
 RateTables = "d40fb65e-c2ee-4113-9e14-cb96ca0acb32"

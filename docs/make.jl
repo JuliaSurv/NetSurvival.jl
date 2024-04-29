@@ -24,7 +24,8 @@ makedocs(;
         "theory.md",
         "getting_started.md",
         "benches.md",
-        "references.md",
+        "example.md",
+        "references.md"
     ],
 )
 

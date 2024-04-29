@@ -22,10 +22,20 @@ We will illustrate with an example using the dataset `colrec`, which comprises $
 
 By examining `slopop`, we notice it contains information regarding `age` and `year`, as expected for mortality tables. Additionally, it incorporates the covariate sex, which has two possible entries (`:male` or `:female`).
 
-**Pohar Perme**
+**EdererI**
 ```@example 1
 using NetSurvival, RateTables
-pp1 = fit(PoharPerme, @formula(Surv(time,status)~1), colrec, slopop)
+e1 = fit(EdererI, @formula(Surv(time,status)~1), colrec, slopop)
+```
+
+**EdererII**
+```@example 1
+e2 = fit(EdererII, @formula(Surv(time,status)~1), colrec, slopop)
+```
+
+**Pohar Perme**
+```@example 1
+pp = fit(PoharPerme, @formula(Surv(time,status)~1), colrec, slopop)
 ```
 
 ## Applying the Grafféo log-rank test
@@ -51,5 +61,5 @@ test2 = fit(GraffeoTest, @formula(Surv(time,status)~sex), colrec, slopop)
 For the `sex` variable, we notice that the p-value is above $0.05$ indicating that there isn't a difference between male and female patients.
 
 ```@example 1
-test4 = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, slopop)
+test3 = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, slopop)
 ```
