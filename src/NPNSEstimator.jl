@@ -58,8 +58,8 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
         for i in 1:nrow(unique(df[!,pred_names]))
             resp2 = modelcols(formula_applied.lhs, new_df[i])
             push!(pp,E(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-            return pp
         end
+        return pp
     end
 end
 
