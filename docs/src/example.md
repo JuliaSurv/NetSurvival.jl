@@ -44,7 +44,7 @@ Let's take a look at the `sex` variable now:
 combine(groupby(colrec, :sex), nrow)
 ```
 
-This dataframe shows as the number of male and female patients. There isn't too big of a difference between the two. We can say this study includes both gender relatively equally, thus, reducing bias. 
+This dataframe shows the number of male and female patients. There isn't too big of a difference between the two. We can say this study includes both gender relatively equally, thus, reducing bias. 
 
 With these two observations, it is also worth noting that colorectal cancer is most common with men and people older than 50.
 
@@ -60,7 +60,7 @@ Out of the $5971$ patients, $4979$ have died. This is a very high mortality rate
 (nrow(colrec) - sum(colrec.status)) / nrow(colrec)
 ```
 
-In other terms, the censorship rate is of 16.6%, meaning the event, in this case death, was not observed for only 16.6% of the patients.
+In other terms, the censorship rate is of 16.6%, meaning the event, in this case death, was not observed for only 16.6% of the patients. This is a low censorship rate and thus the quality of the signal will be pretty good. 
 
 ### Mortalility table
 
