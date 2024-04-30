@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714391600038,
+  "lastUpdate": 1714468763022,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -418,6 +418,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "GraffeoTest/colrec x slopop - explicit",
             "value": 228027962,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "oskar.laverny@univ-amu.fr",
+            "name": "Oskar Laverny",
+            "username": "lrnv"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "df8b890b542c2fa84d6c0ac51a1078d7fb444f7b",
+          "message": "[CI] Fix R issues (#33)\n\n* upgraidng R version\r\n\r\n* invalidate cache\r\n\r\n* try another way\r\n\r\n* up\r\n\r\n* back to previous installation method (with cache) but with rc pak version\r\n\r\n* move to 4.2.3\r\n\r\n* up to 4.2.3 again\r\n\r\n* try to add matrix to the list\r\n\r\n* remove force uncompile\r\n\r\n* install only relsurv\r\n\r\n* try R 4.4\r\n\r\n* move to stbale pak\r\n\r\n* up version everywhere\r\n\r\n* forbid installation of uncompiled packages.\r\n\r\n* move compile and instlal packages around\r\n\r\n* rm r comile",
+          "timestamp": "2024-04-30T11:15:42+02:00",
+          "tree_id": "e87983db98db4554d363a662bc7118ad4f746f7e",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/df8b890b542c2fa84d6c0ac51a1078d7fb444f7b"
+        },
+        "date": 1714468761516,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 226212597,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4345472\nallocs=53859\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 246872409.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7564472\nallocs=101207\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 229611258,
             "unit": "ns",
             "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
