@@ -98,3 +98,8 @@ GraffeoTest
 ```
 
 ## References
+
+```@bibliography
+Pages = ["getting_started.md"]
+Canonical = false
+```
