@@ -40,7 +40,6 @@ jobs:
       - name: Install R packages survival & relsurv
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          pak-version: rc
           packages: |
             any::relsurv
       - uses: julia-actions/setup-julia@v2
@@ -71,7 +70,6 @@ jobs:
       - name: Install R packages survival & relsurv
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          pak-version: rc
           packages: |
             any::relsurv
       - uses: julia-actions/setup-julia@v2
