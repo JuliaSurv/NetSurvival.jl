@@ -43,6 +43,7 @@ jobs:
         with:
           pak-version: rc
           packages: |
+            any::Matrix
             any::survival
             any::relsurv
       - uses: julia-actions/setup-julia@v2
@@ -75,6 +76,7 @@ jobs:
         with:
           pak-version: rc
           packages: |
+            any::Matrix
             any::survival
             any::relsurv
       - uses: julia-actions/setup-julia@v2
