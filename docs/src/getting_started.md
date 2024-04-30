@@ -57,9 +57,6 @@ where, in the variances, it is understood that when no more individuals are at r
 The Pohar Perme estimator [PoharPerme2012](@cite) is the newest addition to relative survival analysis between the four methods, particularly designed to handle situations where covariates may change over time. It is trusted from the field (see e.g. [PermePavlik2018](@cite) and [CharvatBelot2021](@cite)) that only this estimator should really be used, the other ones being included mostly for historical reasons and comparisons. 
 
 
-### Estimator's doctrings
-
-
 ```@docs
 PoharPerme
 EdererI
@@ -95,11 +92,6 @@ where the entries of the $\hat{\Sigma}_Z$ matrix are given by:
 $$\sigma_{g,h}(T) = \int_0^T \sum_{\ell \in G} \left(\delta_{g,\ell} - R_g(t) \right)\left(\delta_{h,\ell} - R_h(t)\right) \left(\sum_{i\in\ell} \frac{\partial N_i(s)}{S^2_{P_i}}\right)$$
 
 Under $H_0$, the statistic $U(T)$ is asymptotically $\chi^2(k-1)$-distributed. We thus reject the $H_0$ hypothesis when the p-value obtained is under $0.05$, admitting the notable difference between the groups. 
-
-
-
-
-### Grafféo log-rank test's docstring
 
 ```@docs
 GraffeoTest
