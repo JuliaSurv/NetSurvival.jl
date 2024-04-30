@@ -213,10 +213,3 @@ plot(plot1, plot2, layout = (1, 2))
 ```
 
 Visually, it is almost immediately understood that there are no worthy differences between the two sexes whereas the `age65` variable seems to play a big role.
-
-## References
-
-```@bibliography
-Pages = ["example.md"]
-Canonical = false
-```
