@@ -1,13 +1,13 @@
-# Practice
+# Case study
 
-## Data 
+## Introduction and datasets
 
-We will illustrate with an example using the dataset `colrec`, which comprises $5971$ patients diagnosed with colon or rectal cancer  between 1994 and 2000. This dataset is sourced from the Slovenia cancer registry. Given the high probability that the patients are Slovenian, we will be using the Slovenian mortality table `slopop` as reference for the populational rates. Subsequently, we can apply various non-parametric estimators for net survival analysis.
+We will illustrate with an example using the dataset `colrec`, which comprises $5971$ patients diagnosed with colon or rectal cancer  between $1994$ and $2000$. This dataset is sourced from the Slovenia cancer registry. Given the high probability that the patients are Slovenian, we will be using the Slovenian mortality table `slopop` as reference for the populational rates. Subsequently, we can apply various non-parametric estimators for net survival analysis.
 
 !!! note "N.B." 
-    Mortality tables may vary in structure, with options such as the addition or removal of specific covariates. To confirm that the mortality table is in the correct format, please refer to the documentation of `RateTables.jl`, or directly extract it from there.
+    Mortality tables may vary in structure, with options such as the addition or removal of specific covariates. To confirm that the mortality table is in the correct format, please refer to [`RateTables.jl`'s documentation](https://JuliaSurv.github.io/RateTables.jl/), or directly extract it from there.
 
-### Cohort
+### Cohort details
 
 The patients in the study are diagnosed between January 1st 1994 and December 31st 2000. Before we move on to the survival probabilities, it is important to be aware of how your data is distributed and of what it comprises. 
 

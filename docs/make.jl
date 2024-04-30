@@ -21,11 +21,10 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
-        "theory.md",
         "getting_started.md",
-        "benches.md",
         "example.md",
-        "references.md"
+        "benches.md",
+        "references.md",
     ],
 )
 
