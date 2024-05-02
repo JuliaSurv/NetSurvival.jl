@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714468763022,
+  "lastUpdate": 1714643326574,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -460,6 +460,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "GraffeoTest/colrec x slopop - explicit",
             "value": 229611258,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "113822034+rimhajal@users.noreply.github.com",
+            "name": "rimhajal",
+            "username": "rimhajal"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "67868df13056f90ed6559ecf5ab644db8bd616a3",
+          "message": "Maja's example (#32)\n\n* example maja\r\n\r\n* survival km\r\n\r\n* docs\r\n\r\n* few typos\r\n\r\n* typo\r\n\r\n* moving stuff around\r\n\r\n* do not repeat yourself in Grafféo's docstring\r\n\r\n* changed my mind\r\n\r\n* restoring bilbiography\r\n\r\n* oops\r\n\r\n* readme\r\n\r\n* wrong interpretation\r\n\r\n* link+version\r\n\r\n---------\r\n\r\nCo-authored-by: Oskar Laverny <oskar.laverny@univ-amu.fr>",
+          "timestamp": "2024-05-02T11:44:51+02:00",
+          "tree_id": "63cf7b3538dbc48f1345670623536f17928ca5e2",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/67868df13056f90ed6559ecf5ab644db8bd616a3"
+        },
+        "date": 1714643325580,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 226326234,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4345472\nallocs=53859\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 246179860.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7564472\nallocs=101207\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 232578157,
             "unit": "ns",
             "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
