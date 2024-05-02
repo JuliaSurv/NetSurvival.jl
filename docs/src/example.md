@@ -154,7 +154,7 @@ When comparing at time $1826$, we notice that the survival probability is slight
 test_sex = fit(GraffeoTest, @formula(Surv(time5,status5)~sex), colrec, slopop)
 ```
 
-The p-value is indeed above $0.05$. We reject the null hypothesis $H_0$ and dismiss the differences between the two sexes.
+The p-value is indeed above $0.05$. We cannot reject the null hypothesis $H_0$ and thus we dismiss the differences between the two sexes.
 
 As for the age, we will define two different groups: individuals aged 65 and above and those who are not.
 
@@ -179,7 +179,7 @@ When applying the Grafféo test, we get the results below:
 test_age65 = fit(GraffeoTest, @formula(Surv(time5,status5)~age65), colrec, slopop)
 ```
 
-The p-value is well under $0.05$, meaning we accept the $H_0$ hypothesis and admit there are differences between the individuals aged 65 and above and the others.
+The p-value is well under $0.05$, meaning we reject the $H_0$ hypothesis and must admit there are differences between the individuals aged 65 and above and the others.
 
 When plotting both we get:
 
