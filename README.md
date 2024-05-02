@@ -34,5 +34,5 @@ using Pkg
 Pkg.add("https://github.com/JuliaSurv/NetSurvival.jl.git")
 ```
 
-See the rest of this documentation to have a glimpse of the functionalities!
+See the rest of this [documentation](https://juliasurv.github.io/NetSurvival.jl/dev/) to have a glimpse of the functionalities!
 
