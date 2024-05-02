@@ -114,13 +114,13 @@ Now that we have defined our own time and status variables according to the obse
 e1 = fit(EdererI, @formula(Surv(time5,status5)~1), colrec, slopop)
 ```
 
-With the EdererI method, and at time $1826$ days, we can say that the survival rate at this mark is around $0.456$ with only $0.017$% of patients dying from causes other than colorectal cancer.
+With the EdererI method, and at time $1826$ days, we can say that the survival rate at this mark is around $0.456$, in the hypothetical world where patients can only die of cancer.
 
 ```@example 2
 e2 = fit(EdererII, @formula(Surv(time5,status5)~1), colrec, slopop)
 ```
 
-The EdererII method, also known as the conditional method, shows that at the $5$ year mark, the survival probability is of $0.44$ with the same rate of patients from other causes. 
+Similarily, the EdererII method, also known as the conditional method, shows that at the $5$ year mark, the survival probability is of $0.44$ in this hypothetical world. 
 
 ```@example 2
 pp = fit(PoharPerme, @formula(Surv(time5,status5)~1), colrec, slopop)
