@@ -42,19 +42,6 @@ end
     @test true
 end
 
-@testitem "crude mortality interface" begin
-    
-    ################################
-    # Run code: test. 
-    using DataFrames
-    using RateTables
-
-    colrec.country = rand(keys(hmd_countries),nrow(colrec))
-    fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, frpop)
-
-    @test true
-end
-
 
 @testitem "Comparing PoharPerme with R" begin
     
@@ -253,4 +240,44 @@ end
 
 end
 
+@testitem "crude mortality interface" begin
+    
+    ################################
+    # Run code: test. 
+    using DataFrames
+    using RateTables
+
+    colrec.country = rand(keys(hmd_countries),nrow(colrec))
+    fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, slopop)
+
+    @test true
+end
+
+@testitem "comparing crude mortality" begin
+    
+    ################################
+    # Run code: test. 
+    using DataFrames
+    using RateTables
+
+    colrec.country = rand(keys(hmd_countries),nrow(colrec))
+    instance = fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, slopop)
+
+    # R version
+    using RCall
+    using RateTables
+    R"""
+    rez = relsurv::cmp.rel(survival::Surv(time, stat) ~ 1, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
+    """
+    R_model = @rget rez
+    R_grid = R_model[:causeSpec][:time]
+    R_causeSpec = R_model[:causeSpec][:est]
+    R_population = R_model[:population][:est]
+
+    err_causeSpec = (R_causeSpec[2:end, :] .- instance.Λₑ[2:end, :]) ./ R_causeSpec[2:end, :]
+    err_pop = (R_population[2:end, :] .- instance.Λₚ[2:end, :]) ./ R_population[2:end, :]
+
+    @test all(abs.(err_causeSpec) .<= 0.01)
+    @test all(abs.(err_pop) .<= 0.01)
+end
 
