@@ -44,6 +44,8 @@ If you wish to stratify a covariate:
 
     fit(GraffeoTest, @formula(Surv(time,status)~covariable1 + Strata(covariable2)), data, ratetable)
 
+The produced test statistics is supposed to follow a chi squared distribution under ``(H_0)``. You can fetch the results using the `.stat`, `.df` and `.pval` fields of the returned object. 
+
 References: 
 * [Graffeo2016](@cite) Grafféo, Nathalie and Castell, Fabienne and Belot, Aurélien and Giorgi, Roch (2016). A Log-Rank-Type Test to Compare Net Survival Distributions.  
 """
