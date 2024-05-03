@@ -16,7 +16,6 @@ Note first that, for any positive random variable $X$, we will use extensively t
 | ``\Lambda_X(t) = -\ln S_X(t)`` | Cumulative Hazard function |
 | ``\lambda_X(t) = \partial \lambda_X(t)`` | Instantaneous hazard function |
 
-
 Consider a study that consists of censored survival times from a specific cause. Such a study consists of several random objects: 
 
 | Random variable    | Name         | Is it observed ?     |
@@ -35,7 +34,26 @@ One central hypothesis in net survival (on top of non-informative censoring) is 
 
 The population hazard for each individual $\lambda_{P_i}$ is usally drawn from a reference life table, and may depend on covariates $\mathbf D_i$ such as age and date, sex, country, race, etc... See the [RateTables.jl](https://github.com/JuliaSurv/RateTables.jl) package for more details on the potential covariates. On the other hand, the excess mortality is assumed to be i.i.d. between individuals and not to depend on covariates at all. Thus, we mostly omit these covariates from our notations.
 
-The estimation of net survival is usually discussed in terms of the estimation of the cumulative excess hazard $\Lambda_E(t)$ and/or the instantaneous hazard $\lambda_E = \partial\Lambda_E$. To describe the estimators, we use the following counting processes notations, similar to standard survival analysis(see e.g. [FlemingHarington2013](@cite) or [ABGK1993](@cite)). 
+## Crude Mortality
+
+The crude mortality rate is the mortality rate from all causes of death for a population. The measure does not use the cause of death information, as we previously mentioned that it can be unreliable and incomplete. Thus, we wish to estimate:
+
+$$F_C(t) = \int_0^t S_O(u-) \lambda_E(u)du$$
+
+We use Kaplan-Meier to estimate the overall survival function $\hat{S}_O$.
+As for the estimation of the hazard rates, we use:
+
+* ``\hat{\lambda}_O(t)dt = \frac{dN(t)}{Y(t)}``
+* ``\hat{\lambda}_P(t)dt = \frac{\sum_i^n Y_i(t)\lambda_{P_i}(t)dt}{Y(t)}``
+* ``\hat{\lambda}_E(t)dt = \hat{\lambda}_O(t)dt - \hat{\lambda}_P(t)dt``
+
+Then, given the continuous version of Cronin-Feuer [cronin2000cumulative](@cite), it is estimated by:
+
+$$\hat{F}_C(t) = \int_0^t \hat{S}_O(u-) \hat{\lambda}_E(u)du$$
+
+## Non Parametric Estimators
+
+The estimation of net survival is usually discussed in terms of the estimation of the cumulative excess hazard $\Lambda_E(t)$ and/or the instantaneous hazard $\lambda_E = \partial\Lambda_E$. To describe the estimators, we use the following counting processes notations, similar to standard survival analysis (see e.g. [FlemingHarington2013](@cite) or [ABGK1993](@cite)). 
 * The uncensored event indicatrix $\partial N_i(t)$ for individual $i$ at time $t$ 
 * The total number of uncensored events process $\partial N(t) = \sum_i \partial N_i(t)$ at time $t$
 * The at-risk indicatrix $Y_i(t)$, for whether an individual is still at risk 
