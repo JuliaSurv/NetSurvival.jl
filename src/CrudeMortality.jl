@@ -3,6 +3,18 @@ struct CrudeMortality
     Λₚ::Vector{Float64}
 end
 
+"""
+    CrudeMortality
+
+This method applies the Cronin-Feuer estimator for the crude mortality and presents both the excess mortality and population mortality rates.
+
+To fit the Cronin-Feuer estimator to your data based on a certain rate table, apply the example below to your code : 
+
+    fit(CrudeMortality, @formula(Surv(time,status)~1), data, ratetable)
+
+References: 
+* [cronin2000cumulative](@cite) Cronin, Kathleen A and Feuer, Eric J (2000). Cumulative cause-specific mortality for cancer patients in the presence of other causes: a crude analogue of relative survival.
+"""
 function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E <: CrudeMortality}
     formula_applied = apply_schema(formula,schema(df))
     resp = modelcols(formula_applied.lhs, df)
@@ -18,8 +30,8 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
 
     Λ!(EdererIIMethod, num_excess, den_excess, num_pop, den_pop, num_variance, resp[:,1], resp[:,2], df.age, df.year, rate_preds, rt, grid)
     
-    ∂λₒ = num_excess ./ den_excess
-    Sₒ = cumprod(1 .- ∂λₒ)
+    ∂Λₒ = num_excess ./ den_excess
+    Sₒ = cumprod(1 .- ∂Λₒ)
 
     causeSpec = zero(grid)
     population = zero(grid)

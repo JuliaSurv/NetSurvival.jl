@@ -52,6 +52,10 @@ Then, given the continuous version of Cronin-Feuer [cronin2000cumulative](@cite)
 
 $$\hat{F}_C(t) = \int_0^t \hat{S}_O(u-) \hat{\lambda}_E(u)du$$
 
+```@docs
+CrudeMortality
+```
+
 ## Available Estimators
 
 The estimation of net survival is usually discussed in terms of the estimation of the cumulative excess hazard $\Lambda_E(t)$ and/or the instantaneous hazard $\lambda_E = \partial\Lambda_E$. To describe the estimators, we use the following counting processes notations, similar to standard survival analysis(see e.g. [FlemingHarington2013](@cite) or [ABGK1993](@cite)). 
