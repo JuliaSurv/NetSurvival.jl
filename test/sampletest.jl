@@ -262,7 +262,7 @@ end
 
     colrec.country = rand(keys(hmd_countries),nrow(colrec))
     eII = fit(EdererII, @formula(Surv(time, status)~1), colrec, slopop)
-    instance = CrudeMortality(eII, colrec)
+    instance = CrudeMortality(eII)
 
     # R version
     using RCall
