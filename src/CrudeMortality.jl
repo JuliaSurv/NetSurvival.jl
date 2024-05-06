@@ -9,41 +9,32 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
 
     rate_preds = select(df, String.([RateTables.predictors(rt)...]))
 
-    eII = NPNSEstimator{EdererIIMethod}(resp[:,1], resp[:,2], df.age, df.year, rate_preds, rt)
-    num_excess      = zero(eII.grid)
-    den_excess      = zero(eII.grid)
-    Sₑ = 0.0
-    Sₚ = 0.0 
+    grid            = mk_grid(resp[:,1],1)
+    num_pop         = zero(grid)
+    den_pop         = zero(grid)
+    num_excess      = zero(grid)
+    den_excess      = zero(grid)
+    num_variance    = zero(grid)
 
-    for i in 1:nrow(df)
-        Tᵢ = searchsortedlast(eII.grid, resp[:,1][i])
-        for j in 1:Tᵢ
-            den_excess[j] += 1
-        end
-        num_excess[Tᵢ] += resp[:,2][i]
-    end
-
+    Λ!(EdererIIMethod, num_excess, den_excess, num_pop, den_pop, num_variance, resp[:,1], resp[:,2], df.age, df.year, rate_preds, rt, grid)
+    
     ∂λₒ = num_excess ./ den_excess
     Sₒ = cumprod(1 .- ∂λₒ)
 
-    causeSpec = zero(eII.grid)
-    population = zero(eII.grid)
-    num_pop = zero(eII.grid)
-    den_pop = zero(eII.grid)
+    causeSpec = zero(grid)
+    population = zero(grid)
 
     for i in 1:nrow(df)
-        Tᵢ = searchsortedlast(eII.grid, resp[:,1][i])
-        Λₚ = 0.0
+        Tᵢ = searchsortedlast(grid, resp[:,1][i])
         Λₑ = 0.0
-        rtᵢ = rt[rate_preds[i,:]...]
+        ∂λₚ = 0.0
+
         for j in 1:Tᵢ
-            λₚ          = daily_hazard(rtᵢ, df.age[i] + eII.grid[j], df.year[i] + eII.grid[j])
-            ∂Λₚ         = λₚ * (eII.grid[j+1]-eII.grid[j])
-            den_pop[j] += 1
-            num_pop[j] += ∂Λₚ
-            Λₑ        += eII.∂Λₑ[j] * Sₒ[j]
+            ∂λₑ = (num_excess[j] ./ den_excess[j]) .- (num_pop[j] ./ den_pop[j])
+            Λₑ        += ∂λₑ * Sₒ[j]
             causeSpec[j] = Λₑ
-            population[j] += (num_pop[j]/den_pop[j]) * Sₒ[j]
+            ∂λₚ = num_pop[j] / den_pop[j]
+            population[j+1] = population[j] + ∂λₚ * Sₒ[j]
         end
     end
 
