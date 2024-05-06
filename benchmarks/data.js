@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714718020743,
+  "lastUpdate": 1715001060081,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -544,6 +544,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "GraffeoTest/colrec x slopop - explicit",
             "value": 228489180,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "113822034+rimhajal@users.noreply.github.com",
+            "name": "rimhajal",
+            "username": "rimhajal"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b84d7894ab4fadf81a05230702063b3e4264c72",
+          "message": "CrudeMortality (#35)\n\n* very messy, half works\r\n\r\n* better results for pop, needs cleaning\r\n\r\n* test\r\n\r\n* [docs] typo (#37)\r\n\r\n* theory\r\n\r\n* Revert \"theory\"\r\n\r\nThis reverts commit 38b7e3880299f7787dc6b8a119c4c93db863ccf4.\r\n\r\n* very messy, half works\r\n\r\n* better results for pop, needs cleaning\r\n\r\n* commit message\r\n\r\ntest\r\n\r\ntheory\r\n\r\nRevert \"theory\"\r\n\r\nThis reverts commit 38b7e3880299f7787dc6b8a119c4c93db863ccf4.\r\n\r\n* theory\r\n\r\n* like this?\r\n\r\n* unsure how to get rid of df as an arg\r\n\r\n* maybe?\r\n\r\n* right formula\r\n\r\n* bit cleaner type inference\r\n\r\n* docs\r\n\r\n---------\r\n\r\nCo-authored-by: Oskar Laverny <oskar.laverny@univ-amu.fr>",
+          "timestamp": "2024-05-06T15:08:33+02:00",
+          "tree_id": "7424ebe45bcc0a0d30ac36e3a43c7f2de3785750",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/6b84d7894ab4fadf81a05230702063b3e4264c72"
+        },
+        "date": 1715001057934,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 224447653.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4476016\nallocs=53863\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 245005562.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7825560\nallocs=101215\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 228466459,
             "unit": "ns",
             "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
