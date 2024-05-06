@@ -32,8 +32,8 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
         for j in 1:Tᵢ
             ∂λₑ = (num_excess[j] ./ den_excess[j]) .- (num_pop[j] ./ den_pop[j])
             Λₑ        += ∂λₑ * Sₒ[j]
-            causeSpec[j] = Λₑ
             ∂λₚ = num_pop[j] / den_pop[j]
+            causeSpec[j+1] = Λₑ
             population[j+1] = population[j] + ∂λₚ * Sₒ[j]
         end
     end
