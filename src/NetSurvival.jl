@@ -20,9 +20,12 @@ include("EdererI.jl")
 include("EdererII.jl")
 include("Hakulinen.jl")
 
+include("CrudeMortality.jl")
+
 include("GraffeoTest.jl")
 
 export PoharPerme, EdererI, EdererII, Hakulinen
+export CrudeMortality
 export fit, confint
 export GraffeoTest
 export Surv, Strata

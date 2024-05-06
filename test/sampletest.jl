@@ -40,8 +40,19 @@ end
     fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
 
     @test true
+end
 
-    # How to use R and R packages in here ? 
+@testitem "crude mortality interface" begin
+    
+    ################################
+    # Run code: test. 
+    using DataFrames
+    using RateTables
+
+    colrec.country = rand(keys(hmd_countries),nrow(colrec))
+    fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, frpop)
+
+    @test true
 end
 
 
