@@ -16,7 +16,7 @@ struct CrudeMortality
     Λₒ::Vector{Float64}
     Λₑ::Vector{Float64}
     Λₚ::Vector{Float64}
-    function CrudeMortality(npe::Method) where Method        
+    function CrudeMortality(npe::NPNSEstimator{Method}) where Method
         Sₒ = cumprod(1 .- npe.∂Λₒ)
         Λₑ = [0.0, cumsum(npe.∂Λₑ .* Sₒ)[1:end-1]...]
         Λₚ = [0.0, cumsum(npe.∂Λₚ .* Sₒ)[1:end-1]...]
