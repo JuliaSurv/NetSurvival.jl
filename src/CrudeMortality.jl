@@ -3,7 +3,7 @@
 
 This method calculates the crude mortality and presents both the excess mortality and population mortality rates.
 
-The default Cronin-Feuer estimator can be fitted to data with the folloiwng interface: 
+The default Cronin-Feuer estimator can be fitted to data with the following interface: 
 
     fit(CrudeMortality, args...)
 
