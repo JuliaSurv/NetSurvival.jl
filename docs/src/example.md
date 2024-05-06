@@ -118,7 +118,7 @@ With the EdererI method, after $1826$ days have passed, we can say that the surv
 
 ```@example 2
 crude_e1 = CrudeMortality(e1)
-println(e1.Λₒ[1826], e1.Λₑ[1826], e1.Λₚ[1826])
+println(crude_e1.Λₒ[1826], crude_e1.Λₑ[1826], crude_e1.Λₚ[1826])
 ```
 
 Out of the 0.63 patients that have died, according to the EdererI method, 0.51 died because of colorectal cancer and 0.12 died of other causes.
@@ -132,7 +132,7 @@ Similarily, the EdererII method, also known as the conditional method, shows tha
 
 ```@example 2
 crude_e2 = CrudeMortality(e2)
-println(e2.Λₒ[1826], e2.Λₑ[1826], e2.Λₚ[1826])
+println(crude_e2.Λₒ[1826], crude_e2.Λₑ[1826], crude_e2.Λₚ[1826])
 ```
 
 Here, out of the 0.63 patients that have dued, 0.53 are due to colorectal cancer and 0.1 due to other causes.
@@ -145,7 +145,7 @@ We conclude for the Poher-Perme method, that in a world where cancer patients co
 
 ```@example 2
 crude_pp = CrudeMortality(pp)
-println(pp.Λₒ[1826], pp.Λₑ[1826], pp.Λₚ[1826])
+println(crude_pp.Λₒ[1826], crude_pp.Λₑ[1826], crude_pp.Λₚ[1826])
 ```
 
 Finally, for this estimator, we have that of the 0.64 patients that have died, 0.53 is due to colorectal cancer while 0.11 is due to other causes.
