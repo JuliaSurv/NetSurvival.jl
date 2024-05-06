@@ -114,19 +114,41 @@ Now that we have defined our own time and status variables according to the obse
 e1 = fit(EdererI, @formula(Surv(time5,status5)~1), colrec, slopop)
 ```
 
-With the EdererI method, and at time $1826$ days, we can say that the survival rate at this mark is around $0.456$, in the hypothetical world where patients can only die of cancer.
+With the EdererI method, after $1826$ days have passed, we can say that the survival rate at this mark is around $0.456$, in the hypothetical world where patients can only die of cancer.
+
+```@example 2
+crude_e1 = CrudeMortality(e1)
+println(e1.Λₒ[1826], e1.Λₑ[1826], e1.Λₚ[1826])
+```
+
+Out of the 0.63 patients that have died, according to the EdererI method, 0.51 died because of colorectal cancer and 0.12 died of other causes.
+
 
 ```@example 2
 e2 = fit(EdererII, @formula(Surv(time5,status5)~1), colrec, slopop)
 ```
 
-Similarily, the EdererII method, also known as the conditional method, shows that at the $5$ year mark, the survival probability is of $0.44$ in this hypothetical world. 
+Similarily, the EdererII method, also known as the conditional method, shows that at the $5$ year mark, the survival probability is of $0.44$ in this hypothetical world.
+
+```@example 2
+crude_e2 = CrudeMortality(e2)
+println(e2.Λₒ[1826], e2.Λₑ[1826], e2.Λₚ[1826])
+```
+
+Here, out of the 0.63 patients that have dued, 0.53 are due to colorectal cancer and 0.1 due to other causes.
 
 ```@example 2
 pp = fit(PoharPerme, @formula(Surv(time5,status5)~1), colrec, slopop)
 ```
 
-We conclude, that in a world where cancer patients could only die due to cancer, only 41% of these patients would still be alive $5$ year after their diagnosis.
+We conclude for the Poher-Perme method, that in a world where cancer patients could only die due to cancer, only 41% of these patients would still be alive $5$ year after their diagnosis.
+
+```@example 2
+crude_pp = CrudeMortality(pp)
+println(pp.Λₒ[1826], pp.Λₑ[1826], pp.Λₚ[1826])
+```
+
+Finally, for this estimator, we have that of the 0.64 patients that have died, 0.53 is due to colorectal cancer while 0.11 is due to other causes.
 
 We will plot the Pohar Perme method only.
 
@@ -135,10 +157,15 @@ conf_int = confint(pp; level = 0.05)
 lower_bounds = [lower[1] for lower in conf_int]
 upper_bounds = [upper[2] for upper in conf_int] 
 
-plot(pp.grid, pp.Sₑ, ribbon=(pp.Sₑ - lower_bounds, upper_bounds - pp.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = false, title="Net survival distribution using Pohar Perme")
+p1 = plot(pp.grid, pp.Sₑ, ribbon=(pp.Sₑ - lower_bounds, upper_bounds - pp.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = false)
+
+p2 = plot(pp.grid, crude_pp.Λₑ, label = "Excess Mortality Rate")
+p2 = plot!(pp.grid, crude_pp.Λₚ, label = "Population Mortality Rate")
+
+plot(p1,p2)
 ```
 
-Looking at the rgaph, and its quick dip, it is evident that the first $5$ years are crucial and that the survival probability is highly affected in these years.
+Looking at the graph, and the rapid dip it takes, it is evident that the first $5$ years are crucial and that the survival probability is highly affected in these years. Additionnally, the crude mortality graph allows us to see how much of this curve is due to the colorectacl cancer studied versus other undefined causes. It is clear that the large majority is due to the cancer.
 
 ## Net survival with respect to covariates
 
