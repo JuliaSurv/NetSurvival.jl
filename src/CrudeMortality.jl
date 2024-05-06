@@ -26,7 +26,7 @@ struct CrudeMortality
         Sₒ = cumprod(1 .- npe.∂Λₒ)
         Λₑ = cumsum(npe.∂Λₑ .* Sₒ)
         Λₚ = cumsum(npe.∂Λₚ .* Sₒ)
-        return new(Λₑ .- Λₚ, Λₑ, Λₚ)
+        return new(Λₑ .+ Λₚ, Λₑ, Λₚ)
     end
 end
 
