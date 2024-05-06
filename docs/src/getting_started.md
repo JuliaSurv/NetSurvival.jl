@@ -41,17 +41,14 @@ The crude mortality rate is the mortality rate from all causes of death for a po
 
 $$F_C(t) = \int_0^t S_O(u-) \lambda_E(u)du$$
 
-We use Kaplan-Meier to estimate the overall survival function $\hat{S}_O$.
-As for the estimation of the hazard rates, we use: (similar to EdererII)
-
-* ``\hat{\lambda}_O(t)dt = \frac{dN(t)}{Y(t)}``
-* ``\hat{\lambda}_P(t)dt = \frac{\sum_i^n Y_i(t)\lambda_{P_i}(t)dt}{Y(t)}``
-* ``\hat{\lambda}_E(t)dt = \hat{\lambda}_O(t)dt - \hat{\lambda}_P(t)dt``
-
-Then, given the continuous version of Cronin-Feuer [cronin2000cumulative](@cite), it is estimated by:
+We use . Then, the Cronin-Feuer estimator [cronin2000cumulative](@cite) is:
 
 $$\hat{F}_C(t) = \int_0^t \hat{S}_O(u-) \hat{\lambda}_E(u)du$$
 
+where, traditionally, Kaplan-Meier is used to estimate the overall survival function $\hat{S}_O$ and Ederer II is used for the excess hazard rate $\hat{\lambda}_E$.
+
+Our implementation is a bit more permissive, as any net survival estimators can be used for $\hat{\lambda}_E$. Of course, the default is still the original Ederer II wich provides the original Cronin-Feuer estimator. 
+ 
 ```@docs
 CrudeMortality
 ```
