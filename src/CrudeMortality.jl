@@ -16,21 +16,10 @@ struct CrudeMortality
     Λₒ::Vector{Float64}
     Λₑ::Vector{Float64}
     Λₚ::Vector{Float64}
-    function CrudeMortality(npe::Method) where Method
-        Λₑ = zero(npe.grid)
-        Λₚ = zero(npe.grid)
-        
+    function CrudeMortality(npe::Method) where Method        
         Sₒ = cumprod(1 .- npe.∂Λₒ)
-
-        for i in eachindex(npe.T)
-            ∂Λₑ = 0.0 
-            Tᵢ = searchsortedlast(npe.grid, npe.T[i])
-            for j in 1:Tᵢ
-                ∂Λₑ += npe.∂Λₑ[j] * Sₒ[j]
-                Λₑ[j+1] = ∂Λₑ
-                Λₚ[j+1] = Λₚ[j] + npe.∂Λₚ[j]*Sₒ[j]
-            end
-        end
+        Λₑ = [0.0, cumsum(npe.∂Λₑ .* Sₒ)[1:end-1]...]
+        Λₚ = [0.0, cumsum(npe.∂Λₚ .* Sₒ)[1:end-1]...]
         return new(Λₑ .- Λₚ, Λₑ, Λₚ)
     end
 end

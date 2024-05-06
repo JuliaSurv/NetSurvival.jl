@@ -8,14 +8,13 @@ struct NPNSEstimator{Method} <: NonParametricEstimator
     ∂Λₚ::Vector{Float64}
     σₑ::Vector{Float64}
     grid::Vector{Float64}
-    T::Vector{Float64}
     function NPNSEstimator{Method}(T, Δ, age, year, rate_preds, ratetable) where Method
         grid = mk_grid(T,1) # precision is always 1 ? 
         ∂Λₒ, ∂Λₚ, ∂σₑ = Λ(Method, T, Δ, age, year, rate_preds, ratetable, grid)
         ∂Λₑ = ∂Λₒ .- ∂Λₚ
         Sₑ = cumprod(1 .- ∂Λₑ)
         σₑ = sqrt.(cumsum(∂σₑ))
-        return new(Sₑ, ∂Λₑ, ∂Λₒ, ∂Λₚ, σₑ, grid, T)
+        return new(Sₑ, ∂Λₑ, ∂Λₒ, ∂Λₚ, σₑ, grid)
     end
 end
 
