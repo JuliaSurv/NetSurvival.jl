@@ -1,59 +1,43 @@
-struct CrudeMortality
-    Λₑ::Vector{Float64}
-    Λₚ::Vector{Float64}
-end
-
 """
     CrudeMortality
 
-This method applies the Cronin-Feuer estimator for the crude mortality and presents both the excess mortality and population mortality rates.
+This method calculates the crude mortality and presents both the excess mortality and population mortality rates.
 
-To fit the Cronin-Feuer estimator to your data based on a certain rate table, apply the example below to your code : 
+To apply the Cronin-Feuer estimator to your data based on a certain rate table, apply the example below to your code : 
 
-    fit(CrudeMortality, @formula(Surv(time,status)~1), data, ratetable)
+    CrudeMortality(EdererII, data, ratetable)
+
+To check for the other methods, simply replace "EdererII" with the method of your choice (PoharPerme, EdererI, Hakulinen).
 
 References: 
 * [cronin2000cumulative](@cite) Cronin, Kathleen A and Feuer, Eric J (2000). Cumulative cause-specific mortality for cancer patients in the presence of other causes: a crude analogue of relative survival.
 """
-function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E <: CrudeMortality}
-    formula_applied = apply_schema(formula,schema(df))
-    resp = modelcols(formula_applied.lhs, df)
+struct CrudeMortality
+    Λₒ::Vector{Float64}
+    Λₑ::Vector{Float64}
+    Λₚ::Vector{Float64}
+    function CrudeMortality(npe::Method, df::DataFrame) where Method
+        Λₑ = zero(npe.grid)
+        Λₚ = zero(npe.grid)
+        
+        Sₒ = cumprod(1 .- npe.∂Λₒ)
 
-    rate_preds = select(df, String.([RateTables.predictors(rt)...]))
-
-    grid            = mk_grid(resp[:,1],1)
-    num_pop         = zero(grid)
-    den_pop         = zero(grid)
-    num_excess      = zero(grid)
-    den_excess      = zero(grid)
-    num_variance    = zero(grid)
-
-    Λ!(EdererIIMethod, num_excess, den_excess, num_pop, den_pop, num_variance, resp[:,1], resp[:,2], df.age, df.year, rate_preds, rt, grid)
-    
-    ∂Λₒ = num_excess ./ den_excess
-    Sₒ = cumprod(1 .- ∂Λₒ)
-
-    causeSpec = zero(grid)
-    population = zero(grid)
-
-    for i in 1:nrow(df)
-        Tᵢ = searchsortedlast(grid, resp[:,1][i])
-        Λₑ = 0.0
-        ∂λₚ = 0.0
-
-        for j in 1:Tᵢ
-            ∂λₑ = (num_excess[j] ./ den_excess[j]) .- (num_pop[j] ./ den_pop[j])
-            Λₑ        += ∂λₑ * Sₒ[j]
-            ∂λₚ = num_pop[j] / den_pop[j]
-            causeSpec[j+1] = Λₑ
-            population[j+1] = population[j] + ∂λₚ * Sₒ[j]
+        for i in 1:nrow(df)
+            ∂Λₑ = 0.0 
+            Tᵢ = searchsortedlast(npe.grid, df.time[i])
+            for j in 1:Tᵢ
+                ∂Λₑ += npe.∂Λₑ[j] * Sₒ[j]
+                Λₑ[j+1] = ∂Λₑ
+                Λₚ[j+1] = Λₚ[j] + npe.∂Λₚ[j]*Sₒ[j]
+            end
         end
+        return new(Λₑ .- Λₚ, Λₑ, Λₚ)
     end
-
-    return CrudeMortality(causeSpec, population)
 end
 
+StatsBase.fit(::Type{CrudeMortality}, args...) = CrudeMortality(args...) 
+
 function Base.show(io::IO, crud::CrudeMortality) 
-    df = DataFrame(Λₑ = crud.Λₑ, Λₚ = crud.Λₚ)
+    df = DataFrame(Λₒ = crud.Λₒ, Λₑ = crud.Λₑ, Λₚ = crud.Λₚ)
     show(io, df)
 end

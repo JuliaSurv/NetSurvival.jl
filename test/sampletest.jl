@@ -261,7 +261,8 @@ end
     using RateTables
 
     colrec.country = rand(keys(hmd_countries),nrow(colrec))
-    instance = fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, slopop)
+    eII = fit(EdererII, @formula(Surv(time, status)~1), colrec, slopop)
+    instance = CrudeMortality(eII, colrec)
 
     # R version
     using RCall

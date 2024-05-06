@@ -4,14 +4,17 @@ abstract type NonParametricEstimator <: StatisticalModel end # maybe this one is
 struct NPNSEstimator{Method} <: NonParametricEstimator
     Sₑ::Vector{Float64}
     ∂Λₑ::Vector{Float64}
+    ∂Λₒ::Vector{Float64}
+    ∂Λₚ::Vector{Float64}
     σₑ::Vector{Float64}
     grid::Vector{Float64}
     function NPNSEstimator{Method}(T, Δ, age, year, rate_preds, ratetable) where Method
         grid = mk_grid(T,1) # precision is always 1 ? 
-        ∂Λₑ, ∂σₑ = Λ(Method, T, Δ, age, year, rate_preds, ratetable, grid)
+        ∂Λₒ, ∂Λₚ, ∂σₑ = Λ(Method, T, Δ, age, year, rate_preds, ratetable, grid)
+        ∂Λₑ = ∂Λₒ .- ∂Λₚ
         Sₑ = cumprod(1 .- ∂Λₑ)
         σₑ = sqrt.(cumsum(∂σₑ))
-        return new(Sₑ, ∂Λₑ, σₑ, grid)
+        return new(Sₑ, ∂Λₑ, ∂Λₒ, ∂Λₚ, σₑ, grid)
     end
 end
 
@@ -26,7 +29,7 @@ function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M
     den_pop      = zero(grid)
     den_excess   = zero(grid)
     Λ!(M, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid)
-    return (num_excess ./ den_excess) .- (num_pop ./ den_pop), num_variance ./ (den_excess.^2)
+    return num_excess ./ den_excess, num_pop ./ den_pop, num_variance ./ (den_excess.^2)
 end
 
 function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:NPNSEstimator}
