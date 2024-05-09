@@ -1,4 +1,6 @@
-# NetSurvival
+# NetSurvival.jl
+
+*A pure-Julia take on standard net survival routines*
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaSurv.github.io/NetSurvival.jl/stable/)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaSurv.github.io/NetSurvival.jl/dev/)
@@ -12,11 +14,11 @@
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/JuliaDiff/BlueStyle)
 
 
-The `NetSurvival.jl` package provides the necessary tools to perform estimations and analysis in the Net Survival field. This specialized branch of Survival Analysis focuses on estimating the probability of survival from a specific event of interest, for example a given cancer, without considering other causes of death. This is especially relevant in the (unfortunately quite common) case where the cause of death indicatrix is either unavailable or untrustworthy. Consequently, the so-called *missing indicatrix* issue forbids the use of standard competitive risks survival analysis methods on these datasets.  For that, a few standard estimators were established in the last 50 years, backed by a wide literature.
+The `NetSurvival.jl` package provides the necessary tools to perform estimations and analysis in the Net Survival field. This specialized branch of Survival Analysis focuses on estimating the probability of survival from a specific event of interest, for example a given cancer, without considering other causes of death, in the (unfortunately quite common) case where the cause of death indicatrix is unavailable (or e.g. untrustworthy). Consequently, the so-called *missing indicatrix* issue forbids the use of standard competitive risks survival analysis methods on these datasets. Thus, a few standard estimators were established in the last 50 years, backed by a wide literature.
 
 # Features 
 
-This package is an attempt to bring standard relative survival analysis modeling routines to Julia, while providing an interface that is close to the `relsurv` standard, albeit significantly faster and easier to maintain in the future.
+This package is an attempt to bring standard relative survival analysis modeling routines to Julia, while providing an interface that is close to the R package `relsurv`, albeit significantly faster and easier to maintain in the future. We aim at covering the standard estimators, needed for routines and comparisons, but also to provide the most up to date state of the art. 
 
 Some key features in `NetSurvival.jl` are:
 
@@ -35,4 +37,9 @@ Pkg.add("https://github.com/JuliaSurv/NetSurvival.jl.git")
 ```
 
 See the rest of this [documentation](https://juliasurv.github.io/NetSurvival.jl/dev/) to have a glimpse of the functionalities!
+
+# Contributions are welcome
+
+If you want to contribute to the package, ask a question, found a bug or simply want to chat, do not hesitate to open an issue on this repo. General guidelines on collaborative practices (colprac) are available at https://github.com/SciML/ColPrac.
+
 
