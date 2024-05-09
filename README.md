@@ -24,8 +24,8 @@ Some key features in `NetSurvival.jl` are:
 
 - A panel of different non-parametric net survival estimators (Ederer I, Ederer II, Hakulinen, Pohar Perme) with an interface compliant with Julia's standards. 
 - Grafféo's log-rank test to compare net survival curves accross groups, including stratified testing.
-- A compact, readable and efficient codebase (up to 1000x less LOC than `relsurv` for the same functionalities), ensuring long-term maintenability.
-- Significant performance improvements (up to 50x) compared to the R package `relsurv`.
+- A compact, readable and efficient codebase (up to 100x less LOC than `relsurv` for the same functionalities), ensuring long-term maintenability.
+- Significant performance improvements (see below) compared `relsurv`.
 
 # Getting Started
 
@@ -37,6 +37,28 @@ Pkg.add("https://github.com/JuliaSurv/NetSurvival.jl.git")
 ```
 
 See the rest of this [documentation](https://juliasurv.github.io/NetSurvival.jl/dev/) to have a glimpse of the functionalities!
+
+# Benchmarks
+
+`NetSurvival.jl` is *fast*. Below numbers gives runtime mulitpliers w.r.t. [`R::relsurv`](https://cran.r-project.org/web/packages/relsurv/index.html), computed on a (rather slow, only 4 cores) mobile I7-1165G7 processor. A version of these numebrs computed on (even slower) github action's runners are availiable in [our documentation](https://juliasurv.github.io/NetSurvival.jl/dev/benches/), alongside the code needed to re-ran these numbers on your environnement. 
+
+The comparison is done on the `colrec` dataset with the `slopop` ratetable. The first numbers compare the timing in the obtention of the net survival curve: 
+
+|  | **Unstratified**<br>`Surv(time,status)~1` | **Stratified**<br>`Surv(time,status)~sex` |
+|--------------------------:|------------------------------:|----------------------------:|
+| Pohar Perme               | 16.7207                       | 15.2162                     |
+| EdererI                   | 5.81211                       | 3.58087                     |
+| EdererII                  | 29.3094                       | 28.5909                     |
+| Hakulinen                 | 21.5374                       | 12.9833                     |
+
+While the second numbers compare the implementation the Grafféo's log-rank-type test:
+
+|  | **Unstratified**<br>`Surv(time,status)~stage` | **Stratified**<br>`Surv(time,status)~stage+Strata(sex)` |
+|--------------------------:|------------------------------:|----------------------------:|
+| Graffeo                   | 14.1733                       | 22.4551                     |
+
+*Call to contributions* : If you have access to stata's implementation (which is not free) and want to report timings, do not hesitate to open an issue.
+
 
 # Contributions are welcome
 

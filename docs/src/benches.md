@@ -61,7 +61,15 @@ test_all() = DataFrame(
 )
 rez = test_all()
 rez = test_all() # discard first run.
+
+# note: to obtain the pretty printing from the readme, you need to install PrettyTables.jl and do : 
+# using PrettyTables
+# pretty_table(rez, backend = Val(:markdown))
+
+rez
 ```
+
+
 
 
 # Benchmarking across time
