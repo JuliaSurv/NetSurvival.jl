@@ -1,14 +1,12 @@
-abstract type NonParametricEstimator <: StatisticalModel end # maybe this one is superfluous now. 
-
-
-struct NPNSEstimator{Method} <: NonParametricEstimator
+abstract type NPNSMethod end
+struct NPNSEstimator{Method} <: StatisticalModel
     Sₑ::Vector{Float64}
     ∂Λₑ::Vector{Float64}
     ∂Λₒ::Vector{Float64}
     ∂Λₚ::Vector{Float64}
     σₑ::Vector{Float64}
     grid::Vector{Float64}
-    function NPNSEstimator{Method}(T, Δ, age, year, rate_preds, ratetable) where Method
+    function NPNSEstimator{Method}(T, Δ, age, year, rate_preds, ratetable) where Method<:NPNSMethod
         grid = mk_grid(T,1) # precision is always 1 ? 
         ∂Λₒ, ∂Λₚ, ∂σₑ = Λ(Method, T, Δ, age, year, rate_preds, ratetable, grid)
         ∂Λₑ = ∂Λₒ .- ∂Λₚ
@@ -22,7 +20,7 @@ function mk_grid(times,prec)
     M = maximum(times)+1
     return unique(sort([(1:prec:M)..., times..., M]))
 end
-function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M
+function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M<:NPNSMethod
     num_excess   = zero(grid)
     num_pop      = zero(grid)
     num_variance = zero(grid)
