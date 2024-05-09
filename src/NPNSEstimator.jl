@@ -31,36 +31,21 @@ function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M<:N
 end
 
 function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:NPNSEstimator}
-    column_names = names(df)
-    rate_predictors = String.([RateTables.predictors(rt)...])
-
-    expected_columns = [rate_predictors...,"age","year"]
-    missing_columns = filter(name -> !(name in column_names), expected_columns)
-    if !isempty(missing_columns)
-        throw(ArgumentError("Missing columns in data: $missing_columns"))
-    end
-
+    rate_predictors = _get_rate_predictors(rt,df)
     formula_applied = apply_schema(formula,schema(df))
 
-    if isa(formula.rhs, ConstantTerm)
-        # then there is no predictors.
+    if isa(formula.rhs, ConstantTerm) # No predictors
         resp = modelcols(formula_applied.lhs, df)
         return E(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
     else
-        nms = StatsModels.termnames(formula.rhs)
-        if isa(nms, String)
-            pred_names = [nms]
-        else
-            pred_names = nms
-        end
-
-        new_df = groupby(df, pred_names)
-        pp = Vector{E}()
-        for i in 1:nrow(unique(df[!,pred_names]))
-            resp2 = modelcols(formula_applied.lhs, new_df[i])
-            push!(pp,E(resp2[:,1], resp2[:,2], new_df[i].age, new_df[i].year, select(new_df[i],rate_predictors), rt))
-        end
-        return pp
+        gdf = groupby(df, StatsModels.termnames(formula.rhs))
+        return Dict(
+            NamedTuple(i) => begin
+                resp2 = modelcols(formula_applied.lhs, dfᵢ)
+                E(resp2[:,1], resp2[:,2], dfᵢ.age, dfᵢ.year, select(dfᵢ,rate_predictors), rt)
+            end
+            for (i,dfᵢ) in pairs(gdf)
+        )
     end
 end
 
