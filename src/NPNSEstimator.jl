@@ -31,12 +31,12 @@ function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M<:N
 end
 
 function _get_rate_predictors(rt,df)
-    rate_preds = RateTables.predictors(rt)
-    expected_cols = [rate_preds...,:age,:year]
-    if !all(col in names(df) for col in expected_cols)
-        throw ArgumentError("Missing columns in data : we expected $expected_cols.")
+    prd = [RateTables.predictors(rt)...]
+    cl = Symbol.(names(df))
+    if !(all(prd .∈ Ref(cl)) && (:age ∈ cl) && (:year ∈ cl))
+        throw(ArgumentError("Missing columns in data : the chosen ratetable expects colums :age, :year and $(prd) to be present in the dataset."))
     end
-    return rate_preds
+    return prd
 end
 
 function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:NPNSEstimator}
