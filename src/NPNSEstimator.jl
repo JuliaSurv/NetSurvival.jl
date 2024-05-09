@@ -68,8 +68,14 @@ function StatsAPI.confint(npe::E; level::Real=0.05) where E <: NPNSEstimator
 end
 
 function Base.show(io::IO, npe::E) where E <: NPNSEstimator
+    compact = get(io, :compact, false)
+    if !compact
+        print(io, "$(E)(t ∈ $(extrema(npe.grid))) with summary stats:\n ")
     lower_bounds = [lower[1] for lower in confint(npe; level = 0.05)]
     upper_bounds = [upper[2] for upper in confint(npe; level = 0.05)]
     df = DataFrame(Sₑ = npe.Sₑ, ∂Λₑ = npe.∂Λₑ, σₑ=npe.σₑ, lower_95_CI = lower_bounds, upper_95_CI = upper_bounds)
     show(io, df)
+    else
+        print(io, "$(E)(t ∈ $(extrema(npe.grid)))")
+    end
 end
