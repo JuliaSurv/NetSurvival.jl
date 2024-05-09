@@ -188,13 +188,7 @@ The p-value is indeed above $0.05$. We cannot reject the null hypothesis $H_0$ a
 As for the age, we will define two different groups: individuals aged 65 and above and those who are not.
 
 ```@example 2
-colrec.age65 .= Bool(false)
-for i in 1:nrow(colrec)
-    if colrec.age[i] >= 65*365.241 
-        colrec.age65[i] = true
-    end
-end
-
+colrec.age65 .= colrec.age .>= 65 * 365.241
 pp_age65 = fit(PoharPerme, @formula(Surv(time5,status5)~age65), colrec, slopop)
 ```
 
