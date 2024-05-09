@@ -30,6 +30,15 @@ function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M<:N
     return num_excess ./ den_excess, num_pop ./ den_pop, num_variance ./ (den_excess.^2)
 end
 
+function _get_rate_predictors(rt,df)
+    rate_preds = RateTables.predictors(rt)
+    expected_cols = [rate_preds...,:age,:year]
+    if !all(col in names(df) for col in expected_cols)
+        throw ArgumentError("Missing columns in data : we expected $expected_cols.")
+    end
+    return rate_preds
+end
+
 function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:NPNSEstimator}
     rate_predictors = _get_rate_predictors(rt,df)
     formula_applied = apply_schema(formula,schema(df))
