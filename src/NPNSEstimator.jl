@@ -47,14 +47,14 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
         resp = modelcols(formula_applied.lhs, df)
         return E(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
     else
+        # we could simply group by the left side and apply fit() again, that would make sense. 
+
         gdf = groupby(df, StatsModels.termnames(formula.rhs))
-        return Dict(
-            NamedTuple(i) => begin
+        return rename(combine(gdf, dfᵢ -> begin
                 resp2 = modelcols(formula_applied.lhs, dfᵢ)
-                E(resp2[:,1], resp2[:,2], dfᵢ.age, dfᵢ.year, select(dfᵢ,rate_predictors), rt)
+                E(resp2[:,1], resp2[:,2], dfᵢ.age, dfᵢ.year, select(dfᵢ, rate_predictors), rt)
             end
-            for (i,dfᵢ) in pairs(gdf)
-        )
+        ), :x1 => :estimator)
     end
 end
 
