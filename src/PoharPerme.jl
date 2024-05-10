@@ -1,4 +1,4 @@
-struct PoharPermeMethod end
+struct PoharPermeMethod<:NPNSMethod end
 
 """
     PoharPerme

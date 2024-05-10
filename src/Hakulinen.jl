@@ -1,4 +1,4 @@
-struct HakulinenMethod end
+struct HakulinenMethod<:NPNSMethod end
 
 """
     Hakulinen

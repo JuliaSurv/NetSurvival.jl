@@ -175,6 +175,8 @@ We are now interested in comparing the different groups of patients defined by v
 
 ```@example 2
 pp_sex = fit(PoharPerme, @formula(Surv(time5,status5)~sex), colrec, slopop)
+pp_males = pp_sex[pp_sex.sex .== :male,:estimator][1]
+pp_females = pp_sex[pp_sex.sex .== :female,:estimator][1]
 ```
 
 When comparing at time $1826$, we notice that the survival probability is slightly inferior for men than for women ($0.433 < 0.449$). It is also more probable for the women to die from other causes than the men seeing as $0.0255 > 0.025$. Still, the differences are minimal. Let's confirm this with the Grafféo log-rank test:
@@ -188,14 +190,10 @@ The p-value is indeed above $0.05$. We cannot reject the null hypothesis $H_0$ a
 As for the age, we will define two different groups: individuals aged 65 and above and those who are not.
 
 ```@example 2
-colrec.age65 .= Bool(false)
-for i in 1:nrow(colrec)
-    if colrec.age[i] >= 65*365.241 
-        colrec.age65[i] = true
-    end
-end
-
+colrec.age65 .= ifelse.(colrec.age .>= 65*365.241, :old, :young)
 pp_age65 = fit(PoharPerme, @formula(Surv(time5,status5)~age65), colrec, slopop)
+pp_young = pp_age65[pp_age65.age65 .== :young, :estimator][1]
+pp_old = pp_age65[pp_age65.age65 .== :old, :estimator][1]
 ```
 
 Here, the difference between the two is much more important. In the first group, the individuals are aged under 65 and at $5$ years time, they have a $50.1$% chance of survival. On the other hand, the individuals aged 65 and up have a $40.1$% chance of survival. 
@@ -214,29 +212,27 @@ When plotting both we get:
 
 
 ```@example 2
-conf_int_men = confint(pp_sex[1]; level = 0.05)
+conf_int_men = confint(pp_males; level = 0.05)
 lower_bounds_men = [lower[1] for lower in conf_int_men]
 upper_bounds_men = [upper[2] for upper in conf_int_men] 
 
-conf_int_women = confint(pp_sex[2]; level = 0.05)
+conf_int_women = confint(pp_females; level = 0.05)
 lower_bounds_women = [lower[1] for lower in conf_int_women]
 upper_bounds_women = [upper[2] for upper in conf_int_women]
 
-conf_int_under65 = confint(pp_age65[1]; level = 0.05)
+conf_int_under65 = confint(pp_young; level = 0.05)
 lower_bounds_under65 = [lower[1] for lower in conf_int_under65]
 upper_bounds_under65 = [upper[2] for upper in conf_int_under65] 
 
-conf_int_65 = confint(pp_age65[2]; level = 0.05)
+conf_int_65 = confint(pp_old; level = 0.05)
 lower_bounds_65 = [lower[1] for lower in conf_int_65]
 upper_bounds_65 = [upper[2] for upper in conf_int_65] 
 
-plot1 = plot(pp_sex[1].grid, pp_sex[1].Sₑ, ribbon=(pp_sex[1].Sₑ - lower_bounds_men, upper_bounds_men - pp_sex[1].Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "men")
+plot1 = plot(pp_males.grid, pp_males.Sₑ, ribbon=(pp_males.Sₑ - lower_bounds_men, upper_bounds_men - pp_males.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "men")
+plot1 = plot!(pp_females.grid, pp_females.Sₑ, ribbon=(pp_females.Sₑ - lower_bounds_women, upper_bounds_women - pp_females.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "women")
 
-plot1 = plot!(pp_sex[2].grid, pp_sex[2].Sₑ, ribbon=(pp_sex[2].Sₑ - lower_bounds_women, upper_bounds_women - pp_sex[2].Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "women")
-
-plot2 = plot(pp_age65[1].grid, pp_age65[1].Sₑ, ribbon=(pp_age65[1].Sₑ - lower_bounds_under65, upper_bounds_under65 - pp_age65[1].Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "Under 65")
-
-plot2 = plot!(pp_age65[2].grid, pp_age65[2].Sₑ, ribbon=(pp_age65[2].Sₑ - lower_bounds_65, upper_bounds_65 - pp_age65[2].Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "65 and up")
+plot2 = plot(pp_young.grid, pp_young.Sₑ, ribbon=(pp_young.Sₑ - lower_bounds_under65, upper_bounds_under65 - pp_young.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "Under 65")
+plot2 = plot!(pp_old.grid, pp_old.Sₑ, ribbon=(pp_old.Sₑ - lower_bounds_65, upper_bounds_65 - pp_old.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "65 and up")
 
 plot(plot1, plot2, layout = (1, 2))
 ```

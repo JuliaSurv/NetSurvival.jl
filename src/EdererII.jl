@@ -1,4 +1,4 @@
-struct EdererIIMethod end
+struct EdererIIMethod<:NPNSMethod end
 
 """
     EdererII
