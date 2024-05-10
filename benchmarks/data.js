@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1715323886834,
+  "lastUpdate": 1715323911452,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -712,6 +712,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "GraffeoTest/colrec x slopop - explicit",
             "value": 230157068,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "oskar.laverny@univ-amu.fr",
+            "name": "Oskar Laverny",
+            "username": "lrnv"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e8b17515f856d247786eddc0976770c4a321b7d6",
+          "message": "[Internals] Few simplifications (#34)\n\n* Change type hierarchy\r\n\r\n* Simplify fitting\r\n\r\n* Simplify test fiting\r\n\r\n* add missing function\r\n\r\n* pass tests\r\n\r\n* Better version with dataframes\r\n\r\n* adapt the show function\r\n\r\n* Adapt example code in the docs",
+          "timestamp": "2024-05-10T08:50:17+02:00",
+          "tree_id": "74125aa514dd910835ce819e897ef90f511c3003",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/e8b17515f856d247786eddc0976770c4a321b7d6"
+        },
+        "date": 1715323911018,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 224310419,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4476016\nallocs=53863\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 243032062.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7555312\nallocs=101449\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 228096645,
             "unit": "ns",
             "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
