@@ -40,22 +40,22 @@ See the rest of this [documentation](https://juliasurv.github.io/NetSurvival.jl/
 
 # Benchmarks
 
-`NetSurvival.jl` is *fast*. Below numbers gives runtime mulitpliers w.r.t. [`R::relsurv`](https://cran.r-project.org/web/packages/relsurv/index.html), computed on a (rather slow, only 4 cores) mobile I7-1165G7 processor. A version of these numebrs computed on (even slower) github action's runners are availiable in [our documentation](https://juliasurv.github.io/NetSurvival.jl/dev/benches/), alongside the code needed to re-ran these numbers on your environnement. 
+`NetSurvival.jl` is *fast*. Below numbers gives runtime mulitpliers w.r.t. [`R::relsurv`](https://cran.r-project.org/web/packages/relsurv/index.html), computed on a i9-13900 processor. A version of these numbers computed on (even slower) github action's runners are availiable in [our documentation](https://juliasurv.github.io/NetSurvival.jl/dev/benches/), alongside the code needed to re-ran these numbers on your environnement. 
 
 The comparison is done on the `colrec` dataset with the `slopop` ratetable. The first numbers compare the timing in the obtention of the net survival curve: 
 
 |  | **Unstratified**<br>`Surv(time,status)~1` | **Stratified**<br>`Surv(time,status)~sex` |
 |--------------------------:|------------------------------:|----------------------------:|
-| Pohar Perme               | 16.7207                       | 15.2162                     |
-| EdererI                   | 5.81211                       | 3.58087                     |
-| EdererII                  | 29.3094                       | 28.5909                     |
-| Hakulinen                 | 21.5374                       | 12.9833                     |
+| Pohar Perme               | 20.8431                       | 20.1461                     |
+| EdererI                   | 7.216                         | 4.1363                      |
+| EdererII                  | 29.2397                       | 29.0399                     |
+| Hakulinen                 | 23.493                        | 15.6676                     |
 
 While the second numbers compare the implementation the Grafféo's log-rank-type test:
 
 |  | **Unstratified**<br>`Surv(time,status)~stage` | **Stratified**<br>`Surv(time,status)~stage+Strata(sex)` |
 |--------------------------:|------------------------------:|----------------------------:|
-| Graffeo                   | 14.1733                       | 22.4551                     |
+| Graffeo's LRT             | 13.1556                       | 18.156                      |
 
 *Call to contributions* : If you have access to stata's implementation (which is not free) and want to report timings, do not hesitate to open an issue.
 
