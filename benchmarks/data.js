@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1715323911452,
+  "lastUpdate": 1715336498200,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -754,6 +754,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "GraffeoTest/colrec x slopop - explicit",
             "value": 228096645,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "oskar.laverny@univ-amu.fr",
+            "name": "Oskar Laverny",
+            "username": "lrnv"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "050b0f62ea090e0ce370839a88b490b239f167a2",
+          "message": "[Readme timings] Add timings to readme.md  (#36)\n\n* Update README.md\r\n\r\n* Add benchmarks to the docs\r\n\r\n* Add my benchmark results to the\r\n\r\n* input my numbers\r\n\r\n---------\r\n\r\nCo-authored-by: rimhajal <rim.hajal@gmail.com>",
+          "timestamp": "2024-05-10T12:20:05+02:00",
+          "tree_id": "29b73968aa77b99257674c3344e41d9847b7081a",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/050b0f62ea090e0ce370839a88b490b239f167a2"
+        },
+        "date": 1715336497163,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 225074910,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4476016\nallocs=53863\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 243303955.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7555312\nallocs=101449\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 231989072,
             "unit": "ns",
             "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
