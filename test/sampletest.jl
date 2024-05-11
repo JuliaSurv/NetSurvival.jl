@@ -15,15 +15,29 @@ end
     # Run code: test. 
     using RateTables
 
-    for E in (PoharPerme, EdererI, EdererII, Hakulinen)
-        npe = fit(E, @formula(Surv(time,status)~1), colrec, frpop)
+    function mktest(::Type{E}, df, rt, args...) where E
+        npe = fit(E, @formula(Surv(time,status)~1), df, rt)
         ci = confint(npe; level = 0.05)
-        @test !any(isnan.(npe.Sₑ..., npe.∂Λₑ..., npe.σₑ))
-        @test !any(isnan.(ci))
+        # Check for no-nans :
+        rez = true 
+        rez &= !any(isnan.(npe.Sₑ))
+        rez &= !any(isnan.(npe.∂Λₑ))
+        rez &= !any(isnan.(npe.σₑ))
+        rez &= !any([any(isnan.(x)) for x in ci])
+
+        # Check for correspondance of the alternative call syntax: 
+        v2 = E(args..., rt)
+        rez &= all(v2.Sₑ .== npe.Sₑ) & all(v2.∂Λₑ .== npe.∂Λₑ) & all(v2.σₑ .== npe.σₑ)
+        return rez
     end
+    args =  (colrec, slopop, colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex)
+    @test mktest(PoharPerme, args...)
+    @test mktest(EdererI, args...)
+    @test mktest(EdererII, args...)
+    @test mktest(Hakulinen, args...)
     
-    fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
-    @test true
+    rez = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
+    @test !isnan(rez.pval) && !isnan(rez.stat)
 end
 
 @testitem "Compare NPNSEstimator's with R::relsurv::rs.surv on colrec x slopop" begin
