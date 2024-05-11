@@ -42,26 +42,35 @@ end
 
 @testitem "Compare NPNSEstimator's with relsurv::rs.surv on colrec x slopop" begin
     using RateTables, NetSurvival, RCall, DataFrames
-    function test_surv(r_method,::Type{E},df, rt) where E
+    function mk_r_model(r_method)
         @rput r_method
-        jl = fit(E, @formula(Surv(time,status)~1), df, rt)
         R"""
-            rez = relsurv::rs.surv(
-                survival::Surv(time, stat) ~ 1, 
-                rmap=list(age = age, sex = sex, year = diag), 
-                data = relsurv::colrec, 
-                ratetable = relsurv::slopop, 
-                method = r_method, 
-                add.times=1:8149)
+        rez = relsurv::rs.surv(
+            survival::Surv(time, stat) ~ 1, 
+            rmap=list(age = age, sex = sex, year = diag), 
+            data = relsurv::colrec, 
+            ratetable = relsurv::slopop, 
+            method = r_method, 
+            add.times=1:8149)
+        t = rez$time
+        s = rez$surv
+        e = rez$std.err
         """
-        R_model = @rget rez
+        t = @rget t
+        s = @rget s
+        e = @rget e
+        return t::Vector{Float64},s::Vector{Float64},e::Vector{Float64}
+    end
+    function test_surv(r_method,::Type{E},df, rt) where E
+        jl = fit(E, @formula(Surv(time,status)~1), df, rt)
+        r_t, r_S, r_σ = mk_r_model(r_method)
 
-        err_S = zeros(length(R_model[:time]))
-        err_σ = zeros(length(R_model[:time]))
-        for i in eachindex(R_model[:time]) 
-            j = searchsortedlast(jl.grid, R_model[:time][i])
-            err_S[i] = (R_model[:surv][i] - jl.Sₑ[j]) / R_model[:surv][i]
-            err_σ[i] = (R_model[:std_err][i] - jl.σₑ[j]) / R_model[:std_err][i]
+        err_S = zeros(length(r_t))
+        err_σ = zeros(length(r_t))
+        for i in eachindex(r_t) 
+            j = searchsortedlast(jl.grid, r_t[i])
+            err_S[i] = (r_S[i] - jl.Sₑ[j]) / r_S[i]
+            err_σ[i] = (r_σ[i] - jl.σₑ[j]) / r_σ[i]
         end
         return all(abs.(err_S) .<= 0.01) && all(abs.(err_σ) .<= 0.01)
     end
