@@ -1,8 +1,7 @@
-@testitem "trivial test 2" begin
+@testitem "Basic functionality test" begin
     using RateTables
     ################################
     # Run code: estimator and confidence interval. 
-
     instance = PoharPerme(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, slopop)
     conf_int = confint(instance; level = 0.05)
     # Run code: test. 
@@ -13,28 +12,53 @@
     fit(PoharPerme, @formula(Surv(time,status)~sex), colrec, frpop)
 
     @test true
-
-    # How to use R and R packages in here ? 
 end
 
-@testitem "interface test" begin
+@testitem "Interface test & No-Nan" begin
     
     ################################
     # Run code: test. 
-    using DataFrames
     using RateTables
 
     for E in (PoharPerme, EdererI, EdererII, Hakulinen)
         npe = fit(E, @formula(Surv(time,status)~1), colrec, frpop)
-        @assert !any(isnan.(npe.Sₑ..., npe.∂Λₑ..., npe.σₑ))
+        ci = confint(npe; level = 0.05)
+        @test !any(isnan.(npe.Sₑ..., npe.∂Λₑ..., npe.σₑ))
+        @test !any(isnan.(ci))
     end
     
     fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
     @test true
 end
 
+@testitem "Compare NPNSEstimator's with R::relsurv::rs.surv on colrec x slopop" begin
+    using RateTables, NetSurvival, RCall, DataFrames
+    function test_surv(r_method,::Type{E}) where E
+        @rput r_method
+        jl = fit(E, @formula(Surv(time,status)~1), colrec, slopop)
+        R"""
+            rez = relsurv::rs.surv(
+                survival::Surv(time, stat) ~ 1, 
+                rmap=list(age = age, sex = sex, year = diag), 
+                data = relsurv::colrec, 
+                ratetable = relsurv::slopop, 
+                method = r_method, 
+                add.times=1:8149)
+        """
+        R_model = @rget rez
+        err_S = (R_model[:surv] .- jl.Sₑ[1:end-1]) ./ R_model[:surv]
+        err_σ = (R_model[:std_err] .- jl.σₑ[1:end-1]) ./ R_model[:std_err]
+        return all(abs.(err_S) .<= 0.01) && all(abs.(err_σ) .<= 0.01)
+    end
 
-@testitem "Comparing PoharPerme with R" begin
+    @test        test_surv("pohar-perme", PoharPerme)
+    @test        test_surv("ederer1",     EdererI)
+    @test        test_surv("ederer2",     EdererII)
+    @test_broken test_surv("hakulinen",   Hakulinen)
+end
+
+
+@testitem "Comparing PoharPerme, Ederer1, Ederer2 and Hakulinen with R" begin
     
     # R version
     using RCall
