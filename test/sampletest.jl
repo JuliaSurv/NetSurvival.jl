@@ -40,11 +40,11 @@ end
     @test !isnan(rez.pval) && !isnan(rez.stat)
 end
 
-@testitem "Compare NPNSEstimator's with R::relsurv::rs.surv on colrec x slopop" begin
+@testitem "Compare NPNSEstimator's with relsurv::rs.surv on colrec x slopop" begin
     using RateTables, NetSurvival, RCall, DataFrames
-    function test_surv(r_method,::Type{E}) where E
+    function test_surv(r_method,::Type{E},df, rt) where E
         @rput r_method
-        jl = fit(E, @formula(Surv(time,status)~1), colrec, slopop)
+        jl = fit(E, @formula(Surv(time,status)~1), df, rt)
         R"""
             rez = relsurv::rs.surv(
                 survival::Surv(time, stat) ~ 1, 
@@ -55,186 +55,21 @@ end
                 add.times=1:8149)
         """
         R_model = @rget rez
-        err_S = (R_model[:surv] .- jl.Sₑ[1:end-1]) ./ R_model[:surv]
-        err_σ = (R_model[:std_err] .- jl.σₑ[1:end-1]) ./ R_model[:std_err]
+
+        err_S = zeros(length(R_model[:time]))
+        err_σ = zeros(length(R_model[:time]))
+        for i in eachindex(R_model[:time]) 
+            j = searchsortedlast(jl.grid, R_model[:time][i])
+            err_S[i] = (R_model[:surv][i] - jl.Sₑ[j]) / R_model[:surv][i]
+            err_σ[i] = (R_model[:std_err][i] - jl.σₑ[j]) / R_model[:std_err][i]
+        end
         return all(abs.(err_S) .<= 0.01) && all(abs.(err_σ) .<= 0.01)
     end
 
-    @test        test_surv("pohar-perme", PoharPerme)
-    @test        test_surv("ederer1",     EdererI)
-    @test        test_surv("ederer2",     EdererII)
-    @test_broken test_surv("hakulinen",   Hakulinen)
-end
-
-
-@testitem "Comparing PoharPerme, Ederer1, Ederer2 and Hakulinen with R" begin
-    
-    # R version
-    using RCall
-    using RateTables
-    R"""
-    rez = relsurv::rs.surv(
-        survival::Surv(time, stat) ~1, 
-        rmap=list(age = age, sex = sex, year = diag), 
-        data = relsurv::colrec, 
-        ratetable = relsurv::slopop, 
-        method = "pohar-perme", 
-        add.times=1:8149)
-    """
-    R_model = @rget rez
-    R_grid = R_model[:time]
-    R_Sₑ = R_model[:surv]
-    R_σ = R_model[:std_err]
-    R_low = R_model[:lower]
-    R_upp = R_model[:upper]
-
-
-    # Julia version
-    instance = fit(PoharPerme, @formula(Surv(time,status)~1), colrec, slopop)
-    conf_int = confint(instance; level = 0.05)
-    lower_bounds = [lower[1] for lower in conf_int]
-    upper_bounds = [upper[2] for upper in conf_int]
-    
-    err_S = (R_Sₑ .- instance.Sₑ[1:end-1]) ./ R_Sₑ
-    err_σ = (R_σ .- instance.σₑ[1:end-1]) ./ R_σ
-
-    @test all(abs.(err_S) .<= 0.01)
-    @test all(abs.(err_σ) .<= 0.01)
-
-end
-
-@testitem "Comparing EdererI with R" begin
-    
-    # R version
-    using RCall
-    using RateTables
-    R"""
-    rez = relsurv::rs.surv(
-        survival::Surv(time, stat) ~1, 
-        rmap=list(age = age, sex = sex, year = diag), 
-        data = relsurv::colrec, 
-        ratetable = relsurv::slopop, 
-        method = "ederer1", 
-        add.times=1:8149)
-    """
-    R_model = @rget rez
-    R_grid = R_model[:time]
-    R_Sₑ = R_model[:surv]
-    R_σ = R_model[:std_err]
-    R_low = R_model[:lower]
-    R_upp = R_model[:upper]
-
-
-    # Julia version
-    instance = fit(EdererI, @formula(Surv(time,status)~1), colrec, slopop)
-    conf_int = confint(instance; level = 0.05)
-    lower_bounds = [lower[1] for lower in conf_int]
-    upper_bounds = [upper[2] for upper in conf_int]
-
-    err_S = zeros(length(R_grid))
-    err_σ = zeros(length(R_grid))
-    
-    for i in eachindex(R_grid) 
-        for j in eachindex(instance.grid)
-            if R_grid[i] == instance.grid[j]
-                err_S[i] += (R_Sₑ[i] - instance.Sₑ[j]) / R_Sₑ[i]
-                err_σ[i] += (R_σ[i] - instance.σₑ[j]) / R_σ[i]
-            end
-        end
-    end
-
-    @test all(abs.(err_S) .<= 0.01)
-    @test all(abs.(err_σ) .<= 0.01)
-
-end
-
-@testitem "Comparing EdererII with R" begin
-    
-    # R version
-    using RCall
-    using RateTables
-    R"""
-    rez = relsurv::rs.surv(
-        survival::Surv(time, stat) ~1, 
-        rmap=list(age = age, sex = sex, year = diag), 
-        data = relsurv::colrec, 
-        ratetable = relsurv::slopop, 
-        method = "ederer2", 
-        add.times=1:8149)
-    """
-    R_model = @rget rez
-    R_grid = R_model[:time]
-    R_Sₑ = R_model[:surv]
-    R_σ = R_model[:std_err]
-    R_low = R_model[:lower]
-    R_upp = R_model[:upper]
-
-
-    # Julia version
-    instance = fit(EdererII, @formula(Surv(time,status)~1), colrec, slopop)
-    conf_int = confint(instance; level = 0.05)
-    lower_bounds = [lower[1] for lower in conf_int]
-    upper_bounds = [upper[2] for upper in conf_int]
-
-    err_S = zeros(length(R_grid))
-    err_σ = zeros(length(R_grid))
-    
-    for i in eachindex(R_grid) 
-        for j in eachindex(instance.grid)
-            if R_grid[i] == instance.grid[j]
-                err_S[i] += (R_Sₑ[i] - instance.Sₑ[j]) / R_Sₑ[i]
-                err_σ[i] += (R_σ[i] - instance.σₑ[j]) / R_σ[i]
-            end
-        end
-    end
-
-    @test all(abs.(err_S) .<= 0.01)
-    @test all(abs.(err_σ) .<= 0.01)
-
-end
-
-@testitem "Comparing Hakulinen with R" begin
-    
-    # R version
-    using RCall
-    using RateTables
-    R"""
-    rez = relsurv::rs.surv(
-        survival::Surv(time, stat) ~1, 
-        rmap=list(age = age, sex = sex, year = diag), 
-        data = relsurv::colrec, 
-        ratetable = relsurv::slopop, 
-        method = "hakulinen", 
-        add.times=1:8149)
-    """
-    R_model = @rget rez
-    R_grid = R_model[:time]
-    R_Sₑ = R_model[:surv]
-    R_σ = R_model[:std_err]
-    R_low = R_model[:lower]
-    R_upp = R_model[:upper]
-
-
-    # Julia version
-    instance = fit(Hakulinen, @formula(Surv(time,status)~1), colrec, slopop)
-    conf_int = confint(instance; level = 0.05)
-    lower_bounds = [lower[1] for lower in conf_int]
-    upper_bounds = [upper[2] for upper in conf_int]
-
-    err_S = zeros(length(R_grid))
-    err_σ = zeros(length(R_grid))
-    
-    for i in eachindex(R_grid) 
-        for j in eachindex(instance.grid)
-            if R_grid[i] == instance.grid[j]
-                err_S[i] += (R_Sₑ[i] - instance.Sₑ[j]) / R_Sₑ[i]
-                err_σ[i] += (R_σ[i] - instance.σₑ[j]) / R_σ[i]
-            end
-        end
-    end
-
-    @test_broken all(abs.(err_S) .<= 0.01)
-    @test all(abs.(err_σ) .<= 0.01)
+    @test        test_surv("pohar-perme", PoharPerme, colrec, slopop)
+    @test        test_surv("ederer1",     EdererI,    colrec, slopop)
+    @test        test_surv("ederer2",     EdererII,   colrec, slopop)
+    @test_broken test_surv("hakulinen",   Hakulinen,  colrec, slopop)
 end
 
 
