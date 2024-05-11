@@ -35,24 +35,6 @@ One central hypothesis in net survival (on top of non-informative censoring) is 
 
 The population hazard for each individual $\lambda_{P_i}$ is usally drawn from a reference life table, and may depend on covariates $\mathbf D_i$ such as age and date, sex, country, race, etc... See the [RateTables.jl](https://github.com/JuliaSurv/RateTables.jl) package for more details on the potential covariates. On the other hand, the excess mortality is assumed to be i.i.d. between individuals and not to depend on covariates at all. Thus, we mostly omit these covariates from our notations.
 
-## Crude Mortality
-
-The crude mortality rate is the mortality rate from all causes of death for a population. This measure does not use the cause of death information which, as we previously mentioned, can be unreliable and incomplete. For this reason, we wish to estimate:
-
-$$F_C(t) = \int_0^t S_O(u-) \lambda_E(u)du$$
-
-The Cronin-Feuer estimator [cronin2000cumulative](@cite) is thus introduced as:
-
-$$\hat{F}_C(t) = \int_0^t \hat{S}_O(u-) \hat{\lambda}_E(u)du$$
-
-where, traditionally, Kaplan-Meier is used to estimate the overall survival function $\hat{S}_O$ and Ederer II is used for the excess hazard rate $\hat{\lambda}_E$ and the population hazard rate $\hat{\lambda}_P$.
-
-Our implementation is a bit more permissive, as any net survival estimators can be used for $\hat{\lambda}_E$ and  $\hat{\lambda}_P$. Of course, the default is still the original Ederer II which provides the original Cronin-Feuer estimator. 
- 
-```@docs
-CrudeMortality
-```
-
 ## Available Estimators
 
 The estimation of net survival is usually discussed in terms of the estimation of the cumulative excess hazard $\Lambda_E(t)$ and/or the instantaneous hazard $\lambda_E = \partial\Lambda_E$. To describe the estimators, we use the following counting processes notations, similar to standard survival analysis(see e.g. [FlemingHarington2013](@cite) or [ABGK1993](@cite)). 
@@ -80,6 +62,24 @@ PoharPerme
 EdererI
 EdererII
 Hakulinen
+```
+
+## Crude Mortality
+
+The *crude mortality rate* is the global mortality rate (from all causes of death) for a population. This measure does not use the cause of death information which, as we previously mentioned, can be unreliable and incomplete. It is given as:
+
+$$F_C(t) = \int_0^t S_O(u-) \lambda_E(u)du$$
+
+There exists a few estimators of this quantity, the most known one being the Cronin-Feuer estimator [cronin2000cumulative](@cite), given by:
+
+$$\hat{F}_C(t) = \int_0^t \hat{S}_O(u-) \hat{\lambda}_E(u)du$$
+
+where, traditionally, Kaplan-Meier is used to estimate the overall survival function $\hat{S}_O$ and Ederer II is used for the excess hazard rate $\hat{\lambda}_E$ and the population hazard rate $\hat{\lambda}_P$.
+
+Our implementation is a bit more permissive, as any net survival estimators can be used for $\hat{\lambda}_E$. Of course, the default is still the original Ederer II which provides the original Cronin-Feuer estimator. 
+ 
+```@docs
+CrudeMortality
 ```
 
 ## Grafféo Log-Rank Test
