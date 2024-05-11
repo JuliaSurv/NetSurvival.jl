@@ -38,6 +38,9 @@ export @formula
     @compile_workload begin
         fit(PoharPerme, @formula(Surv(time,status)~1), colrec, slopop)
         fit(PoharPerme, @formula(Surv(time,status)~sex), colrec, slopop)
+        fit(EdererI, @formula(Surv(time,status)~1), colrec, slopop)
+        fit(EdererII, @formula(Surv(time,status)~1), colrec, slopop)
+        fit(Hakulinen, @formula(Surv(time,status)~1), colrec, slopop)
         fit(GraffeoTest, @formula(Surv(time,status)~sex), colrec, slopop)
         fit(GraffeoTest, @formula(Surv(time,status)~sex+Strata(stage)), colrec, slopop)
         fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, slopop)
