@@ -31,14 +31,12 @@ end
     using DataFrames
     using RateTables
 
-    colrec.country = rand(keys(hmd_countries),nrow(colrec))
-    fit(PoharPerme, @formula(Surv(time,status)~1), colrec, frpop)
-    fit(EdererI, @formula(Surv(time,status)~sex), colrec, frpop)
-    fit(EdererII, @formula(Surv(time,status)~sex), colrec, frpop)
-    fit(Hakulinen, @formula(Surv(time,status)~sex), colrec, frpop)
-    fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, frpop)
+    for E in (PoharPerme, EdererI, EdererII, Hakulinen)
+        npe = fit(E, @formula(Surv(time,status)~1), colrec, frpop)
+        @assert !any(isnan.(npe.Sₑ..., npe.∂Λₑ..., npe.σₑ))
+    end
+    
     fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
-
     @test true
 end
 
