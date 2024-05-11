@@ -86,6 +86,7 @@ struct GraffeoTest
         num_variance = zero(grid)
         den_pop      = zero(grid)
         den_excess   = zero(grid)
+        ∂t = [diff(grid)...,1.0]
 
         # Compute Pohar Perme numerator and denominators on each strata&group (s,g)
         for s in eachindex(stratas)
@@ -97,7 +98,7 @@ struct GraffeoTest
                 num_variance .= 0
                 den_pop      .= 0
                 den_excess   .= 0
-                Λ!(PoharPermeMethod, num_excess, den_excess, num_pop, den_pop, num_variance, T[idx], Δ[idx], age[idx], year[idx], rate_preds[idx,:], ratetable, grid)
+                Λ!(PoharPermeMethod, num_excess, den_excess, num_pop, den_pop, num_variance, T[idx], Δ[idx], age[idx], year[idx], rate_preds[idx,:], ratetable, grid, ∂t)
                 ∂N[s, g, :] .= num_excess.- num_pop
                 ∂V[s, g, :] .= num_variance
                 D[s, g, :]  .= den_excess
