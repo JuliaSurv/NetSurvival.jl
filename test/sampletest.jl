@@ -1,14 +1,9 @@
 @testitem "Basic functionality test" begin
     using RateTables
     ################################
-    # Run code: estimator and confidence interval. 
     instance = PoharPerme(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, slopop)
     conf_int = confint(instance; level = 0.05)
-    # Run code: test. 
-    strata = colrec.sex
-    group = colrec.stage
-    mytest = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, strata, group, slopop)
-
+    mytest   = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
     fit(PoharPerme, @formula(Surv(time,status)~sex), colrec, frpop)
 
     @test true
