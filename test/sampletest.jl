@@ -134,8 +134,8 @@ end
     R_causeSpec = R_model[:causeSpec][:est]
     R_population = R_model[:population][:est]
 
-    err_causeSpec = (R_causeSpec[2:end, :] .- instance.Λₑ[1:(end-1), :]) ./ R_causeSpec[2:end, :]
-    err_pop = (R_population[2:end, :] .- instance.Λₚ[1:(end-1), :]) ./ R_population[2:end, :]
+    err_causeSpec = (R_causeSpec[2:end, :] .- instance.Λₑ[1:end, :]) ./ R_causeSpec[2:end, :]
+    err_pop = (R_population[2:end, :] .- instance.Λₚ[1:end, :]) ./ R_population[2:end, :]
 
     @test all(abs.(err_causeSpec) .<= 0.01)
     @test all(abs.(err_pop) .<= 0.01)
