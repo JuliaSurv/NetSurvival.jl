@@ -1,15 +1,4 @@
-@testitem "Basic functionality test" begin
-    using RateTables
-    ################################
-    instance = PoharPerme(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, slopop)
-    conf_int = confint(instance; level = 0.05)
-    mytest   = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
-    fit(PoharPerme, @formula(Surv(time,status)~sex), colrec, frpop)
-
-    @test true
-end
-
-@testitem "Interface test & No-Nan" begin
+@testitem "Interface test & ensure no nans" begin
     
     ################################
     # Run code: test. 
@@ -97,6 +86,8 @@ end
 
     # Julia version
     graffeo = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
+
+    other_calling_syntax = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
     
     err_F = (R_test - graffeo.stat) / R_test
     err_p = R_pvalue == 0.0 ? 0.0 : (R_pvalue - graffeo.pval) / R_pvalue
@@ -150,3 +141,6 @@ end
     @test all(abs.(err_pop) .<= 0.01)
 end
 
+@testitem "machin" begin
+    @test false
+end
