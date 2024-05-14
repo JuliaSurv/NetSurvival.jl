@@ -14,10 +14,9 @@ function Nessie(formula::FormulaTerm, df::DataFrame, rate_preds, rt::RateTables.
     times_d = times .* 365.241
 
     new_df = groupby(df, pred_names)
-    k = Matrix(undef, nrow(unique(df[!,pred_names])), length(times))
     povp = zeros(nrow(unique(df[!,pred_names])))
     sit = zeros(length(times))
-    num_pop = zeros(length(times))
+    num_pop = zeros(nrow(unique(df[!,pred_names])), length(times))
 
     for i in 1:nrow(unique(df[!,pred_names]))
         for j in 1:nrow(new_df[i])
@@ -30,10 +29,10 @@ function Nessie(formula::FormulaTerm, df::DataFrame, rate_preds, rt::RateTables.
                 ∂Λₚ         = λₚ #* (times_d[m+1]-times_d[m]) 
                 Λₚ         += ∂Λₚ
                 Sₚ          = exp(-Λₚ)
-                num_pop[m] += Sₚ 
+                num_pop[i,m] += Sₚ 
                 sit[m]     += (1-Sₚ) / λₚ
             end
-        end     
+        end   
         povp[i] = mean(sit ./ 365.241)    
     end
     return num_pop, povp
