@@ -238,3 +238,15 @@ plot(plot1, plot2, layout = (1, 2))
 ```
 
 Visually, it is almost immediately understood that there are no worthy differences between the two sexes whereas the `age65` variable seems to play a big role.
+
+
+## Estimated sample size and life expectancy 
+
+Given that the age group plays a significant role in the study, we will now define a new variable that groups patients in specific age groups. We will use these groups to estimate the sample size by yearly intervals and compare the groups.
+
+```@example 1
+breaks = [0; collect(45:5:90); Inf]
+
+colrec.agegr = cut(colrec.age./365.241, breaks, right=false)
+ess = Nessie(@formula(Surv(time,status)~sex+agegr), colrec, slopop)
+```
