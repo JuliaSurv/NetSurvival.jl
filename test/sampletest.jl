@@ -71,6 +71,9 @@ end
     @test all(instance.∂N .== v2.∂N)
     @test all(instance.∂V .== v2.∂V)
     @test all(instance.∂Z .== v2.∂Z)
+    @test instance.stat == v2.stat
+    @test instance.df == v2.df
+    @test instance.pval == v2.pval
 
 
     # Check for no nans: 
@@ -95,6 +98,9 @@ end
     @test all(second_instance.∂N .== second_v2.∂N)
     @test all(second_instance.∂V .== second_v2.∂V)
     @test all(second_instance.∂Z .== second_v2.∂Z)
+    @test second_instance.stat == second_v2.stat
+    @test second_instance.df == second_v2.df
+    @test second_instance.pval == second_v2.pval
     
     err_F = (r[:test_stat] - instance.stat) / r[:test_stat]
     err_p = r[:p_value] == 0.0 ? 0.0 : (r[:p_value] - instance.pval) / r[:p_value]
