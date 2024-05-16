@@ -55,60 +55,64 @@ end
 
 @testitem "Assess GraffeoTest" begin
     
-    # R version
-    using RCall
-    using RateTables
+    using RCall, RateTables
+
+    # Prerequisite functions: 
+    function check_equal(test1, test2)
+        @test all(test1.∂N .== test2.∂N)
+        @test all(test1.∂V .== test2.∂V)
+        @test all(test1.∂Z .== test2.∂Z)
+        @test test1.stat == test2.stat
+        @test test1.df == test2.df
+        @test test1.pval == test2.pval
+        return nothing
+    end
+    function check_no_nan(instance)
+        @test !any(isnan.(instance.∂N))
+        @test !any(isnan.(instance.∂V))
+        @test !any(isnan.(instance.∂Z))
+        @test !isnan(instance.stat)
+        @test !isnan(instance.df)
+        @test !isnan(instance.pval)
+        return nothing
+    end
+    function compare_with_R(test,r)
+        err_F = (r[:test_stat] - test.stat) / r[:test_stat]
+        err_p = r[:p_value] == 0.0 ? 0.0 : (r[:p_value] - test.pval) / r[:p_value]
+        err_df = (r[:df] - test.df) / r[:df]
+        @test abs(err_F)   <= 0.01
+        @test abs(err_p)   <= 0.001
+        @test abs.(err_df) <= 0.01
+        return nothing
+    end
+
+    # Compare the two interfaces for the test, check for no-nans and compare with R results: 
+    v1 = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
+    v2 = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, ones(length(colrec.age)), colrec.stage, slopop)
+
     R"""
     rez = relsurv::rs.diff(survival::Surv(time, stat) ~ stage, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
     """
-    r = @rget rez
+    vR = @rget rez
 
-    # Julia version
-    instance = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
+    compare_with_R(v1, vR)
+    check_equal(v1,v2)
+    check_no_nan(v1)
+    check_no_nan(v2)
 
-    # Check concordance between the two calling syntaxes: 
-    v2 = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, ones(length(colrec.age)), colrec.stage, slopop)
-    @test all(instance.∂N .== v2.∂N)
-    @test all(instance.∂V .== v2.∂V)
-    @test all(instance.∂Z .== v2.∂Z)
-    @test instance.stat == v2.stat
-    @test instance.df == v2.df
-    @test instance.pval == v2.pval
+    # Same checks for the stratified version: 
+    v1_strat = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
+    v2_strat = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
 
-
-    # Check for no nans: 
-    @test !any(isnan.(instance.∂N))
-    @test !any(isnan.(instance.∂V))
-    @test !any(isnan.(instance.∂Z))
-    @test !isnan(instance.stat)
-    @test !isnan(instance.df)
-    @test !isnan(instance.pval)
-
-    # Check also for no nans if strata is used: 
-    second_instance = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
-    @test !any(isnan.(second_instance.∂N))
-    @test !any(isnan.(second_instance.∂V))
-    @test !any(isnan.(second_instance.∂Z))
-    @test !isnan(second_instance.stat)
-    @test !isnan(second_instance.df)
-    @test !isnan(second_instance.pval)
-
-    # Check concordance between the two calling syntaxes, stratified
-    second_v2 = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
-    @test all(second_instance.∂N .== second_v2.∂N)
-    @test all(second_instance.∂V .== second_v2.∂V)
-    @test all(second_instance.∂Z .== second_v2.∂Z)
-    @test second_instance.stat == second_v2.stat
-    @test second_instance.df == second_v2.df
-    @test second_instance.pval == second_v2.pval
+    R"""
+    rez = relsurv::rs.diff(survival::Surv(time, stat) ~ stage+strata(sex), rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
+    """
+    vR_strat = @rget rez
     
-    err_F = (r[:test_stat] - instance.stat) / r[:test_stat]
-    err_p = r[:p_value] == 0.0 ? 0.0 : (r[:p_value] - instance.pval) / r[:p_value]
-    err_df = (r[:df] - instance.df) / r[:df]
-
-    @test abs(err_F)   <= 0.01
-    @test abs(err_p)   <= 0.001
-    @test abs.(err_df) <= 0.01
+    compare_with_R(v1_strat, vR_strat)
+    check_equal(v1_strat,v2_strat)
+    check_no_nan(v1_strat)
+    check_no_nan(v2_strat)
 end
 
 
