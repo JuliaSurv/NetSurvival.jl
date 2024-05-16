@@ -1,34 +1,3 @@
-@testitem "Interface test & ensure no nans" begin
-    
-    ################################
-    # Run code: test. 
-    using RateTables
-
-    function mktest(::Type{E}, df, rt, args...) where E
-        npe = fit(E, @formula(Surv(time,status)~1), df, rt)
-        ci = confint(npe; level = 0.05)
-        # Check for no-nans :
-        rez = true 
-        rez &= !any(isnan.(npe.Sₑ))
-        rez &= !any(isnan.(npe.∂Λₑ))
-        rez &= !any(isnan.(npe.σₑ))
-        rez &= !any([any(isnan.(x)) for x in ci])
-
-        # Check for correspondance of the alternative call syntax: 
-        v2 = E(args..., rt)
-        rez &= all(v2.Sₑ .== npe.Sₑ) & all(v2.∂Λₑ .== npe.∂Λₑ) & all(v2.σₑ .== npe.σₑ)
-        return rez
-    end
-    args =  (colrec, slopop, colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex)
-    @test mktest(PoharPerme, args...)
-    @test mktest(EdererI, args...)
-    @test mktest(EdererII, args...)
-    @test mktest(Hakulinen, args...)
-    
-    rez = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
-    @test !isnan(rez.pval) && !isnan(rez.stat)
-end
-
 @testitem "Compare NPNSEstimator's with relsurv::rs.surv on colrec x slopop" begin
     using RateTables, NetSurvival, RCall, DataFrames
     function mk_r_model(r_method)
@@ -50,10 +19,25 @@ end
         e = @rget e
         return t::Vector{Float64},s::Vector{Float64},e::Vector{Float64}
     end
-    function test_surv(r_method,::Type{E},df, rt) where E
-        jl = fit(E, @formula(Surv(time,status)~1), df, rt)
-        r_t, r_S, r_σ = mk_r_model(r_method)
+    function test_surv(r_method,::Type{E},df, rt, args...) where E
 
+        jl = fit(E, @formula(Surv(time,status)~1), df, rt)
+        ci = confint(npe; level = 0.05)
+
+        # Check for no-nans :
+        @test !any(isnan.(npe.Sₑ))
+        @test !any(isnan.(npe.∂Λₑ))
+        @test !any(isnan.(npe.σₑ))
+        @test !any([any(isnan.(x)) for x in ci])
+
+        # Check for correspondance of the alternative call syntax: 
+        v2 = E(args..., df, rt)
+        @test all(v2.Sₑ .== npe.Sₑ)
+        @test all(v2.∂Λₑ .== npe.∂Λₑ)
+        @test all(v2.σₑ .== npe.σₑ)
+
+        # Compare with R: 
+        r_t, r_S, r_σ = mk_r_model(r_method)
         err_S = zeros(length(r_t))
         err_σ = zeros(length(r_t))
         for i in eachindex(r_t) 
@@ -63,10 +47,12 @@ end
         end
         return all(abs.(err_S) .<= 0.01) && all(abs.(err_σ) .<= 0.01)
     end
+    args =  (colrec, slopop, colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex)
+    @test        test_surv("pohar-perme", PoharPerme, args...)
+    @test        test_surv("ederer1",     EdererI,    args...)
+    @test        test_surv("ederer2",     EdererII,   args...)
 
-    @test        test_surv("pohar-perme", PoharPerme, colrec, slopop)
-    @test        test_surv("ederer1",     EdererI,    colrec, slopop)
-    @test        test_surv("ederer2",     EdererII,   colrec, slopop)
+    # Hakulinen is unfortunately broken.
     @test_broken test_surv("hakulinen",   Hakulinen,  colrec, slopop)
 end
 
@@ -79,24 +65,41 @@ end
     R"""
     rez = relsurv::rs.diff(survival::Surv(time, stat) ~ stage, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
     """
-    R_model = @rget rez
-    R_test = R_model[:test_stat]
-    R_pvalue = R_model[:p_value]
-    R_df = R_model[:df]
+    r = @rget rez
 
     # Julia version
-    graffeo = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
+    instance = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
 
-    other_calling_syntax = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
+    # Check concordance between the two calling syntaxes: 
+    v2 = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
+    @test all(instance.∂N .== v2.∂N)
+    @test all(instance.∂V .== v2.∂V)
+    @test all(instance.∂Z .== v2.∂Z)
+
+    # Check for no nans: 
+    @test !any(isnan.(instance.∂N))
+    @test !any(isnan.(instance.∂V))
+    @test !any(isnan.(instance.∂Z))
+    @test !isnan(instance.stat)
+    @test !isnan(instance.df)
+    @test !isnan(instance.pval)
+
+    # Check also for no nans if strata is used: 
+    second_instance = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
+    @test !any(isnan.(second_instance.∂N))
+    @test !any(isnan.(second_instance.∂V))
+    @test !any(isnan.(second_instance.∂Z))
+    @test !isnan(second_instance.stat)
+    @test !isnan(second_instance.df)
+    @test !isnan(second_instance.pval)
     
-    err_F = (R_test - graffeo.stat) / R_test
-    err_p = R_pvalue == 0.0 ? 0.0 : (R_pvalue - graffeo.pval) / R_pvalue
-    err_df = (R_df - graffeo.df) / R_df
+    err_F = (r[:test_stat] - instance.stat) / r[:test_stat]
+    err_p = r[:p_value] == 0.0 ? 0.0 : (r[:p_value] - instance.pval) / r[:p_value]
+    err_df = (r[:df] - instance.df) / r[:df]
 
-    @test all(abs.(err_F) .<= 0.01)
-    @test all(abs.(err_p) .<= 0.001)
-    @test all(abs.(err_df) .<= 0.01)
-
+    @test abs(err_F)   <= 0.01
+    @test abs(err_p)   <= 0.001
+    @test abs.(err_df) <= 0.01
 end
 
 
@@ -104,6 +107,7 @@ end
 
     using DataFrames
     using RateTables
+    using RCall
 
     colrec.country = rand(keys(hmd_countries),nrow(colrec))
     instance = fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, slopop)
@@ -114,20 +118,19 @@ end
     @test all(instance.Λₑ .== v2.Λₑ)
     @test all(instance.Λₚ .== v2.Λₚ)
 
+    # Check for no nans: 
+    @test !any(isnan.(instance.Λₒ))
+    @test !any(isnan.(instance.Λₑ))
+    @test !any(isnan.(instance.Λₚ))
+
     # Now compare with R baseline: 
-    using RCall
-    using RateTables
     R"""
     rez = relsurv::cmp.rel(survival::Surv(time, stat) ~ 1, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
     """
-    R_model = @rget rez
-    R_grid = R_model[:causeSpec][:time]
-    R_causeSpec = R_model[:causeSpec][:est]
-    R_population = R_model[:population][:est]
+    r = @rget rez
 
-    err_causeSpec = (R_causeSpec[2:end, :] .- instance.Λₑ[1:end, :]) ./ R_causeSpec[2:end, :]
-    err_pop = (R_population[2:end, :] .- instance.Λₚ[1:end, :]) ./ R_population[2:end, :]
-
+    err_causeSpec = (r[:causeSpec][:est][2:end, :]  .- instance.Λₑ[1:end, :]) ./ r[:causeSpec][:est][2:end, :]
+    err_pop =       (r[:population][:est][2:end, :] .- instance.Λₚ[1:end, :]) ./ r[:population][:est][2:end, :]
     @test all(abs.(err_causeSpec) .<= 0.01)
-    @test all(abs.(err_pop) .<= 0.01)
+    @test all(abs.(err_pop)       .<= 0.01)
 end
