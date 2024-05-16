@@ -21,7 +21,7 @@ function Λ!(::Type{EdererIIMethod}, num_excess, den_excess, num_pop, den_pop, n
         rtᵢ = ratetable[rate_preds[i,:]...]
         for j in 1:Tᵢ
             λₚ          = daily_hazard(rtᵢ, age[i] + grid[j], year[i] + grid[j])
-            ∂Λₚ         = λₚ * ∂t[j]#(grid[j+1]-grid[j]) # λₚ * ∂t 
+            ∂Λₚ         = λₚ * ∂t[j]
             den_excess[j] += 1
             den_pop[j] += 1
             num_pop[j] += ∂Λₚ

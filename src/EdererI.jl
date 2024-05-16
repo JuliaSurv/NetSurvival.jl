@@ -23,7 +23,7 @@ function Λ!(::Type{EdererIMethod}, num_excess, den_excess, num_pop, den_pop, nu
         rtᵢ = ratetable[rate_preds[i,:]...]
         for j in 1:Tmax
             λₚ          = daily_hazard(rtᵢ, age[i] + grid[j], year[i] + grid[j])
-            ∂Λₚ         = λₚ * ∂t[j]#(grid[j+1]-grid[j]) # λₚ * ∂t 
+            ∂Λₚ         = λₚ * ∂t[j]
             Λₚ         += ∂Λₚ
             Sₚ          = exp(-Λₚ)
             num_pop[j] += (Sₚ * ∂Λₚ)
