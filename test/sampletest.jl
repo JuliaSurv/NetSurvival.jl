@@ -71,7 +71,7 @@ end
 end
 
 
-@testitem "Comparing log rank test with R" begin
+@testitem "Comparing log rank test with relsurv::rs.surv on colrec x slopop" begin
     
     # R version
     using RCall
@@ -99,31 +99,22 @@ end
 
 end
 
-@testitem "crude mortality interface" begin
-    
-    ################################
-    # Run code: test. 
-    using DataFrames
-    using RateTables
-
-    colrec.country = rand(keys(hmd_countries),nrow(colrec))
-    fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, slopop)
-    CrudeMortality(fit(EdererII, @formula(Surv(time, status)~1), colrec, slopop))
-
-    @test true
-end
 
 @testitem "comparing crude mortality" begin
-    
-    ################################
-    # Run code: test. 
+
     using DataFrames
     using RateTables
 
     colrec.country = rand(keys(hmd_countries),nrow(colrec))
     instance = fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, slopop)
 
-    # R version
+    # Check that this verison is returning the same thing: 
+    v2 = CrudeMortality(fit(EdererII, @formula(Surv(time, status)~1), colrec, slopop))
+    @test all(instance.Λₒ .== v2.Λₒ)
+    @test all(instance.Λₑ .== v2.Λₑ)
+    @test all(instance.Λₚ .== v2.Λₚ)
+
+    # Now compare with R baseline: 
     using RCall
     using RateTables
     R"""
