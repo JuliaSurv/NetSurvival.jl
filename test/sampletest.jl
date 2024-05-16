@@ -108,13 +108,11 @@ end
 
     # Coompare results with R: 
     compare_with_R(v1, vR)
-    compare_with_R(v1_strat, vR_strat)
+    compare_with_R(v1_strat, vR_strat) # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------- This ones fails 
 
     # Check for equality of the two interfaces: 
     check_equal(v1,v2)
-    check_equal(v1_strat,v2_strat)
-
-
+    check_equal(v1_strat,v2_strat) # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------- This ones fails 
 end
 
 
