@@ -38,6 +38,6 @@ function nessie(args...)
     return lt, r
 end
 
-
+# Maybe not necessary ? No need to clutter the interface too much.. 
 expected_life_time(x::Nessie) = x.expected_life_time
 expected_sample_size(x::Nessie) = x.expected_sample_size
