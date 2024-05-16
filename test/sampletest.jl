@@ -86,33 +86,35 @@ end
         return nothing
     end
 
-    # Compare the two interfaces for the test, check for no-nans and compare with R results: 
+    # Make the different tests: 
     v1 = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
     v2 = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, ones(length(colrec.age)), colrec.stage, slopop)
 
-    R"""
-    rez = relsurv::rs.diff(survival::Surv(time, stat) ~ stage, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
-    """
-    vR = @rget rez
-
-    compare_with_R(v1, vR)
-    check_equal(v1,v2)
-    check_no_nan(v1)
-    check_no_nan(v2)
-
-    # Same checks for the stratified version: 
     v1_strat = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
     v2_strat = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
 
     R"""
-    rez = relsurv::rs.diff(survival::Surv(time, stat) ~ stage+strata(sex), rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
+    rez = relsurv::rs.diff(survival::Surv(time, stat) ~ stage, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
+    rez_strat = relsurv::rs.diff(survival::Surv(time, stat) ~ stage+survival::strata(sex), rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
     """
-    vR_strat = @rget rez
-    
-    compare_with_R(v1_strat, vR_strat)
-    check_equal(v1_strat,v2_strat)
+    vR = @rget rez
+    vR_strat = @rget rez_strat
+
+    # Check for no-nans: 
+    check_no_nan(v1)
+    check_no_nan(v2)
     check_no_nan(v1_strat)
     check_no_nan(v2_strat)
+
+    # Coompare results with R: 
+    compare_with_R(v1, vR)
+    compare_with_R(v1_strat, vR_strat)
+
+    # Check for equality of the two interfaces: 
+    check_equal(v1,v2)
+    check_equal(v1_strat,v2_strat)
+
+
 end
 
 
