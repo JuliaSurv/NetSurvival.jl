@@ -1,5 +1,6 @@
-function Nessie(formula::FormulaTerm, df::DataFrame, rate_preds, rt::RateTables.AbstractRateTable)
+function Nessie(formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable)
     formula_applied = apply_schema(formula,schema(df))
+    rate_predictors = String.([RateTables.predictors(rt)...])
 
     nms = StatsModels.termnames(formula_applied.rhs)
     if isa(nms, String)
@@ -21,19 +22,20 @@ function Nessie(formula::FormulaTerm, df::DataFrame, rate_preds, rt::RateTables.
     for i in 1:nrow(unique(df[!,pred_names]))
         for j in 1:nrow(new_df[i])
             Tᵢ = searchsortedlast(times_d, new_df[i].time[j])
+            rate_preds = select(new_df[i],rate_predictors)
             rtᵢ = rt[rate_preds[j,:]...]
             Λₚ = 0.0
 
             for m in 1:Tᵢ
                 λₚ          = daily_hazard(rtᵢ, new_df[i].age[j] + times_d[m], new_df[i].year[j] + times_d[m])
-                ∂Λₚ         = λₚ #* (times_d[m+1]-times_d[m]) 
+                ∂Λₚ         = λₚ 
                 Λₚ         += ∂Λₚ
                 Sₚ          = exp(-Λₚ)
                 num_pop[i,m] += Sₚ 
                 sit[m]     += (1-Sₚ) / λₚ
             end
-        end   
-        povp[i] = mean(sit ./ 365.241)    
+        end  
+        povp[i] = mean(sit ./ 365.241)     
     end
     return num_pop, povp
 end
