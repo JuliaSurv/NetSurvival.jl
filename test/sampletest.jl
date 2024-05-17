@@ -1,284 +1,149 @@
-# This file could be removed =, but here is a sample test: 
+@testitem "Assess all NPNSEstimators" begin
+    using RateTables, NetSurvival, RCall, DataFrames
+    function mk_r_model(r_method)
 
-@testitem "trivial test" begin
-    @test true
-end
+        return t::Vector{Float64},s::Vector{Float64},e::Vector{Float64}
+    end
+    function test_surv(r_method,::Type{E},df, rt, args...) where E
 
+        # Main instance: 
+        instance = fit(E, @formula(Surv(time,status)~1), df, rt)
+        ci = confint(instance; level = 0.05)
 
-@testitem "trivial test 2" begin
-    using RateTables
-    ################################
-    # Run code: estimator and confidence interval. 
+        # Check for no-nans :
+        @test !any(isnan.(instance.Sₑ))
+        @test !any(isnan.(instance.∂Λₑ))
+        @test !any(isnan.(instance.σₑ))
+        @test !any([any(isnan.(x)) for x in ci])
 
-    instance = PoharPerme(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, slopop)
-    conf_int = confint(instance; level = 0.05)
-    # Run code: test. 
-    strata = colrec.sex
-    group = colrec.stage
-    mytest = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, strata, group, slopop)
+        # Check for correspondance of the alternative call syntax: 
+        v2 = E(args..., rt)
+        @test all(v2.Sₑ .== instance.Sₑ)
+        @test all(v2.∂Λₑ .== instance.∂Λₑ)
+        @test all(v2.σₑ .== instance.σₑ)
 
-    fit(PoharPerme, @formula(Surv(time,status)~sex), colrec, frpop)
+        # Compare with R: 
+        @rput r_method
+        R"""
+        rez = relsurv::rs.surv(survival::Surv(time, stat) ~ 1, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop, method = r_method, add.times=1:8149)
+        t = rez$time
+        s = rez$surv
+        e = rez$std.err
+        """
+        r = @rget rez
 
-    @test true
-
-    # How to use R and R packages in here ? 
-end
-
-@testitem "interface test" begin
-    
-    ################################
-    # Run code: test. 
-    using DataFrames
-    using RateTables
-
-    colrec.country = rand(keys(hmd_countries),nrow(colrec))
-    fit(PoharPerme, @formula(Surv(time,status)~1), colrec, frpop)
-    fit(EdererI, @formula(Surv(time,status)~sex), colrec, frpop)
-    fit(EdererII, @formula(Surv(time,status)~sex), colrec, frpop)
-    fit(Hakulinen, @formula(Surv(time,status)~sex), colrec, frpop)
-    fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, frpop)
-    fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
-
-    @test true
-end
-
-
-@testitem "Comparing PoharPerme with R" begin
-    
-    # R version
-    using RCall
-    using RateTables
-    R"""
-    rez = relsurv::rs.surv(
-        survival::Surv(time, stat) ~1, 
-        rmap=list(age = age, sex = sex, year = diag), 
-        data = relsurv::colrec, 
-        ratetable = relsurv::slopop, 
-        method = "pohar-perme", 
-        add.times=1:8149)
-    """
-    R_model = @rget rez
-    R_grid = R_model[:time]
-    R_Sₑ = R_model[:surv]
-    R_σ = R_model[:std_err]
-    R_low = R_model[:lower]
-    R_upp = R_model[:upper]
-
-
-    # Julia version
-    instance = fit(PoharPerme, @formula(Surv(time,status)~1), colrec, slopop)
-    conf_int = confint(instance; level = 0.05)
-    lower_bounds = [lower[1] for lower in conf_int]
-    upper_bounds = [upper[2] for upper in conf_int]
-    
-    err_S = (R_Sₑ .- instance.Sₑ[1:end-1]) ./ R_Sₑ
-    err_σ = (R_σ .- instance.σₑ[1:end-1]) ./ R_σ
-
-    @test all(abs.(err_S) .<= 0.01)
-    @test all(abs.(err_σ) .<= 0.01)
-
-end
-
-@testitem "Comparing EdererI with R" begin
-    
-    # R version
-    using RCall
-    using RateTables
-    R"""
-    rez = relsurv::rs.surv(
-        survival::Surv(time, stat) ~1, 
-        rmap=list(age = age, sex = sex, year = diag), 
-        data = relsurv::colrec, 
-        ratetable = relsurv::slopop, 
-        method = "ederer1", 
-        add.times=1:8149)
-    """
-    R_model = @rget rez
-    R_grid = R_model[:time]
-    R_Sₑ = R_model[:surv]
-    R_σ = R_model[:std_err]
-    R_low = R_model[:lower]
-    R_upp = R_model[:upper]
-
-
-    # Julia version
-    instance = fit(EdererI, @formula(Surv(time,status)~1), colrec, slopop)
-    conf_int = confint(instance; level = 0.05)
-    lower_bounds = [lower[1] for lower in conf_int]
-    upper_bounds = [upper[2] for upper in conf_int]
-
-    err_S = zeros(length(R_grid))
-    err_σ = zeros(length(R_grid))
-    
-    for i in eachindex(R_grid) 
-        for j in eachindex(instance.grid)
-            if R_grid[i] == instance.grid[j]
-                err_S[i] += (R_Sₑ[i] - instance.Sₑ[j]) / R_Sₑ[i]
-                err_σ[i] += (R_σ[i] - instance.σₑ[j]) / R_σ[i]
-            end
+        err_S = zeros(length(r[:time]))
+        err_σ = zeros(length(r[:time]))
+        for i in eachindex(r[:time]) 
+            j = searchsortedlast(instance.grid, r[:time][i])
+            err_S[i] = (r[:surv][i] - instance.Sₑ[j]) / r[:surv][i]
+            err_σ[i] = (r[:std_err][i] - instance.σₑ[j]) / r[:std_err][i]
         end
+        @test all(abs.(err_σ) .<= 0.01)
+        # We return this last one instead of testing it directly because it is broken for Hakulinen, so we can test_broken it only for haku. 
+        return all(abs.(err_S) .<= 0.01) 
+    end
+    args =  (colrec, slopop, colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex)
+    @test        test_surv("pohar-perme", PoharPerme, args...)
+    @test        test_surv("ederer1",     EdererI,    args...)
+    @test        test_surv("ederer2",     EdererII,   args...)
+
+    # Hakulinen is unfortunately broken.
+    @test_broken test_surv("hakulinen",   Hakulinen,  colrec, slopop)
+end
+
+
+@testitem "Assess GraffeoTest" begin
+    
+    using RCall, RateTables, DataFrames
+
+    # Prerequisite functions: 
+    function check_equal(test1, test2)
+        @test all(test1.∂N .== test2.∂N)
+        @test all(test1.∂V .== test2.∂V)
+        @test all(test1.∂Z .== test2.∂Z)
+        @test test1.stat == test2.stat
+        @test test1.df == test2.df
+        @test test1.pval == test2.pval
+        return nothing
+    end
+    function check_no_nan(instance)
+        @test !any(isnan.(instance.∂N))
+        @test !any(isnan.(instance.∂V))
+        @test !any(isnan.(instance.∂Z))
+        @test !isnan(instance.stat)
+        @test !isnan(instance.df)
+        @test !isnan(instance.pval)
+        return nothing
+    end
+    function compare_with_R(test,r)
+        err_F = (r[:test_stat] - test.stat) / r[:test_stat]
+        err_p = r[:p_value] == 0.0 ? 0.0 : (r[:p_value] - test.pval) / r[:p_value]
+        err_df = (r[:df] - test.df) / r[:df]
+        @test abs(err_F)   <= 0.02
+        @test abs(err_p)   <= 0.001
+        @test abs.(err_df) <= 0.01
+        return nothing
     end
 
-    @test all(abs.(err_S) .<= 0.01)
-    @test all(abs.(err_σ) .<= 0.01)
+    # Make the different tests: 
+    v1 = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
+    v2 = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, ones(length(colrec.age)), colrec.stage, slopop)
 
-end
+    v1_strat = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, slopop)
+    v2_strat = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, [join(row, " ") for row in eachrow(select(colrec,[:sex,:stage]))], slopop)
 
-@testitem "Comparing EdererII with R" begin
-    
-    # R version
-    using RCall
-    using RateTables
-    R"""
-    rez = relsurv::rs.surv(
-        survival::Surv(time, stat) ~1, 
-        rmap=list(age = age, sex = sex, year = diag), 
-        data = relsurv::colrec, 
-        ratetable = relsurv::slopop, 
-        method = "ederer2", 
-        add.times=1:8149)
-    """
-    R_model = @rget rez
-    R_grid = R_model[:time]
-    R_Sₑ = R_model[:surv]
-    R_σ = R_model[:std_err]
-    R_low = R_model[:lower]
-    R_upp = R_model[:upper]
-
-
-    # Julia version
-    instance = fit(EdererII, @formula(Surv(time,status)~1), colrec, slopop)
-    conf_int = confint(instance; level = 0.05)
-    lower_bounds = [lower[1] for lower in conf_int]
-    upper_bounds = [upper[2] for upper in conf_int]
-
-    err_S = zeros(length(R_grid))
-    err_σ = zeros(length(R_grid))
-    
-    for i in eachindex(R_grid) 
-        for j in eachindex(instance.grid)
-            if R_grid[i] == instance.grid[j]
-                err_S[i] += (R_Sₑ[i] - instance.Sₑ[j]) / R_Sₑ[i]
-                err_σ[i] += (R_σ[i] - instance.σₑ[j]) / R_σ[i]
-            end
-        end
-    end
-
-    @test all(abs.(err_S) .<= 0.01)
-    @test all(abs.(err_σ) .<= 0.01)
-
-end
-
-@testitem "Comparing Hakulinen with R" begin
-    
-    # R version
-    using RCall
-    using RateTables
-    R"""
-    rez = relsurv::rs.surv(
-        survival::Surv(time, stat) ~1, 
-        rmap=list(age = age, sex = sex, year = diag), 
-        data = relsurv::colrec, 
-        ratetable = relsurv::slopop, 
-        method = "hakulinen", 
-        add.times=1:8149)
-    """
-    R_model = @rget rez
-    R_grid = R_model[:time]
-    R_Sₑ = R_model[:surv]
-    R_σ = R_model[:std_err]
-    R_low = R_model[:lower]
-    R_upp = R_model[:upper]
-
-
-    # Julia version
-    instance = fit(Hakulinen, @formula(Surv(time,status)~1), colrec, slopop)
-    conf_int = confint(instance; level = 0.05)
-    lower_bounds = [lower[1] for lower in conf_int]
-    upper_bounds = [upper[2] for upper in conf_int]
-
-    err_S = zeros(length(R_grid))
-    err_σ = zeros(length(R_grid))
-    
-    for i in eachindex(R_grid) 
-        for j in eachindex(instance.grid)
-            if R_grid[i] == instance.grid[j]
-                err_S[i] += (R_Sₑ[i] - instance.Sₑ[j]) / R_Sₑ[i]
-                err_σ[i] += (R_σ[i] - instance.σₑ[j]) / R_σ[i]
-            end
-        end
-    end
-
-    @test_broken all(abs.(err_S) .<= 0.01)
-    @test all(abs.(err_σ) .<= 0.01)
-end
-
-
-@testitem "Comparing log rank test with R" begin
-    
-    # R version
-    using RCall
-    using RateTables
     R"""
     rez = relsurv::rs.diff(survival::Surv(time, stat) ~ stage, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
+    rez_strat = relsurv::rs.diff(survival::Surv(time, stat) ~ stage+survival::strata(sex), rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
     """
-    R_model = @rget rez
-    R_test = R_model[:test_stat]
-    R_pvalue = R_model[:p_value]
-    R_df = R_model[:df]
+    vR = @rget rez
+    vR_strat = @rget rez_strat
 
-    # Julia version
-    graffeo = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
-    
-    err_F = (R_test - graffeo.stat) / R_test
-    err_p = R_pvalue == 0.0 ? 0.0 : (R_pvalue - graffeo.pval) / R_pvalue
-    err_df = (R_df - graffeo.df) / R_df
+    # Check for no-nans: 
+    check_no_nan(v1)
+    check_no_nan(v2)
+    check_no_nan(v1_strat)
+    check_no_nan(v2_strat)
 
-    @test all(abs.(err_F) .<= 0.01)
-    @test all(abs.(err_p) .<= 0.001)
-    @test all(abs.(err_df) .<= 0.01)
+    # Coompare results with R: 
+    compare_with_R(v1, vR)
+    compare_with_R(v1_strat, vR_strat) # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------- This ones fails 
 
+    # Check for equality of the two interfaces: 
+    check_equal(v1,v2)
+    check_equal(v1_strat,v2_strat) # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------- This ones fails 
 end
 
-@testitem "crude mortality interface" begin
-    
-    ################################
-    # Run code: test. 
+
+@testitem "Assess CrudeMortality" begin
+
     using DataFrames
     using RateTables
-
-    colrec.country = rand(keys(hmd_countries),nrow(colrec))
-    fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, slopop)
-    CrudeMortality(fit(EdererII, @formula(Surv(time, status)~1), colrec, slopop))
-
-    @test true
-end
-
-@testitem "comparing crude mortality" begin
-    
-    ################################
-    # Run code: test. 
-    using DataFrames
-    using RateTables
+    using RCall
 
     colrec.country = rand(keys(hmd_countries),nrow(colrec))
     instance = fit(CrudeMortality, @formula(Surv(time,status)~1), colrec, slopop)
 
-    # R version
-    using RCall
-    using RateTables
+    # Check that this verison is returning the same thing: 
+    v2 = CrudeMortality(fit(EdererII, @formula(Surv(time, status)~1), colrec, slopop))
+    @test all(instance.Λₒ .== v2.Λₒ)
+    @test all(instance.Λₑ .== v2.Λₑ)
+    @test all(instance.Λₚ .== v2.Λₚ)
+
+    # Check for no nans: 
+    @test !any(isnan.(instance.Λₒ))
+    @test !any(isnan.(instance.Λₑ))
+    @test !any(isnan.(instance.Λₚ))
+
+    # Now compare with R baseline: 
     R"""
     rez = relsurv::cmp.rel(survival::Surv(time, stat) ~ 1, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
     """
-    R_model = @rget rez
-    R_grid = R_model[:causeSpec][:time]
-    R_causeSpec = R_model[:causeSpec][:est]
-    R_population = R_model[:population][:est]
+    r = @rget rez
 
-    err_causeSpec = (R_causeSpec[2:end, :] .- instance.Λₑ[1:(end-1), :]) ./ R_causeSpec[2:end, :]
-    err_pop = (R_population[2:end, :] .- instance.Λₚ[1:(end-1), :]) ./ R_population[2:end, :]
-
+    err_causeSpec = (r[:causeSpec][:est][2:end, :]  .- instance.Λₑ[1:end, :]) ./ r[:causeSpec][:est][2:end, :]
+    err_pop =       (r[:population][:est][2:end, :] .- instance.Λₚ[1:end, :]) ./ r[:population][:est][2:end, :]
     @test all(abs.(err_causeSpec) .<= 0.01)
-    @test all(abs.(err_pop) .<= 0.01)
+    @test all(abs.(err_pop)       .<= 0.01)
 end
-

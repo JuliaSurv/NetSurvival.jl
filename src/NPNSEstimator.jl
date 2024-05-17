@@ -17,7 +17,7 @@ struct NPNSEstimator{Method} <: StatisticalModel
 end
 
 function mk_grid(times,prec)
-    M = maximum(times)+1
+    M = maximum(times)
     return unique(sort([(1:prec:M)..., times..., M]))
 end
 function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M<:NPNSMethod
@@ -26,7 +26,8 @@ function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M<:N
     num_variance = zero(grid)
     den_pop      = zero(grid)
     den_excess   = zero(grid)
-    Λ!(M, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid)
+    ∂t = [diff(grid)...,1.0]
+    Λ!(M, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
     return num_excess ./ den_excess, num_pop ./ den_pop, num_variance ./ (den_excess.^2)
 end
 
