@@ -3,25 +3,26 @@ struct Nessie
     expected_life_time::Float64
     grid::Vector{Float64}
     function Nessie(T, Δ, age, year, rate_preds, ratetable)
-        grid = mk_grid([1,maximum(T)],1)
-        # grid = mk_grid(T,1)
-        expected_sample_size = zero(grid)
+        grid = mk_grid([1,maximum(T)],1) # mk_grid(T,1)
+        exp_spl_size = zeros(length(grid))
+        life_time = 0.0
         for i in eachindex(age)
-            # Tᵢ = searchsortedlast(grid, T[i])
             Λₚ = 0.0
             rtᵢ = ratetable[rate_preds[i,:]...]
             for j in 1:(length(grid)-1)
+                Sₚ  = exp(-Λₚ)
                 λₚ  = daily_hazard(rtᵢ, age[i] + grid[j], year[i] + grid[j])
                 ∂Λₚ = λₚ * (grid[j+1]-grid[j]) # λₚ * ∂t 
                 Λₚ += ∂Λₚ
-                Sₚ  = exp(-Λₚ)
-                expected_sample_size[j] += Sₚ
+                exp_spl_size[j] += Sₚ
+                life_time += Sₚ * (1 - exp(-∂Λₚ)) / λₚ
             end
         end
-        expected_life_time = sum(expected_sample_size[1:(end-1)] .* diff(grid)) / length(age)
 
-        annual_indices = [searchsortedlast(grid, i) for i in (365.241 * (0:floor(maximum(T)/365.241))).+1]
-        return new(expected_sample_size[annual_indices], expected_life_time / 365.241, grid[annual_indices])
+        exp_life_time = life_time / 365.241 / length(age)
+        annually = [searchsortedlast(grid, i) for i in (365.241 * (0:floor(maximum(T)/365.241))).+1]
+        
+        return new(exp_spl_size[annually], exp_life_time, grid[annually])
     end
 end
 
@@ -33,7 +34,7 @@ bla bla
 """
 function nessie(args...)
     r = fit(Nessie,args...)
-    transform!(r, :estimator => ByRow(x-> (x.grid, x.expected_life_time, x.expected_sample_size)) => [:expected_sample_size,:expected_life_time, :grid])
+    transform!(r, :estimator => ByRow(x-> (x.grid, x.expected_life_time, x.expected_sample_size)) => [:grid, :expected_life_time,:expected_sample_size])
     select!(r, Not(:estimator))
 
     lt = deepcopy(r)
