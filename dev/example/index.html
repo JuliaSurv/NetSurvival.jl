@@ -6,83 +6,83 @@ first(colrec,10)</code></pre><div><div style = "float: left;"><span>10×7 DataFr
 plot(
     histogram(colrec.age./365.241, label=&quot;Age&quot;),
     histogram(colrec.time./365.241, label=&quot;Follow-up time&quot;)
-)</code></pre><img src="c57a6323.svg" alt="Example block output"/><p>The graph above show us that although it has a wide range of patients within all age groups, it is mostly centered around older adults and elderly, with the majority of the patients being between 60 and 80 years old. </p><p>Looking at the second graph that details the distibution of the follow-up times, we notice that the values quickly drop. Unfortunately, this is a common theme in cancer studies. </p><p>Let&#39;s take a look at the <code>sex</code> variable now: </p><pre><code class="language-julia hljs">combine(groupby(colrec, :sex), nrow)</code></pre><div><div style = "float: left;"><span>2×2 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "header"><th class = "rowNumber" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">sex</th><th style = "text-align: left;">nrow</th></tr><tr class = "subheader headerLastRow"><th class = "rowNumber" style = "font-weight: bold; text-align: right;"></th><th title = "Symbol" style = "text-align: left;">Symbol</th><th title = "Int64" style = "text-align: left;">Int64</th></tr></thead><tbody><tr><td class = "rowNumber" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">male</td><td style = "text-align: right;">3289</td></tr><tr><td class = "rowNumber" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">female</td><td style = "text-align: right;">2682</td></tr></tbody></table></div><p>This dataframe shows the number of male and female patients. There isn&#39;t too big of a difference between the two. We can say this study includes both gender relatively equally, thus, reducing bias. </p><p>With these two observations, it is also worth noting that colorectal cancer is most common with men and people older than 50.</p><p>In total, we note that we have <span>$5971$</span> patients. By taking a look at the <code>status</code> variable, we can determine the deaths and censorship:</p><pre><code class="language-julia hljs">sum(colrec.status)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4979</code></pre><p>Out of the <span>$5971$</span> patients, <span>$4979$</span> have died. This is a very high mortality rate, and again, unfortunately common in cancer studies.</p><pre><code class="language-julia hljs">(nrow(colrec) - sum(colrec.status)) / nrow(colrec)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.16613632557360575</code></pre><p>In other terms, the censorship rate is of 16.6%, meaning the event, in this case death, was not observed for only 16.6% of the patients. This is a low censorship rate and thus the quality of the signal will be pretty good. </p><h3 id="Mortality-table"><a class="docs-heading-anchor" href="#Mortality-table">Mortality table</a><a id="Mortality-table-1"></a><a class="docs-heading-anchor-permalink" href="#Mortality-table" title="Permalink"></a></h3><p>We will be using the mortality table <code>slopop</code> taken from the <code>RateTables.jl</code> package as the study is done on Slovenian patients. </p><pre><code class="language-julia hljs">slopop</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">RateTable(:sex,)</code></pre><p>By examining <code>slopop</code>, we notice it contains information regarding <code>age</code> and <code>year</code>, as expected for mortality tables. Additionally, it incorporates the covariate sex, which has two possible entries (<code>:male</code> or <code>:female</code>). The ratetable is then three dimensional, with the covariate <code>sex</code> added. For example, the daily hazard rate for a woman turning <span>$45$</span> on the January 1st <span>$2006$</span> can be accessed through the following command:</p><pre><code class="language-julia hljs">daily_hazard(slopop, 45*365.241, 2006*365.241; sex=:female)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2.02680951796113e-6</code></pre><p>Making the survival probability easily calculated with:</p><pre><code class="language-julia hljs">exp(-(daily_hazard(slopop, 45*365.241, 2006*365.241; sex=:female))*365)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.9992604880997519</code></pre><h2 id="Overall-and-expected-survival"><a class="docs-heading-anchor" href="#Overall-and-expected-survival">Overall and expected survival</a><a id="Overall-and-expected-survival-1"></a><a class="docs-heading-anchor-permalink" href="#Overall-and-expected-survival" title="Permalink"></a></h2><p>For this part, we will be using the <code>Survival.jl</code> package to apply the Kaplan Meier estimator for the overall survival.</p><pre><code class="language-julia hljs">using Survival
+)</code></pre><img src="24e526a7.svg" alt="Example block output"/><p>The graph above show us that although it has a wide range of patients within all age groups, it is mostly centered around older adults and elderly, with the majority of the patients being between 60 and 80 years old. </p><p>Looking at the second graph that details the distibution of the follow-up times, we notice that the values quickly drop. Unfortunately, this is a common theme in cancer studies. </p><p>Let&#39;s take a look at the <code>sex</code> variable now: </p><pre><code class="language-julia hljs">combine(groupby(colrec, :sex), nrow)</code></pre><div><div style = "float: left;"><span>2×2 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "header"><th class = "rowNumber" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">sex</th><th style = "text-align: left;">nrow</th></tr><tr class = "subheader headerLastRow"><th class = "rowNumber" style = "font-weight: bold; text-align: right;"></th><th title = "Symbol" style = "text-align: left;">Symbol</th><th title = "Int64" style = "text-align: left;">Int64</th></tr></thead><tbody><tr><td class = "rowNumber" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: left;">male</td><td style = "text-align: right;">3289</td></tr><tr><td class = "rowNumber" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: left;">female</td><td style = "text-align: right;">2682</td></tr></tbody></table></div><p>This dataframe shows the number of male and female patients. There isn&#39;t too big of a difference between the two. We can say this study includes both gender relatively equally, thus, reducing bias. </p><p>With these two observations, it is also worth noting that colorectal cancer is most common with men and people older than 50.</p><p>In total, we note that we have <span>$5971$</span> patients. By taking a look at the <code>status</code> variable, we can determine the deaths and censorship:</p><pre><code class="language-julia hljs">sum(colrec.status)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4979</code></pre><p>Out of the <span>$5971$</span> patients, <span>$4979$</span> have died. This is a very high mortality rate, and again, unfortunately common in cancer studies.</p><pre><code class="language-julia hljs">(nrow(colrec) - sum(colrec.status)) / nrow(colrec)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.16613632557360575</code></pre><p>In other terms, the censorship rate is of 16.6%, meaning the event, in this case death, was not observed for only 16.6% of the patients. This is a low censorship rate and thus the quality of the signal will be pretty good. </p><h3 id="Mortality-table"><a class="docs-heading-anchor" href="#Mortality-table">Mortality table</a><a id="Mortality-table-1"></a><a class="docs-heading-anchor-permalink" href="#Mortality-table" title="Permalink"></a></h3><p>We will be using the mortality table <code>slopop</code> taken from the <code>RateTables.jl</code> package as the study is done on Slovenian patients. </p><pre><code class="language-julia hljs">slopop</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">RateTable(:sex,)</code></pre><p>By examining <code>slopop</code>, we notice it contains information regarding <code>age</code> and <code>year</code>, as expected for mortality tables. Additionally, it incorporates the covariate sex, which has two possible entries (<code>:male</code> or <code>:female</code>). The ratetable is then three dimensional, with the covariate <code>sex</code> added. For example, the daily hazard rate for a woman turning <span>$45$</span> on the January 1st <span>$2006$</span> can be accessed through the following command:</p><pre><code class="language-julia hljs">daily_hazard(slopop, 45*365.241, 2006*365.241; sex=:female)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2.02680951796113e-6</code></pre><p>Making the survival probability easily calculated with:</p><pre><code class="language-julia hljs">exp(-(daily_hazard(slopop, 45*365.241, 2006*365.241; sex=:female))*365)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.9992604880997519</code></pre><h2 id="Overall-and-expected-survival"><a class="docs-heading-anchor" href="#Overall-and-expected-survival">Overall and expected survival</a><a id="Overall-and-expected-survival-1"></a><a class="docs-heading-anchor-permalink" href="#Overall-and-expected-survival" title="Permalink"></a></h2><p>For this part, we will be using the <code>Survival.jl</code> package to apply the Kaplan Meier estimator for the overall survival.</p><pre><code class="language-julia hljs">using Survival
 
 km = fit(KaplanMeier, colrec.time./365.241, colrec.status)
-plot(km.events.time, km.survival, label=false, title = &quot;Kaplan-Meier Estimator for the Overall Survival&quot;)</code></pre><img src="0089dafb.svg" alt="Example block output"/><p>The graph above indicates a significant dip in survival probability within the first <span>$5$</span> years, and even more at <span>$10$</span> years. This period in the study is then crucial for the analysis. </p><h2 id="Estimated-net-survival"><a class="docs-heading-anchor" href="#Estimated-net-survival">Estimated net survival</a><a id="Estimated-net-survival-1"></a><a class="docs-heading-anchor-permalink" href="#Estimated-net-survival" title="Permalink"></a></h2><p>In this part, we are interested in the first <span>$5$</span> years of the study. We will thus limit the follow-up time to <span>$5$</span> years, meaning we will censor all individuals with a follow-up time that is higher than this. Then, we will apply the different net survival methods.</p><pre><code class="language-julia hljs">colrec.time5 .= 0.0
+plot(km.events.time, km.survival, label=false, title = &quot;Kaplan-Meier Estimator for the Overall Survival&quot;)</code></pre><img src="f4dda2e7.svg" alt="Example block output"/><p>The graph above indicates a significant dip in survival probability within the first <span>$5$</span> years, and even more at <span>$10$</span> years. This period in the study is then crucial for the analysis. </p><h2 id="Estimated-net-survival"><a class="docs-heading-anchor" href="#Estimated-net-survival">Estimated net survival</a><a id="Estimated-net-survival-1"></a><a class="docs-heading-anchor-permalink" href="#Estimated-net-survival" title="Permalink"></a></h2><p>In this part, we are interested in the first <span>$5$</span> years of the study. We will thus limit the follow-up time to <span>$5$</span> years, meaning we will censor all individuals with a follow-up time that is higher than this. Then, we will apply the different net survival methods.</p><pre><code class="language-julia hljs">colrec.time5 .= 0.0
 colrec.status5 .= Bool(true)
 for i in 1:nrow(colrec)
     colrec.time5[i] = min(colrec.time[i], round(5*365.241))
     if colrec.time[i] &gt; 5*365.241
         colrec.status5[i] = false
     end
-end</code></pre><p>Now that we have defined our own time and status variables according to the observations made, we can apply the different non parametric methods for relative survival.</p><pre><code class="language-julia hljs">e1 = fit(EdererI, @formula(Surv(time5,status5)~1), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">EdererI(t ∈ (1.0, 1827.0)) with summary stats:
- <span class="sgr1">1827×5 DataFrame</span>
-<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ          ∂Λₑ            σₑ             lower_95_CI  upper_95_CI </span>
-      │<span class="sgr90"> Float64     Float64        Float64        Float64      Float64     </span>
-──────┼────────────────────────────────────────────────────────────────────
-    1 │   0.997105    0.00289458     0.000710541     0.995718     0.998495
-    2 │   0.995215    0.00189576     0.000918415     0.993425     0.997008
-    3 │   0.992152    0.00307809     0.0011755       0.989869     0.99444
-    4 │   0.988753    0.00342609     0.00140734      0.986029     0.991484
-    5 │   0.986023    0.00276087     0.00157124      0.982991     0.989064
-    6 │   0.983292    0.00276916     0.00172041      0.979982     0.986614
-    7 │   0.981734    0.00158443     0.00180287      0.978271     0.98521
-    8 │   0.976991    0.00483135     0.00202379      0.973124     0.980874
-  ⋮   │     ⋮             ⋮              ⋮             ⋮            ⋮
- 1821 │   0.456555   -0.000133262    0.017137        0.441475     0.47215
- 1822 │   0.456616   -0.000133307    0.017137        0.441534     0.472213
- 1823 │   0.456677   -0.000133276    0.017137        0.441593     0.472276
- 1824 │   0.456527    0.000328197    0.0171432       0.441442     0.472127
- 1825 │   0.456377    0.000328384    0.0171494       0.441292     0.471977
- 1826 │   0.456016    0.000790464    0.0171618       0.440932     0.471616
- 1827 │ NaN         NaN            NaN             NaN          NaN
-<span class="sgr36">                                                          1812 rows omitted</span></code></pre><p>With the EdererI method, after <span>$1826$</span> days have passed, we can say that the survival rate at this mark is around <span>$0.456$</span>, in the hypothetical world where patients can only die of cancer.</p><pre><code class="language-julia hljs">crude_e1 = CrudeMortality(e1)
-println(crude_e1.Λₒ[1826], &quot; , &quot;, crude_e1.Λₑ[1826], &quot; , &quot;, crude_e1.Λₚ[1826])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.6368404579125495 , 0.5158124650476975 , 0.12102799286485198</code></pre><p>Out of the 0.63 patients that have died, according to the EdererI method, 0.51 died because of colorectal cancer and 0.12 died of other causes.</p><pre><code class="language-julia hljs">e2 = fit(EdererII, @formula(Surv(time5,status5)~1), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">EdererII(t ∈ (1.0, 1827.0)) with summary stats:
- <span class="sgr1">1827×5 DataFrame</span>
-<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ          ∂Λₑ            σₑ             lower_95_CI  upper_95_CI </span>
-      │<span class="sgr90"> Float64     Float64        Float64        Float64      Float64     </span>
-──────┼────────────────────────────────────────────────────────────────────
-    1 │   0.997105    0.00289456     0.000710541     0.995718     0.998495
-    2 │   0.995215    0.00189611     0.000918415     0.993425     0.997008
-    3 │   0.992151    0.00307874     0.0011755       0.989868     0.994439
-    4 │   0.988751    0.00342711     0.00140734      0.986027     0.991482
-    5 │   0.98602     0.00276208     0.00157124      0.982988     0.989061
-    6 │   0.983288    0.00277059     0.00172041      0.979978     0.986609
-    7 │   0.981728    0.00158595     0.00180287      0.978265     0.985203
-    8 │   0.976983    0.00483311     0.00202379      0.973116     0.980866
-  ⋮   │     ⋮             ⋮              ⋮             ⋮            ⋮
- 1821 │   0.441193   -0.000115156    0.017137        0.42662      0.456263
- 1822 │   0.441243   -0.000115176    0.017137        0.426669     0.456316
- 1823 │   0.441294   -0.000115213    0.017137        0.426718     0.456368
- 1824 │   0.441142    0.00034624     0.0171432       0.426565     0.456216
- 1825 │   0.440989    0.000346509    0.0171494       0.426412     0.456063
- 1826 │   0.440632    0.000808582    0.0171618       0.426057     0.455706
- 1827 │ NaN         NaN            NaN             NaN          NaN
-<span class="sgr36">                                                          1812 rows omitted</span></code></pre><p>Similarily, the EdererII method, also known as the conditional method, shows that at the <span>$5$</span> year mark, the survival probability is of <span>$0.44$</span> in this hypothetical world.</p><pre><code class="language-julia hljs">crude_e2 = CrudeMortality(e2)
-println(crude_e2.Λₒ[1826], &quot; , &quot;, crude_e2.Λₑ[1826], &quot; , &quot;, crude_e2.Λₚ[1826])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.6368404579125495 , 0.5334518856851324 , 0.10338857222741712</code></pre><p>Here, out of the 0.63 patients that have dued, 0.53 are due to colorectal cancer and 0.1 due to other causes.</p><pre><code class="language-julia hljs">pp = fit(PoharPerme, @formula(Surv(time5,status5)~1), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">PoharPerme(t ∈ (1.0, 1827.0)) with summary stats:
- <span class="sgr1">1827×5 DataFrame</span>
-<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ          ∂Λₑ            σₑ             lower_95_CI  upper_95_CI </span>
-      │<span class="sgr90"> Float64     Float64        Float64        Float64      Float64     </span>
-──────┼────────────────────────────────────────────────────────────────────
-    1 │   0.997105    0.00289493     0.000710632     0.995717     0.998495
-    2 │   0.995214    0.0018967      0.0009186       0.993424     0.997007
-    3 │   0.992149    0.00307987     0.00117581      0.989865     0.994438
-    4 │   0.988748    0.00342788     0.0014077       0.986024     0.99148
-    5 │   0.986016    0.00276316     0.0015717       0.982983     0.989058
-    6 │   0.983283    0.00277109     0.00172089      0.979972     0.986605
-    7 │   0.981722    0.00158763     0.0018035       0.978258     0.985199
-    8 │   0.976973    0.00483737     0.00202472      0.973104     0.980858
-  ⋮   │     ⋮             ⋮              ⋮             ⋮            ⋮
- 1821 │   0.441496   -0.000148885    0.0178917       0.426282     0.457252
- 1822 │   0.441561   -0.000148937    0.0178917       0.426345     0.45732
- 1823 │   0.441627   -0.000149005    0.0178917       0.426409     0.457389
- 1824 │   0.441403    0.00050879     0.0179038       0.426182     0.457167
- 1825 │   0.441281    0.000276025    0.0179089       0.42606      0.457045
- 1826 │   0.440922    0.000813485    0.0179221       0.425702     0.456685
- 1827 │ NaN         NaN            NaN             NaN          NaN
-<span class="sgr36">                                                          1812 rows omitted</span></code></pre><p>We conclude for the Poher-Perme method, that in a world where cancer patients could only die due to cancer, only 41% of these patients would still be alive <span>$5$</span> year after their diagnosis.</p><pre><code class="language-julia hljs">crude_pp = CrudeMortality(pp)
-println(crude_pp.Λₒ[1826], &quot; , &quot;, crude_pp.Λₑ[1826], &quot; , &quot;, crude_pp.Λₚ[1826])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.6458893614663985 , 0.5319347797905097 , 0.11395458167588873</code></pre><p>Finally, for this estimator, we have that of the 0.64 patients that have died, 0.53 is due to colorectal cancer while 0.11 is due to other causes.</p><p>We will plot the Pohar Perme method only.</p><pre><code class="language-julia hljs">conf_int = confint(pp; level = 0.05)
+end</code></pre><p>Now that we have defined our own time and status variables according to the observations made, we can apply the different non parametric methods for relative survival.</p><pre><code class="language-julia hljs">e1 = fit(EdererI, @formula(Surv(time5,status5)~1), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">EdererI(t ∈ (1.0, 1826.0)) with summary stats:
+ <span class="sgr1">1826×5 DataFrame</span>
+<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ        ∂Λₑ           σₑ           lower_95_CI  upper_95_CI </span>
+      │<span class="sgr90"> Float64   Float64       Float64      Float64      Float64     </span>
+──────┼───────────────────────────────────────────────────────────────
+    1 │ 0.997105   0.00289458   0.000710541     0.995718     0.998495
+    2 │ 0.995215   0.00189576   0.000918415     0.993425     0.997008
+    3 │ 0.992152   0.00307809   0.0011755       0.989869     0.99444
+    4 │ 0.988753   0.00342609   0.00140734      0.986029     0.991484
+    5 │ 0.986023   0.00276087   0.00157124      0.982991     0.989064
+    6 │ 0.983292   0.00276916   0.00172041      0.979982     0.986614
+    7 │ 0.981734   0.00158443   0.00180287      0.978271     0.98521
+    8 │ 0.976991   0.00483135   0.00202379      0.973124     0.980874
+  ⋮   │    ⋮           ⋮             ⋮            ⋮            ⋮
+ 1820 │ 0.456494  -0.000133259  0.017137        0.441416     0.472087
+ 1821 │ 0.456555  -0.000133262  0.017137        0.441475     0.47215
+ 1822 │ 0.456616  -0.000133307  0.017137        0.441534     0.472213
+ 1823 │ 0.456677  -0.000133276  0.017137        0.441593     0.472276
+ 1824 │ 0.456527   0.000328197  0.0171432       0.441442     0.472127
+ 1825 │ 0.456377   0.000328384  0.0171494       0.441292     0.471977
+ 1826 │ 0.456016   0.000790464  0.0171618       0.440932     0.471616
+<span class="sgr36">                                                     1811 rows omitted</span></code></pre><p>With the EdererI method, after <span>$1826$</span> days have passed, we can say that the survival rate at this mark is around <span>$0.456$</span>, in the hypothetical world where patients can only die of cancer.</p><pre><code class="language-julia hljs">crude_e1 = CrudeMortality(e1)
+println(crude_e1.Λₒ[1826], &quot; , &quot;, crude_e1.Λₑ[1826], &quot; , &quot;, crude_e1.Λₚ[1826])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.6368404579125496 , 0.5158124650476976 , 0.121027992864852</code></pre><p>Out of the 0.63 patients that have died, according to the EdererI method, 0.51 died because of colorectal cancer and 0.12 died of other causes.</p><pre><code class="language-julia hljs">e2 = fit(EdererII, @formula(Surv(time5,status5)~1), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">EdererII(t ∈ (1.0, 1826.0)) with summary stats:
+ <span class="sgr1">1826×5 DataFrame</span>
+<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ        ∂Λₑ           σₑ           lower_95_CI  upper_95_CI </span>
+      │<span class="sgr90"> Float64   Float64       Float64      Float64      Float64     </span>
+──────┼───────────────────────────────────────────────────────────────
+    1 │ 0.997105   0.00289456   0.000710541     0.995718     0.998495
+    2 │ 0.995215   0.00189611   0.000918415     0.993425     0.997008
+    3 │ 0.992151   0.00307874   0.0011755       0.989868     0.994439
+    4 │ 0.988751   0.00342711   0.00140734      0.986027     0.991482
+    5 │ 0.98602    0.00276208   0.00157124      0.982988     0.989061
+    6 │ 0.983288   0.00277059   0.00172041      0.979978     0.986609
+    7 │ 0.981728   0.00158595   0.00180287      0.978265     0.985203
+    8 │ 0.976983   0.00483311   0.00202379      0.973116     0.980866
+  ⋮   │    ⋮           ⋮             ⋮            ⋮            ⋮
+ 1820 │ 0.441142  -0.00011516   0.017137        0.426571     0.45621
+ 1821 │ 0.441193  -0.000115156  0.017137        0.42662      0.456263
+ 1822 │ 0.441243  -0.000115176  0.017137        0.426669     0.456316
+ 1823 │ 0.441294  -0.000115213  0.017137        0.426718     0.456368
+ 1824 │ 0.441142   0.00034624   0.0171432       0.426565     0.456216
+ 1825 │ 0.440989   0.000346509  0.0171494       0.426412     0.456063
+ 1826 │ 0.440632   0.000808582  0.0171618       0.426057     0.455706
+<span class="sgr36">                                                     1811 rows omitted</span></code></pre><p>Similarily, the EdererII method, also known as the conditional method, shows that at the <span>$5$</span> year mark, the survival probability is of <span>$0.44$</span> in this hypothetical world.</p><pre><code class="language-julia hljs">crude_e2 = CrudeMortality(e2)
+println(crude_e2.Λₒ[1826], &quot; , &quot;, crude_e2.Λₑ[1826], &quot; , &quot;, crude_e2.Λₚ[1826])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.6368404579125496 , 0.5334518856851325 , 0.10338857222741712</code></pre><p>Here, out of the 0.63 patients that have dued, 0.53 are due to colorectal cancer and 0.1 due to other causes.</p><pre><code class="language-julia hljs">pp = fit(PoharPerme, @formula(Surv(time5,status5)~1), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">PoharPerme(t ∈ (1.0, 1826.0)) with summary stats:
+ <span class="sgr1">1826×5 DataFrame</span>
+<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ        ∂Λₑ           σₑ           lower_95_CI  upper_95_CI </span>
+      │<span class="sgr90"> Float64   Float64       Float64      Float64      Float64     </span>
+──────┼───────────────────────────────────────────────────────────────
+    1 │ 0.997105   0.00289493   0.000710632     0.995717     0.998495
+    2 │ 0.995214   0.0018967    0.0009186       0.993424     0.997007
+    3 │ 0.992149   0.00307987   0.00117581      0.989865     0.994438
+    4 │ 0.988748   0.00342788   0.0014077       0.986024     0.99148
+    5 │ 0.986016   0.00276316   0.0015717       0.982983     0.989058
+    6 │ 0.983283   0.00277109   0.00172089      0.979972     0.986605
+    7 │ 0.981722   0.00158763   0.0018035       0.978258     0.985199
+    8 │ 0.976973   0.00483737   0.00202472      0.973104     0.980858
+  ⋮   │    ⋮           ⋮             ⋮            ⋮            ⋮
+ 1820 │ 0.44143   -0.000148858  0.0178917       0.426219     0.457184
+ 1821 │ 0.441496  -0.000148885  0.0178917       0.426282     0.457252
+ 1822 │ 0.441561  -0.000148937  0.0178917       0.426345     0.45732
+ 1823 │ 0.441627  -0.000149005  0.0178917       0.426409     0.457389
+ 1824 │ 0.441403   0.00050879   0.0179038       0.426182     0.457167
+ 1825 │ 0.441281   0.000276025  0.0179089       0.42606      0.457045
+ 1826 │ 0.440922   0.000813485  0.0179221       0.425702     0.456685
+<span class="sgr36">                                                     1811 rows omitted</span></code></pre><p>We conclude for the Poher-Perme method, that in a world where cancer patients could only die due to cancer, only 41% of these patients would still be alive <span>$5$</span> year after their diagnosis.</p><pre><code class="language-julia hljs">crude_pp = CrudeMortality(pp)
+println(crude_pp.Λₒ[1826], &quot; , &quot;, crude_pp.Λₑ[1826], &quot; , &quot;, crude_pp.Λₚ[1826])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.6458893614663985 , 0.5319347797905097 , 0.11395458167588875</code></pre><p>Finally, for this estimator, we have that of the 0.64 patients that have died, 0.53 is due to colorectal cancer while 0.11 is due to other causes.</p><p>We will plot the Pohar Perme method only.</p><pre><code class="language-julia hljs">conf_int = confint(pp; level = 0.05)
 lower_bounds = [lower[1] for lower in conf_int]
 upper_bounds = [upper[2] for upper in conf_int]
 
@@ -91,30 +91,30 @@ p1 = plot(pp.grid, pp.Sₑ, ribbon=(pp.Sₑ - lower_bounds, upper_bounds - pp.S�
 p2 = plot(pp.grid, crude_pp.Λₑ, label = &quot;Excess Mortality Rate&quot;)
 p2 = plot!(pp.grid, crude_pp.Λₚ, label = &quot;Population Mortality Rate&quot;)
 
-plot(p1,p2)</code></pre><img src="85359aae.svg" alt="Example block output"/><p>Looking at the graph, and the rapid dip it takes, it is evident that the first <span>$5$</span> years are crucial and that the survival probability is highly affected in these years. Additionnally, the crude mortality graph allows us to see how much of this curve is due to the colorectacl cancer studied versus other undefined causes. It is clear that the large majority is due to the cancer.</p><h2 id="Net-survival-with-respect-to-covariates"><a class="docs-heading-anchor" href="#Net-survival-with-respect-to-covariates">Net survival with respect to covariates</a><a id="Net-survival-with-respect-to-covariates-1"></a><a class="docs-heading-anchor-permalink" href="#Net-survival-with-respect-to-covariates" title="Permalink"></a></h2><p>We are now interested in comparing the different groups of patients defined by various covariates. </p><pre><code class="language-julia hljs">pp_sex = fit(PoharPerme, @formula(Surv(time5,status5)~sex), colrec, slopop)
+plot(p1,p2)</code></pre><img src="adf5d370.svg" alt="Example block output"/><p>Looking at the graph, and the rapid dip it takes, it is evident that the first <span>$5$</span> years are crucial and that the survival probability is highly affected in these years. Additionnally, the crude mortality graph allows us to see how much of this curve is due to the colorectacl cancer studied versus other undefined causes. It is clear that the large majority is due to the cancer.</p><h2 id="Net-survival-with-respect-to-covariates"><a class="docs-heading-anchor" href="#Net-survival-with-respect-to-covariates">Net survival with respect to covariates</a><a id="Net-survival-with-respect-to-covariates-1"></a><a class="docs-heading-anchor-permalink" href="#Net-survival-with-respect-to-covariates" title="Permalink"></a></h2><p>We are now interested in comparing the different groups of patients defined by various covariates. </p><pre><code class="language-julia hljs">pp_sex = fit(PoharPerme, @formula(Surv(time5,status5)~sex), colrec, slopop)
 pp_males = pp_sex[pp_sex.sex .== :male,:estimator][1]
-pp_females = pp_sex[pp_sex.sex .== :female,:estimator][1]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">PoharPerme(t ∈ (1.0, 1827.0)) with summary stats:
- <span class="sgr1">1827×5 DataFrame</span>
-<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ          ∂Λₑ            σₑ            lower_95_CI  upper_95_CI </span>
-      │<span class="sgr90"> Float64     Float64        Float64       Float64      Float64     </span>
-──────┼───────────────────────────────────────────────────────────────────
-    1 │   0.99675     0.00325029     0.00111873     0.994567     0.998938
-    2 │   0.994244    0.00251419     0.00149396     0.991337     0.997159
-    3 │   0.989871    0.0043981      0.00198035     0.986036     0.99372
-    4 │   0.987363    0.00253401     0.00221726     0.983081     0.991663
-    5 │   0.983733    0.00367643     0.00251903     0.978888     0.988602
-    6 │   0.980104    0.00368904     0.00278998     0.974759     0.985478
-    7 │   0.97871     0.00142212     0.00289239     0.973177     0.984274
-    8 │   0.97321     0.00561896     0.00324789     0.967035     0.979425
-  ⋮   │     ⋮             ⋮             ⋮             ⋮            ⋮
- 1821 │   0.450254   -0.000129989    0.025504       0.428301     0.473333
- 1822 │   0.450313   -0.000130047    0.025504       0.428356     0.473395
- 1823 │   0.450371   -0.000130101    0.025504       0.428412     0.473456
- 1824 │   0.45043    -0.000130144    0.025504       0.428468     0.473518
- 1825 │   0.450071    0.000797147    0.0255209      0.428112     0.473156
- 1826 │   0.449584    0.00108151     0.0255496      0.427625     0.472671
- 1827 │ NaN         NaN            NaN            NaN          NaN
-<span class="sgr36">                                                         1812 rows omitted</span></code></pre><p>When comparing at time <span>$1826$</span>, we notice that the survival probability is slightly inferior for men than for women (<span>$0.433 &lt; 0.449$</span>). It is also more probable for the women to die from other causes than the men seeing as <span>$0.0255 &gt; 0.025$</span>. Still, the differences are minimal. Let&#39;s confirm this with the Grafféo log-rank test:</p><pre><code class="language-julia hljs">test_sex = fit(GraffeoTest, @formula(Surv(time5,status5)~sex), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Grafféo&#39;s log-rank-type-test
+pp_females = pp_sex[pp_sex.sex .== :female,:estimator][1]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">PoharPerme(t ∈ (1.0, 1826.0)) with summary stats:
+ <span class="sgr1">1826×5 DataFrame</span>
+<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ        ∂Λₑ           σₑ          lower_95_CI  upper_95_CI </span>
+      │<span class="sgr90"> Float64   Float64       Float64     Float64      Float64     </span>
+──────┼──────────────────────────────────────────────────────────────
+    1 │ 0.99675    0.00325029   0.00111873     0.994567     0.998938
+    2 │ 0.994244   0.00251419   0.00149396     0.991337     0.997159
+    3 │ 0.989871   0.0043981    0.00198035     0.986036     0.99372
+    4 │ 0.987363   0.00253401   0.00221726     0.983081     0.991663
+    5 │ 0.983733   0.00367643   0.00251903     0.978888     0.988602
+    6 │ 0.980104   0.00368904   0.00278998     0.974759     0.985478
+    7 │ 0.97871    0.00142212   0.00289239     0.973177     0.984274
+    8 │ 0.97321    0.00561896   0.00324789     0.967035     0.979425
+  ⋮   │    ⋮           ⋮            ⋮            ⋮            ⋮
+ 1820 │ 0.450196  -0.000129968  0.025504       0.428245     0.473272
+ 1821 │ 0.450254  -0.000129989  0.025504       0.428301     0.473333
+ 1822 │ 0.450313  -0.000130047  0.025504       0.428356     0.473395
+ 1823 │ 0.450371  -0.000130101  0.025504       0.428412     0.473456
+ 1824 │ 0.45043   -0.000130144  0.025504       0.428468     0.473518
+ 1825 │ 0.450071   0.000797147  0.0255209      0.428112     0.473156
+ 1826 │ 0.449584   0.00108151   0.0255496      0.427625     0.472671
+<span class="sgr36">                                                    1811 rows omitted</span></code></pre><p>When comparing at time <span>$1826$</span>, we notice that the survival probability is slightly inferior for men than for women (<span>$0.433 &lt; 0.449$</span>). It is also more probable for the women to die from other causes than the men seeing as <span>$0.0255 &gt; 0.025$</span>. Still, the differences are minimal. Let&#39;s confirm this with the Grafféo log-rank test:</p><pre><code class="language-julia hljs">test_sex = fit(GraffeoTest, @formula(Surv(time5,status5)~sex), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Grafféo&#39;s log-rank-type-test
 <span class="sgr1">1×3 DataFrame</span>
 <span class="sgr1"> Row </span>│<span class="sgr1"> test_statistic  degrees_of_freedom  p_value  </span>
      │<span class="sgr90"> Float64         Int64               Float64  </span>
@@ -122,28 +122,28 @@ pp_females = pp_sex[pp_sex.sex .== :female,:estimator][1]</code></pre><pre class
    1 │        0.54326                   1  0.461085</code></pre><p>The p-value is indeed above <span>$0.05$</span>. We cannot reject the null hypothesis <span>$H_0$</span> and thus we dismiss the differences between the two sexes.</p><p>As for the age, we will define two different groups: individuals aged 65 and above and those who are not.</p><pre><code class="language-julia hljs">colrec.age65 .= ifelse.(colrec.age .&gt;= 65*365.241, :old, :young)
 pp_age65 = fit(PoharPerme, @formula(Surv(time5,status5)~age65), colrec, slopop)
 pp_young = pp_age65[pp_age65.age65 .== :young, :estimator][1]
-pp_old = pp_age65[pp_age65.age65 .== :old, :estimator][1]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">PoharPerme(t ∈ (1.0, 1827.0)) with summary stats:
- <span class="sgr1">1827×5 DataFrame</span>
-<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ          ∂Λₑ            σₑ            lower_95_CI  upper_95_CI </span>
-      │<span class="sgr90"> Float64     Float64        Float64       Float64      Float64     </span>
-──────┼───────────────────────────────────────────────────────────────────
-    1 │   0.996032    0.00396827     0.0010703      0.993944     0.998123
-    2 │   0.993167    0.00287628     0.00141168     0.990423     0.995919
-    3 │   0.988642    0.00455641     0.00181945     0.985122     0.992173
-    4 │   0.983839    0.0048581      0.00217215     0.979659     0.988036
-    5 │   0.980416    0.00347923     0.00239706     0.97582      0.985033
-    6 │   0.97644     0.00405544     0.00263427     0.971411     0.981494
-    7 │   0.974672    0.00180987     0.00273909     0.969454     0.979919
-    8 │   0.967646    0.00720934     0.0030984      0.961787     0.97354
-  ⋮   │     ⋮             ⋮             ⋮             ⋮            ⋮
- 1821 │   0.402335   -0.0002352      0.0269335      0.381647     0.424144
- 1822 │   0.402429   -0.000235279    0.0269335      0.381737     0.424244
- 1823 │   0.402524   -0.000235379    0.0269335      0.381826     0.424344
- 1824 │   0.402139    0.000955393    0.0269598      0.381442     0.42396
- 1825 │   0.401925    0.000534307    0.0269708      0.38123      0.423743
- 1826 │   0.401615    0.000770012    0.0269896      0.380922     0.423432
- 1827 │ NaN         NaN            NaN            NaN          NaN
-<span class="sgr36">                                                         1812 rows omitted</span></code></pre><p>Here, the difference between the two is much more important. In the first group, the individuals are aged under 65 and at <span>$5$</span> years time, they have a <span>$50.1$</span>% chance of survival. On the other hand, the individuals aged 65 and up have a <span>$40.1$</span>% chance of survival. </p><p>It is also worth noting that their chances of dying from other causes is higher than the younger group, given their age. </p><p>When applying the Grafféo test, we get the results below:</p><pre><code class="language-julia hljs">test_age65 = fit(GraffeoTest, @formula(Surv(time5,status5)~age65), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Grafféo&#39;s log-rank-type-test
+pp_old = pp_age65[pp_age65.age65 .== :old, :estimator][1]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">PoharPerme(t ∈ (1.0, 1826.0)) with summary stats:
+ <span class="sgr1">1826×5 DataFrame</span>
+<span class="sgr1">  Row </span>│<span class="sgr1"> Sₑ        ∂Λₑ           σₑ          lower_95_CI  upper_95_CI </span>
+      │<span class="sgr90"> Float64   Float64       Float64     Float64      Float64     </span>
+──────┼──────────────────────────────────────────────────────────────
+    1 │ 0.996032   0.00396827   0.0010703      0.993944     0.998123
+    2 │ 0.993167   0.00287628   0.00141168     0.990423     0.995919
+    3 │ 0.988642   0.00455641   0.00181945     0.985122     0.992173
+    4 │ 0.983839   0.0048581    0.00217215     0.979659     0.988036
+    5 │ 0.980416   0.00347923   0.00239706     0.97582      0.985033
+    6 │ 0.97644    0.00405544   0.00263427     0.971411     0.981494
+    7 │ 0.974672   0.00180987   0.00273909     0.969454     0.979919
+    8 │ 0.967646   0.00720934   0.0030984      0.961787     0.97354
+  ⋮   │    ⋮           ⋮            ⋮            ⋮            ⋮
+ 1820 │ 0.40224   -0.000235167  0.0269335      0.381557     0.424044
+ 1821 │ 0.402335  -0.0002352    0.0269335      0.381647     0.424144
+ 1822 │ 0.402429  -0.000235279  0.0269335      0.381737     0.424244
+ 1823 │ 0.402524  -0.000235379  0.0269335      0.381826     0.424344
+ 1824 │ 0.402139   0.000955393  0.0269598      0.381442     0.42396
+ 1825 │ 0.401925   0.000534307  0.0269708      0.38123      0.423743
+ 1826 │ 0.401615   0.000770012  0.0269896      0.380922     0.423432
+<span class="sgr36">                                                    1811 rows omitted</span></code></pre><p>Here, the difference between the two is much more important. In the first group, the individuals are aged under 65 and at <span>$5$</span> years time, they have a <span>$50.1$</span>% chance of survival. On the other hand, the individuals aged 65 and up have a <span>$40.1$</span>% chance of survival. </p><p>It is also worth noting that their chances of dying from other causes is higher than the younger group, given their age. </p><p>When applying the Grafféo test, we get the results below:</p><pre><code class="language-julia hljs">test_age65 = fit(GraffeoTest, @formula(Surv(time5,status5)~age65), colrec, slopop)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Grafféo&#39;s log-rank-type-test
 <span class="sgr1">1×3 DataFrame</span>
 <span class="sgr1"> Row </span>│<span class="sgr1"> test_statistic  degrees_of_freedom  p_value     </span>
      │<span class="sgr90"> Float64         Int64               Float64     </span>
@@ -170,4 +170,4 @@ plot1 = plot!(pp_females.grid, pp_females.Sₑ, ribbon=(pp_females.Sₑ - lower_
 plot2 = plot(pp_young.grid, pp_young.Sₑ, ribbon=(pp_young.Sₑ - lower_bounds_under65, upper_bounds_under65 - pp_young.Sₑ), xlab = &quot;Time (days)&quot;, ylab = &quot;Net survival&quot;, label = &quot;Under 65&quot;)
 plot2 = plot!(pp_old.grid, pp_old.Sₑ, ribbon=(pp_old.Sₑ - lower_bounds_65, upper_bounds_65 - pp_old.Sₑ), xlab = &quot;Time (days)&quot;, ylab = &quot;Net survival&quot;, label = &quot;65 and up&quot;)
 
-plot(plot1, plot2, layout = (1, 2))</code></pre><img src="de012af2.svg" alt="Example block output"/><p>Visually, it is almost immediately understood that there are no worthy differences between the two sexes whereas the <code>age65</code> variable seems to play a big role.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../getting_started/">« Getting Started</a><a class="docs-footer-nextpage" href="../benches/">Benchmarking results »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.1 on <span class="colophon-date" title="Monday 13 May 2024 06:55">Monday 13 May 2024</span>. Using Julia version 1.10.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+plot(plot1, plot2, layout = (1, 2))</code></pre><img src="c1ca8d7a.svg" alt="Example block output"/><p>Visually, it is almost immediately understood that there are no worthy differences between the two sexes whereas the <code>age65</code> variable seems to play a big role.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../getting_started/">« Getting Started</a><a class="docs-footer-nextpage" href="../benches/">Benchmarking results »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.1 on <span class="colophon-date" title="Friday 17 May 2024 09:19">Friday 17 May 2024</span>. Using Julia version 1.10.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
