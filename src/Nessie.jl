@@ -15,13 +15,13 @@ struct Nessie
                 ∂Λₚ = λₚ * (grid[j+1]-grid[j]) # λₚ * ∂t 
                 Λₚ += ∂Λₚ
                 exp_spl_size[j] += Sₚ
-                life_time += Sₚ * (1 - exp(-∂Λₚ)) / λₚ
+                life_time += Sₚ * (1 - exp(-∂Λₚ)) / λₚ # see relsurv, netwei.c l 200. 
             end
         end
 
         exp_life_time = life_time / 365.241 / length(age)
         annually = [searchsortedlast(grid, i) for i in (365.241 * (0:floor(maximum(T)/365.241))).+1]
-        
+
         return new(exp_spl_size[annually], exp_life_time, grid[annually])
     end
 end
