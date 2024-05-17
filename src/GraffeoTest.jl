@@ -150,7 +150,7 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
     are_strata = [t <: FunctionTerm{typeof(Strata)} for t in types]
 
     strata = groupindices(groupby(df,terms[are_strata]))
-    group  = groupindices(groupby(df,terms[(!).(are_strata)]))
+    group  = groupindices(groupby(df,terms))
 
     resp = modelcols(apply_schema(formula,schema(df)).lhs,df)
     rate_predictors = _get_rate_predictors(rt,df)

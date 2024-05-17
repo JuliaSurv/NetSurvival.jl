@@ -55,7 +55,7 @@ end
 
 @testitem "Assess GraffeoTest" begin
     
-    using RCall, RateTables
+    using RCall, RateTables, DataFrames
 
     # Prerequisite functions: 
     function check_equal(test1, test2)
@@ -91,7 +91,7 @@ end
     v2 = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, ones(length(colrec.age)), colrec.stage, slopop)
 
     v1_strat = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, slopop)
-    v2_strat = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
+    v2_strat = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, [join(row, " ") for row in eachrow(select(colrec,[:sex,:stage]))], slopop)
 
     R"""
     rez = relsurv::rs.diff(survival::Surv(time, stat) ~ stage, rmap=list(age = age, sex = sex, year = diag), data = relsurv::colrec, ratetable = relsurv::slopop)
