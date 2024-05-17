@@ -24,6 +24,7 @@ Some key features in `NetSurvival.jl` are:
 
 - A panel of different non-parametric net survival estimators (Ederer I, Ederer II, Hakulinen, Pohar Perme) with an interface compliant with Julia's standards. 
 - Grafféo's log-rank test to compare net survival curves accross groups, including stratified testing.
+- A 'Nessie' function that outputs the estimated sample size by yearly intervals and the average lifespan expectancy left for a given group. 
 - A compact, readable and efficient codebase (up to 100x less LOC than `relsurv` for the same functionalities), ensuring long-term maintenability.
 - Significant performance improvements (see below) compared `relsurv`.
 
