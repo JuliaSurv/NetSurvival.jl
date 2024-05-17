@@ -3,26 +3,17 @@ struct Nessie
     expected_life_time::Float64
     grid::Vector{Float64}
     function Nessie(T, Δ, age, year, rate_preds, ratetable)
-        grid = mk_grid([1,maximum(T)],1) # mk_grid(T,1)
-        exp_spl_size = zeros(length(grid))
-        life_time = 0.0
+        annual_grid = 1:365.241:maximum(T)
+        exp_spl_size = zeros(length(annual_grid))
+        exp_life_time = 0.0
         for i in eachindex(age)
-            Λₚ = 0.0
-            rtᵢ = ratetable[rate_preds[i,:]...]
-            for j in 1:(length(grid)-1)
-                Sₚ  = exp(-Λₚ)
-                λₚ  = daily_hazard(rtᵢ, age[i] + grid[j], year[i] + grid[j])
-                ∂Λₚ = λₚ * (grid[j+1]-grid[j]) # λₚ * ∂t 
-                Λₚ += ∂Λₚ
-                exp_spl_size[j] += Sₚ
-                life_time += Sₚ * (1 - exp(-∂Λₚ)) / λₚ # see relsurv, netwei.c l 200. 
+            Lᵢ = Life(ratetable[rate_preds[i,:]...], age[i], year[i])
+            for j in eachindex(annual_grid)
+                exp_spl_size[j] += ccdf(Lᵢ, annual_grid[j])
             end
+            exp_life_time += expectation(Lᵢ)
         end
-
-        exp_life_time = life_time / 365.241 / length(age)
-        annually = [searchsortedlast(grid, i) for i in (365.241 * (0:floor(maximum(T)/365.241))).+1]
-
-        return new(exp_spl_size[annually], exp_life_time, grid[annually])
+        return new(exp_spl_size, exp_life_time / 365.241 / length(age), annual_grid)
     end
 end
 
@@ -34,6 +25,9 @@ bla bla
 """
 function nessie(args...)
     r = fit(Nessie,args...)
+    if (typeof(r)<:Nessie)
+        return r
+    end
     transform!(r, :estimator => ByRow(x-> (x.grid, x.expected_life_time, x.expected_sample_size)) => [:grid, :expected_life_time,:expected_sample_size])
     select!(r, Not(:estimator))
 
