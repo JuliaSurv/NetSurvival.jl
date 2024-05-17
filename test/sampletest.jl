@@ -147,3 +147,28 @@ end
     @test all(abs.(err_causeSpec) .<= 0.01)
     @test all(abs.(err_pop)       .<= 0.01)
 end
+
+@testitem "Assess Nessie" begin
+    using RateTables
+    using RCall
+    
+    R"""
+    rez = relsurv::nessie(survival::Surv(time, stat) ~ sex, data = relsurv::colrec, ratetable = relsurv::slopop, rmap = list(age = age, sex = sex, year = diag))
+    rez_male = rez$mata[1,]
+    rez_female = rez$mata[2,]
+    """
+
+    rESS = @rget rez
+    rESS_male = @rget rez_male
+    rESS_female = @rget rez_female
+
+    instance = nessie(@formula(Surv(time,status)~sex), colrec, slopop)
+
+    err_ESS_male = (rESS_male[1:end,:]  .- instance[2].expected_sample_size[1]) ./ rESS_male[1:end,:]
+    err_ESS_female = (rESS_female[1:end,:]  .- instance[2].expected_sample_size[2]) ./ rESS_male[1:end,:]
+    err_ELT = (rESS[:povp][1:end, :] .- instance[1].expected_life_time[1:end, :]) ./ rESS[:povp][1:end, :]
+
+    @test all(err_ESS_male .<= 0.01)
+    @test abs(eachrow(err_ESS_female)) <= 0.01
+    @test all(abs.(err_ELT) .<= 0.01)
+end
