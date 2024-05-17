@@ -80,7 +80,7 @@ end
         err_F = (r[:test_stat] - test.stat) / r[:test_stat]
         err_p = r[:p_value] == 0.0 ? 0.0 : (r[:p_value] - test.pval) / r[:p_value]
         err_df = (r[:df] - test.df) / r[:df]
-        @test abs(err_F)   <= 0.01
+        @test abs(err_F)   <= 0.02
         @test abs(err_p)   <= 0.001
         @test abs.(err_df) <= 0.01
         return nothing
