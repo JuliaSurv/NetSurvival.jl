@@ -90,7 +90,7 @@ end
     v1 = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
     v2 = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, ones(length(colrec.age)), colrec.stage, slopop)
 
-    v1_strat = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, frpop)
+    v1_strat = fit(GraffeoTest, @formula(Surv(time,status)~stage+Strata(sex)), colrec, slopop)
     v2_strat = GraffeoTest(colrec.time, colrec.status, colrec.age, colrec.year, colrec.sex, colrec.sex, colrec.stage, slopop)
 
     R"""
