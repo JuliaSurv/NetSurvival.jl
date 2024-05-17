@@ -3,7 +3,7 @@ struct Nessie
     expected_life_time::Float64
     grid::Vector{Float64}
     function Nessie(T, Δ, age, year, rate_preds, ratetable)
-        annual_grid = 1:365.241:maximum(T)
+        annual_grid = 0:365.241:maximum(T)
         exp_spl_size = zeros(length(annual_grid))
         exp_life_time = 0.0
         for i in eachindex(age)
