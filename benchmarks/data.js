@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1715583136625,
+  "lastUpdate": 1715937202364,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -840,6 +840,48 @@ window.BENCHMARK_DATA = {
             "value": 243886231.5,
             "unit": "ns",
             "extra": "gctime=0\nmemory=9281360\nallocs=54001\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "oskar.laverny@univ-amu.fr",
+            "name": "Oskar Laverny",
+            "username": "lrnv"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "101af040c2120c20739372e0239dedeea4385aa9",
+          "message": "[Tests] Improve tests (#44)\n\n* [Tests] Improve tests\r\nFixes #43\r\n\r\n* remove useless sample test\r\n\r\n* add a new more generic test\r\n\r\n* Add a ∂t variable to Λ! and correct grid size to remove nans.\r\n\r\n* remove useless comments\r\n\r\n* produce generic test against nans\r\n\r\n* make tests more generics\r\n\r\n* correct for new array lengths\r\n\r\n* make test type stable for efficiency.\r\n\r\n* remove redundent tests\r\n\r\n* remove mistake\r\n\r\n* removing comments\r\n\r\n* add a check on crude mortality interface\r\n\r\n* merge redundent tests\r\n\r\n* upgrade test again\r\n\r\n* add last one\r\n\r\n* de-duplicat\"e code\r\n\r\n* better interface\r\n\r\n* mark wich test are failling.\r\n\r\n* slopop not frpop\r\n\r\n* Correct to match R behavior\r\n\r\n* Increase room for error (1.7% and not 1% on our example...)\r\n\r\n---------\r\n\r\nCo-authored-by: rimhajal <rim.hajal@gmail.com>",
+          "timestamp": "2024-05-17T11:11:05+02:00",
+          "tree_id": "dec5ee3f294cb94d715f3aa49052d9414067f08f",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/101af040c2120c20739372e0239dedeea4385aa9"
+        },
+        "date": 1715937201907,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 189640439.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4801936\nallocs=62013\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 210762170,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=8207200\nallocs=117740\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 196184569,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=9607408\nallocs=62159\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
         ]
       }
