@@ -14,7 +14,7 @@
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/JuliaDiff/BlueStyle)
 
 
-The `NetSurvival.jl` package provides the necessary tools to perform estimations and analysis in the Net Survival field. This specialized branch of Survival Analysis focuses on estimating the probability of survival from a specific event of interest, for example a given cancer, without considering other causes of death, in the (unfortunately quite common) case where the cause of death indicatrix is unavailable (or e.g. untrustworthy). Consequently, the so-called *missing indicatrix* issue forbids the use of standard competitive risks survival analysis methods on these datasets. Thus, a few standard estimators were established in the last 50 years, backed by a wide literature.
+The `NetSurvival.jl` package is part of the JuliaSurv survival analysis suite. It provides the necessary tools to perform estimations and analysis in the Net Survival field. This specialized branch of Survival Analysis focuses on estimating the probability of survival from a specific event of interest, for example a given cancer, without considering other causes of death, in the (unfortunately quite common) case where the cause of death indicatrix is unavailable (or e.g. untrustworthy). Consequently, the so-called *missing indicatrix* issue forbids the use of standard competitive risks survival analysis methods on these datasets. Thus, a few standard estimators were established in the last 50 years, backed by a wide literature.
 
 # Features 
 
