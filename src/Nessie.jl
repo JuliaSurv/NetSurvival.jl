@@ -20,8 +20,7 @@ end
 """
     nessie(formula, data, ratetable)
 
-bla bla
-
+The Nessie function estimates the sample size by yearly intervals as well as averages an estimated lifespan left for a given group.  
 """
 function nessie(args...)
     r = fit(Nessie,args...)

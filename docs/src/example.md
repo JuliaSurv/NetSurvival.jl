@@ -242,11 +242,8 @@ Visually, it is almost immediately understood that there are no worthy differenc
 
 ## Estimated sample size and life expectancy 
 
-Given that the age group plays a significant role in the study, we will now define a new variable that groups patients in specific age groups. We will use these groups to estimate the sample size by yearly intervals and compare the groups.
+Given that the age group plays a significant role in the study, we will now estimate the sample size by yearly intervals in order to better compare the age groups.
 
-```@example 1
-breaks = [0; collect(45:5:90); Inf]
-
-colrec.agegr = cut(colrec.age./365.241, breaks, right=false)
-ess = Nessie(@formula(Surv(time,status)~sex+agegr), colrec, slopop)
+```@example 2
+ess = nessie(@formula(Surv(time,status)~age65), colrec, slopop)
 ```
