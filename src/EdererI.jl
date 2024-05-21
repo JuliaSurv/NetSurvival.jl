@@ -15,7 +15,7 @@ To call this function:
 """
 const EdererI = NPNSEstimator{EdererIMethod}
 
-function Λ!(::Type{EdererIMethod}, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid)
+function Λ!(::Type{EdererIMethod}, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
     Tmax= Int(maximum(T))
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])
@@ -23,7 +23,7 @@ function Λ!(::Type{EdererIMethod}, num_excess, den_excess, num_pop, den_pop, nu
         rtᵢ = ratetable[rate_preds[i,:]...]
         for j in 1:Tmax
             λₚ          = daily_hazard(rtᵢ, age[i] + grid[j], year[i] + grid[j])
-            ∂Λₚ         = λₚ * (grid[j+1]-grid[j]) 
+            ∂Λₚ         = λₚ * ∂t[j]
             Λₚ         += ∂Λₚ
             Sₚ          = exp(-Λₚ)
             num_pop[j] += (Sₚ * ∂Λₚ)

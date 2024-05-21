@@ -18,7 +18,7 @@ References:
 """
 const PoharPerme = NPNSEstimator{PoharPermeMethod}
 
-function Λ!(::Type{PoharPermeMethod}, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid)
+function Λ!(::Type{PoharPermeMethod}, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])
         Λₚ = 0.0
@@ -26,7 +26,7 @@ function Λ!(::Type{PoharPermeMethod}, num_excess, den_excess, num_pop, den_pop,
         rtᵢ = ratetable[rate_preds[i,:]...]
         for j in 1:Tᵢ
             λₚ          = daily_hazard(rtᵢ, age[i] + grid[j], year[i] + grid[j])
-            ∂Λₚ         = λₚ * (grid[j+1]-grid[j]) # λₚ * ∂t 
+            ∂Λₚ         = λₚ * ∂t[j]
             Λₚ         += ∂Λₚ
             wₚ          = exp(Λₚ)
             num_pop[j] += ∂Λₚ * wₚ
