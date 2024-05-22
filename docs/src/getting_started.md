@@ -14,7 +14,7 @@ Note first that, for any positive random variable $X$, we will use extensively t
 | :--- | :---- |
 | ``S_X(t) = \mathbb P(X > t)`` | Survival function |
 | ``\Lambda_X(t) = -\ln S_X(t)`` | Cumulative Hazard function |
-| ``\lambda_X(t) = \partial \lambda_X(t)`` | Instantaneous hazard function |
+| ``\lambda_X(t) = \partial \Lambda_X(t)`` | Instantaneous hazard function |
 
 
 Consider a study that consists of censored survival times from a specific cause. Such a study consists of several random objects: 
