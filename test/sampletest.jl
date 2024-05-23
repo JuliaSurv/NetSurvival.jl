@@ -108,11 +108,11 @@ end
 
     # Coompare results with R: 
     compare_with_R(v1, vR)
-    compare_with_R(v1_strat, vR_strat) # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------- This ones fails 
+    compare_with_R(v1_strat, vR_strat)
 
     # Check for equality of the two interfaces: 
     check_equal(v1,v2)
-    check_equal(v1_strat,v2_strat) # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------- This ones fails 
+    check_equal(v1_strat,v2_strat)
 end
 
 
@@ -146,4 +146,30 @@ end
     err_pop =       (r[:population][:est][2:end, :] .- instance.Λₚ[1:end, :]) ./ r[:population][:est][2:end, :]
     @test all(abs.(err_causeSpec) .<= 0.01)
     @test all(abs.(err_pop)       .<= 0.01)
+end
+
+@testitem "Assess Nessie" begin
+    using RateTables
+    using RCall
+    
+    R"""
+    rez = relsurv::nessie(survival::Surv(time, stat) ~ sex, data = relsurv::colrec, ratetable = relsurv::slopop, rmap = list(age = age, sex = sex, year = diag))
+    mata = t(as.matrix(rez$mata))
+    povp = rez$povp
+    """
+    r_mata = @rget mata
+    r_povp = @rget povp
+    r_male, r_female = r_mata[:,1], r_mata[:,2]
+
+    instance = nessie(@formula(Surv(time,status)~sex), colrec, slopop)
+    jl_male, jl_female = instance[2].expected_sample_size
+    jl_povp = instance[1].expected_life_time
+
+    err_male = (r_male[1:end-1]  .- jl_male) ./ r_male[1:end-1]
+    err_female = (r_female[1:end-1]  .- jl_female) ./ r_female[1:end-1]
+    err_povp = (r_povp  .- jl_povp) ./ r_povp
+
+    @test all(abs.(err_male)   .<= 0.01)
+    @test all(abs.(err_female) .<= 0.01)
+    @test all(abs.(err_povp)   .<= 0.01)
 end

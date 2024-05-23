@@ -115,6 +115,22 @@ Under $H_0$, the statistic $U(T)$ is asymptotically $\chi^2(k-1)$-distributed. W
 GraffeoTest
 ```
 
+## Nessie
+
+The Nessie function estimates the sample size by yearly intervals as well as averages an estimated lifespan left for a given group.  
+
+This function is highly dependant on the `Life` function taken from the `RateTables.jl` package which you can find documented [here](https://juliasurv.github.io/RateTables.jl/dev/).
+
+The sample size is thus taken by the following formula:
+
+$$ESS(t) = \sum_i^N S_{P_i}(t) * \exp(-\Lambda_{P_i}(t))$$
+
+While the estimated lifepsan is directly taken from the `expectation` function. 
+
+```@docs
+nessie
+```
+
 ## References
 
 ```@bibliography

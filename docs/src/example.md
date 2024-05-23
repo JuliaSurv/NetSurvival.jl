@@ -238,3 +238,23 @@ plot(plot1, plot2, layout = (1, 2))
 ```
 
 Visually, it is almost immediately understood that there are no worthy differences between the two sexes whereas the `age65` variable seems to play a big role.
+
+
+## Estimated sample size and life expectancy 
+
+Given that the age group plays a significant role in the study, we will now estimate the sample size by yearly intervals in order to better compare the age groups.
+
+```@example 2
+elt, ess = nessie(@formula(Surv(time,status)~age65), colrec, slopop)
+elt
+```
+
+The expected life time for the younger patients is significatively higher than for older patients (24.78 years > 10.29 years).
+
+```@example 2
+hcat(ess[:,3]...)
+```
+
+Finally, the table above represents yearly expected sample sizes for both age groups under 65 and above, with the second column representing the latter. We can see that the sample size decreases for the older patients in a much more dramatic way than for the younger ages.
+
+Unsurprisingly, we can thus conclude that age plays an important role in the study.

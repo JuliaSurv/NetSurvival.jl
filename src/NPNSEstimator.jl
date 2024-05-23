@@ -40,7 +40,7 @@ function _get_rate_predictors(rt,df)
     return prd
 end
 
-function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:NPNSEstimator}
+function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:Union{NPNSEstimator, Nessie}}
     rate_predictors = _get_rate_predictors(rt,df)
     formula_applied = apply_schema(formula,schema(df))
 

@@ -18,7 +18,8 @@ Some key features in `NetSurvival.jl` are:
 
 - A panel of different non-parametric net survival estimators (Ederer I [Ederer1961](@cite), Ederer II [Ederer1959](@cite), Hakulinen [Hakulinen1977](@cite), Pohar Perme [PoharPerme2012](@cite)) with an interface compliant with Julia's standards. 
 - Grafféo's log-rank test [Graffeo2016](@cite) to compare net survival curves accross groups, including stratified testing.
-- Crude mortality, Expected Sample Size, and other usefull metrics in net survival field.
+- Crude mortality, Expected Sample Size, and other useful metrics in net survival field.
+- A 'Nessie' function that outputs the estimated sample size by yearly intervals and the average lifespan expectancy left for a given group. 
 - A compact, readable and efficient codebase (up to 1000x less LOC than `relsurv` for the same functionalities), ensuring long-term maintenability.
 - Significant performance improvements (up to 50x) compared to the R package `relsurv`.
 
