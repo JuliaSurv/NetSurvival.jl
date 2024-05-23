@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716454373022,
+  "lastUpdate": 1716454799734,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -1006,6 +1006,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "GraffeoTest/colrec x slopop - explicit",
             "value": 195431797,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=9607408\nallocs=62159\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "113822034+rimhajal@users.noreply.github.com",
+            "name": "rimhajal",
+            "username": "rimhajal"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9c06966b71ed430679439e4582b3eb446a25c605",
+          "message": "Nessie (#47)\n\n* question\r\n\r\n* somewhat better\r\n\r\n* took it out\r\n\r\n* tout en vrac\r\n\r\n* back to the formula in relsurv -- results differ IDK why.\r\n\r\n* coment\r\n\r\n* up on ratetable branch\r\n\r\n* Typo\r\n\r\n* remove old version\r\n\r\n* dunno what to do with the output\r\n\r\n* some docs\r\n\r\n* question\r\n\r\n* somewhat better\r\n\r\n* took it out\r\n\r\n* tout en vrac\r\n\r\n* back to the formula in relsurv -- results differ IDK why.\r\n\r\n* coment\r\n\r\n* up on ratetable branch\r\n\r\n* Typo\r\n\r\n* some docs\r\n\r\n* remove old version\r\n\r\n* dunno what to do with the output\r\n\r\n* remove useless comments\r\n\r\n* upgrade RateTables dependency\r\n\r\n* error\r\n\r\n* correct tet\r\n\r\n* last push\r\n\r\n* docs\r\n\r\n---------\r\n\r\nCo-authored-by: Oskar Laverny <oskar.laverny@univ-amu.fr>",
+          "timestamp": "2024-05-23T10:58:27+02:00",
+          "tree_id": "f49be1ad60f8b3650ea48fd4c398564a6bd4bdb6",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/9c06966b71ed430679439e4582b3eb446a25c605"
+        },
+        "date": 1716454798907,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 193431956,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4801936\nallocs=62013\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 214856689,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=8207200\nallocs=117740\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 199044409,
             "unit": "ns",
             "extra": "gctime=0\nmemory=9607408\nallocs=62159\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
