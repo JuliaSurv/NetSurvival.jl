@@ -123,9 +123,13 @@ This function is highly dependant on the `Life` function taken from the `RateTab
 
 The sample size is thus taken by the following formula:
 
-$$ ESS = \sum_i^N S_{P_i} * exp(-\Lambda_p) $$
+$$ESS(t) = \sum_i^N S_{P_i}(t) * \exp(-\Lambda_{P_i}(t))$$
 
 While the estimated lifepsan is directly taken from the `expectation` function. 
+
+```@docs
+nessie
+```
 
 ## References
 

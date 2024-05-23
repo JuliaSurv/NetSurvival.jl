@@ -18,9 +18,11 @@ struct Nessie
 end
 
 """
-    nessie(formula, data, ratetable)
+    nessie 
 
-The Nessie function estimates the sample size by yearly intervals as well as averages an estimated lifespan left for a given group.  
+To call this function, use the formula below: 
+
+    nessie(@formula(Surv(time,status)~covariate), data, ratetable)
 """
 function nessie(args...)
     r = fit(Nessie,args...)
