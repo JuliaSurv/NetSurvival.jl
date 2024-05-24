@@ -18,12 +18,12 @@ References:
 """
 const PoharPerme = NPNSEstimator{PoharPermeMethod}
 
-function Λ!(::Type{PoharPermeMethod}, ∂Nₑ, Yₑ, ∂Nₚ, Yₚ, ∂V, T, Δ, a, d, rate_preds, ratetable, grid, ∂t)
+function Λ!(::Type{PoharPermeMethod}, ∂Nₑ, Yₑ, ∂Nₚ, Yₚ, ∂V, T, Δ, age, date, rate_preds, ratetable, grid, ∂t)
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])
         Λₚ, wₚ, rtᵢ = 0.0, 1.0, ratetable[rate_preds[i,:]...]
         for j in 1:Tᵢ
-            λₚ      = daily_hazard(rtᵢ, a[i] + grid[j], d[i] + grid[j])
+            λₚ      = daily_hazard(rtᵢ, age[i] + grid[j], date[i] + grid[j])
             ∂Λₚ     = λₚ * ∂t[j]
             Λₚ     += ∂Λₚ
             wₚ      = exp(Λₚ)
