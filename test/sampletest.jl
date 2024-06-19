@@ -127,14 +127,14 @@ end
 
     # Check that this verison is returning the same thing: 
     v2 = CrudeMortality(fit(EdererII, @formula(Surv(time, status)~1), colrec, slopop))
-    @test all(instance.Λₒ .== v2.Λₒ)
-    @test all(instance.Λₑ .== v2.Λₑ)
-    @test all(instance.Λₚ .== v2.Λₚ)
+    @test all(instance.Mₒ .== v2.Mₒ)
+    @test all(instance.Mₑ .== v2.Mₑ)
+    @test all(instance.Mₚ .== v2.Mₚ)
 
     # Check for no nans: 
-    @test !any(isnan.(instance.Λₒ))
-    @test !any(isnan.(instance.Λₑ))
-    @test !any(isnan.(instance.Λₚ))
+    @test !any(isnan.(instance.Mₒ))
+    @test !any(isnan.(instance.Mₑ))
+    @test !any(isnan.(instance.Mₚ))
 
     # Now compare with R baseline: 
     R"""
@@ -142,8 +142,8 @@ end
     """
     r = @rget rez
 
-    err_causeSpec = (r[:causeSpec][:est][2:end, :]  .- instance.Λₑ[1:end, :]) ./ r[:causeSpec][:est][2:end, :]
-    err_pop =       (r[:population][:est][2:end, :] .- instance.Λₚ[1:end, :]) ./ r[:population][:est][2:end, :]
+    err_causeSpec = (r[:causeSpec][:est][2:end, :]  .- instance.Mₑ[1:end, :]) ./ r[:causeSpec][:est][2:end, :]
+    err_pop =       (r[:population][:est][2:end, :] .- instance.Mₚ[1:end, :]) ./ r[:population][:est][2:end, :]
     @test all(abs.(err_causeSpec) .<= 0.01)
     @test all(abs.(err_pop)       .<= 0.01)
 end

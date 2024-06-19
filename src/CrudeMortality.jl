@@ -19,20 +19,20 @@ References:
 * [cronin2000cumulative](@cite) Cronin, Kathleen A and Feuer, Eric J (2000). Cumulative cause-specific mortality for cancer patients in the presence of other causes: a crude analogue of relative survival.
 """
 struct CrudeMortality
-    Λₒ::Vector{Float64}
-    Λₑ::Vector{Float64}
-    Λₚ::Vector{Float64}
+    Mₒ::Vector{Float64}
+    Mₑ::Vector{Float64}
+    Mₚ::Vector{Float64}
     function CrudeMortality(npe::NPNSEstimator{Method}) where Method
         Sₒ = cumprod(1 .- npe.∂Λₒ)
-        Λₑ = cumsum(npe.∂Λₑ .* Sₒ)
-        Λₚ = cumsum(npe.∂Λₚ .* Sₒ)
-        return new(Λₑ .+ Λₚ, Λₑ, Λₚ)
+        Mₑ = cumsum(npe.∂Λₑ .* Sₒ)
+        Mₚ = cumsum(npe.∂Λₚ .* Sₒ)
+        return new(Mₑ .+ Mₚ, Mₑ, Mₚ)
     end
 end
 
 StatsBase.fit(::Type{CrudeMortality}, args...) = CrudeMortality(fit(EdererII, args...)) 
 
 function Base.show(io::IO, crud::CrudeMortality) 
-    df = DataFrame(Λₒ = crud.Λₒ, Λₑ = crud.Λₑ, Λₚ = crud.Λₚ)
+    df = DataFrame(Mₒ = crud.Mₒ, Mₑ = crud.Mₑ, Mₚ = crud.Mₚ)
     show(io, df)
 end
