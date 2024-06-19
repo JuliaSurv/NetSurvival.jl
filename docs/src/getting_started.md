@@ -68,11 +68,11 @@ Hakulinen
 
 The *crude mortality rate* is the global mortality rate (from all causes of death) for a population. This measure does not use the cause of death information which, as we previously mentioned, can be unreliable and incomplete. It is given as:
 
-$$F_C(t) = \int_0^t S_O(u-) \lambda_E(u)du$$
+$$M_E(t) = \int_0^t S_O(u-) \lambda_E(u)du$$
 
 There exists a few estimators of this quantity, the most known one being the Cronin-Feuer estimator [cronin2000cumulative](@cite), given by:
 
-$$\hat{F}_C(t) = \int_0^t \hat{S}_O(u-) \hat{\lambda}_E(u)du$$
+$$\hat{M}_E(t) = \int_0^t \hat{S}_O(u-) \hat{\lambda}_E(u)du$$
 
 where, traditionally, Kaplan-Meier is used to estimate the overall survival function $\hat{S}_O$ and Ederer II is used for the excess hazard rate $\hat{\lambda}_E$ and the population hazard rate $\hat{\lambda}_P$.
 
@@ -123,7 +123,7 @@ This function is highly dependant on the `Life` function taken from the `RateTab
 
 The sample size is thus taken by the following formula:
 
-$$ESS(t) = \sum_i^N S_{P_i}(t) * \exp(-\Lambda_{P_i}(t))$$
+$$ESS(t) = \sum_i^N S_{P_i}(t)$$
 
 While the estimated lifepsan is directly taken from the `expectation` function. 
 

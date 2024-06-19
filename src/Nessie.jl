@@ -7,11 +7,11 @@ struct Nessie
         exp_spl_size = zeros(length(annual_grid))
         exp_life_time = 0.0
         for i in eachindex(age)
-            Lᵢ = Life(ratetable[rate_preds[i,:]...], age[i], year[i])
+            Pᵢ = Life(ratetable[rate_preds[i,:]...], age[i], year[i])
             for j in eachindex(annual_grid)
-                exp_spl_size[j] += ccdf(Lᵢ, annual_grid[j])
+                exp_spl_size[j] += ccdf(Pᵢ, annual_grid[j])
             end
-            exp_life_time += expectation(Lᵢ)
+            exp_life_time += expectation(Pᵢ)
         end
         return new(exp_spl_size, exp_life_time / RateTables.RT_DAYS_IN_YEAR / length(age), annual_grid)
     end
