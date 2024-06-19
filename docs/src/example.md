@@ -17,7 +17,7 @@ using NetSurvival, RateTables, DataFrames
 first(colrec,10)
 ```
 
-Let's explore how our data is distributed first, strating with the `age` variable.
+Let's explore how our data is distributed first, starting with the `age` variable.
 
 ```@example 2
 println(minimum(colrec.age./365.241), " ; ",maximum(colrec.age./365.241))
@@ -36,7 +36,7 @@ plot(
 
 The graph above show us that although it has a wide range of patients within all age groups, it is mostly centered around older adults and elderly, with the majority of the patients being between 60 and 80 years old. 
 
-Looking at the second graph that details the distibution of the follow-up times, we notice that the values quickly drop. Unfortunately, this is a common theme in cancer studies. 
+Looking at the second graph that details the distribution of the follow-up times, we notice that the values quickly drop. Unfortunately, this is a common theme in cancer studies. 
 
 Let's take a look at the `sex` variable now: 
 
@@ -120,7 +120,7 @@ With the EdererI method, after $1826$ days have passed, we can say that the surv
 
 ```@example 2
 crude_e1 = CrudeMortality(e1)
-println(crude_e1.Λₒ[1826], " , ", crude_e1.Λₑ[1826], " , ", crude_e1.Λₚ[1826])
+println(crude_e1.Mₒ[1826], " , ", crude_e1.Mₑ[1826], " , ", crude_e1.Mₚ[1826])
 ```
 
 Out of the 0.63 patients that have died, according to the EdererI method, 0.51 died because of colorectal cancer and 0.12 died of other causes.
@@ -134,7 +134,7 @@ Similarily, the EdererII method, also known as the conditional method, shows tha
 
 ```@example 2
 crude_e2 = CrudeMortality(e2)
-println(crude_e2.Λₒ[1826], " , ", crude_e2.Λₑ[1826], " , ", crude_e2.Λₚ[1826])
+println(crude_e2.Mₒ[1826], " , ", crude_e2.Mₑ[1826], " , ", crude_e2.Mₚ[1826])
 ```
 
 Here, out of the 0.63 patients that have dued, 0.53 are due to colorectal cancer and 0.1 due to other causes.
@@ -147,7 +147,7 @@ We conclude for the Poher-Perme method, that in a world where cancer patients co
 
 ```@example 2
 crude_pp = CrudeMortality(pp)
-println(crude_pp.Λₒ[1826], " , ", crude_pp.Λₑ[1826], " , ", crude_pp.Λₚ[1826])
+println(crude_pp.Mₒ[1826], " , ", crude_pp.Mₑ[1826], " , ", crude_pp.Mₚ[1826])
 ```
 
 Finally, for this estimator, we have that of the 0.64 patients that have died, 0.53 is due to colorectal cancer while 0.11 is due to other causes.
@@ -161,8 +161,8 @@ upper_bounds = [upper[2] for upper in conf_int]
 
 p1 = plot(pp.grid, pp.Sₑ, ribbon=(pp.Sₑ - lower_bounds, upper_bounds - pp.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = false)
 
-p2 = plot(pp.grid, crude_pp.Λₑ, label = "Excess Mortality Rate")
-p2 = plot!(pp.grid, crude_pp.Λₚ, label = "Population Mortality Rate")
+p2 = plot(pp.grid, crude_pp.Mₑ, label = "Excess Mortality Rate")
+p2 = plot!(pp.grid, crude_pp.Mₚ, label = "Population Mortality Rate")
 
 plot(p1,p2)
 ```
