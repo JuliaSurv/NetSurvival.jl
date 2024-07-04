@@ -5,14 +5,14 @@ using Distributions
 using LinearAlgebra
 using StatsAPI
 using StatsBase
-using StatsModels
 using Tables
 using Base.Cartesian
 using CSV
 using RateTables
+using StatsModels
+using SurvivalBase: Surv, Strata
 
 include("fetch_datasets.jl")
-include("Surv_and_Strata.jl")
 include("Nessie.jl")
 include("NPNSEstimator.jl")
 include("PoharPerme.jl")
