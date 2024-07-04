@@ -28,7 +28,9 @@ function Λ!(::Type{EdererIMethod}, ∂Nₑ, Yₑ, ∂Nₚ, Yₚ, ∂V, T, Δ, a
             Sₚ      = exp(-Λₚ)
             ∂Nₚ[j] += (Sₚ * ∂Λₚ)
             Yₚ[j]  += Sₚ
-            Yₑ[j]  += j ≤ Tᵢ
+        end
+        for j in 1:Tᵢ
+            Yₑ[j]  += 1
         end
         ∂Nₑ[Tᵢ] += Δ[i]
         ∂V[Tᵢ]  += Δ[i]
