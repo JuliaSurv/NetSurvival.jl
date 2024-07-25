@@ -1,7 +1,7 @@
 name = "NetSurvival"
 uuid = "8f9d5d0e-dd2e-4568-92d4-f8c5d34f25cf"
 authors = ["Oskar Laverny <oskar.laverny@univ-amu.fr> and contributors"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
