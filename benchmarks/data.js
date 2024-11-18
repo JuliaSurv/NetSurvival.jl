@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728295723833,
+  "lastUpdate": 1731925277289,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -1554,6 +1554,48 @@ window.BENCHMARK_DATA = {
             "value": 196748451,
             "unit": "ns",
             "extra": "gctime=0\nmemory=9607408\nallocs=62159\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "598c709b47a5e6503cb8a51e0ab93a530120eee0",
+          "message": "Bump codecov/codecov-action from 4.6.0 to 5.0.2 (#74)\n\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-18T11:17:55+01:00",
+          "tree_id": "900e5381a7e7246c842a1c76d1f1a5ae97b9e75f",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/598c709b47a5e6503cb8a51e0ab93a530120eee0"
+        },
+        "date": 1731925276561,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 200642158,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=4801408\nallocs=68013\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 220929534.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=8195376\nallocs=117897\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 210299342,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=9576768\nallocs=68326\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
         ]
       }
