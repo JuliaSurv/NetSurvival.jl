@@ -9,7 +9,7 @@ To call this function:
 """
 const Hakulinen = NPNSEstimator{HakulinenMethod}
 
-function Λ!(::Type{HakulinenMethod}, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
+function Λ!(::HakulinenMethod, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
     Date_max = maximum(T .+ year)
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])

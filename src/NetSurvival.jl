@@ -11,6 +11,9 @@ using CSV
 using RateTables
 using StatsModels
 using SurvivalBase: Surv, Strata
+using Copulas
+using Roots
+using ForwardDiff
 
 include("fetch_datasets.jl")
 include("Nessie.jl")
@@ -19,10 +22,11 @@ include("PoharPerme.jl")
 include("EdererI.jl")
 include("EdererII.jl")
 include("Hakulinen.jl")
+include("GenPoharPerme.jl")
 include("CrudeMortality.jl")
 include("GraffeoTest.jl")
 
-export PoharPerme, EdererI, EdererII, Hakulinen
+export PoharPerme, EdererI, EdererII, Hakulinen, GenPoharPerme
 export CrudeMortality
 export Nessie, nessie
 export fit, confint

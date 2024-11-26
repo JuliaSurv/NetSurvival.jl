@@ -1,9 +1,5 @@
 @testitem "Assess all NPNSEstimators" begin
     using RateTables, NetSurvival, RCall, DataFrames
-    function mk_r_model(r_method)
-
-        return t::Vector{Float64},s::Vector{Float64},e::Vector{Float64}
-    end
     function test_surv(r_method,::Type{E},df, rt, args...) where E
 
         # Main instance: 

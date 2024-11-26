@@ -6,28 +6,31 @@ struct NPNSEstimator{Method} <: StatisticalModel
     ∂Λₚ::Vector{Float64}
     σₑ::Vector{Float64}
     grid::Vector{Float64}
-    function NPNSEstimator{Method}(T, Δ, age, year, rate_preds, ratetable) where Method<:NPNSMethod
+    function NPNSEstimator(m::Method, T, Δ, age, year, rate_preds, ratetable) where Method<:NPNSMethod
         grid = mk_grid(T,1) # precision is always 1 ? 
-        ∂Λₒ, ∂Λₚ, ∂σₑ = Λ(Method, T, Δ, age, year, rate_preds, ratetable, grid)
+        ∂Λₒ, ∂Λₚ, ∂σₑ = Λ(m, T, Δ, age, year, rate_preds, ratetable, grid)
         ∂Λₑ = ∂Λₒ .- ∂Λₚ
-        Sₑ = cumprod(1 .- ∂Λₑ)
+        Sₑ = clamp.(cumprod(1 .- ∂Λₑ),0,Inf)
         σₑ = sqrt.(cumsum(∂σₑ))
-        return new(Sₑ, ∂Λₑ, ∂Λₒ, ∂Λₚ, σₑ, grid)
+        return new{Method}(Sₑ, ∂Λₑ, ∂Λₒ, ∂Λₚ, σₑ, grid)
     end
 end
+NPNSEstimator{Method}() where Method = Method()
+NPNSEstimator{Method}(T, Δ, age, year, rate_preds, ratetable) where Method<:NPNSMethod = NPNSEstimator(Method(), T, Δ, age, year, rate_preds, ratetable)
+NPNSEstimator(::Type{Method}, T, Δ, age, year, rate_preds, ratetable) where Method<:NPNSMethod = NPNSEstimator(Method(), T, Δ, age, year, rate_preds, ratetable)
 
 function mk_grid(times,prec)
     M = maximum(times)
-    return unique(sort([(1:prec:M)..., times..., M]))
+    return unique(sort([(1:prec:M)..., times..., M]))::Vector{Float64}
 end
-function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M<:NPNSMethod
+function Λ(m::M, T, Δ, age, year, rate_preds, ratetable, grid) where M<:NPNSMethod
     num_excess   = zero(grid)
     num_pop      = zero(grid)
     num_variance = zero(grid)
     den_pop      = zero(grid)
     den_excess   = zero(grid)
     ∂t = [diff(grid)...,1.0]
-    Λ!(M, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
+    Λ!(m, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
     return num_excess ./ den_excess, num_pop ./ den_pop, num_variance ./ (den_excess.^2)
 end
 
@@ -40,21 +43,22 @@ function _get_rate_predictors(rt,df)
     return prd
 end
 
-function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:Union{NPNSEstimator, Nessie}}
+function StatsBase.fit(::Type{NPNSEstimator{M}}, formula::FormulaTerm, df, rt) where {M<:NPNSMethod}
+    return StatsBase.fit(NPNSEstimator{M}(), formula, df, rt)
+end
+function StatsBase.fit(m::M, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {M<:NPNSMethod}
     rate_predictors = _get_rate_predictors(rt,df)
     formula_applied = apply_schema(formula,schema(df))
 
     if isa(formula.rhs, ConstantTerm) # No predictors
-        resp = modelcols(formula_applied.lhs, df)
-        return E(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
+        resp = modelcols(formula_applied.lhs, df)::Matrix{Float64}
+        return NPNSEstimator(m, resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), rt)
     else
-        # we could simply group by the left side and apply fit() again, that would make sense. 
-
         gdf = groupby(df, StatsModels.termnames(formula.rhs))
         return rename(combine(gdf, dfᵢ -> begin
-                resp2 = modelcols(formula_applied.lhs, dfᵢ)
-                E(resp2[:,1], resp2[:,2], dfᵢ.age, dfᵢ.year, select(dfᵢ, rate_predictors), rt)
-            end
+                resp2 = modelcols(formula_applied.lhs, dfᵢ)::Matrix{Float64}
+                NPNSEstimator(m, resp2[:,1], resp2[:,2], dfᵢ.age, dfᵢ.year, select(dfᵢ, rate_predictors), rt)
+                end
         ), :x1 => :estimator)
     end
 end

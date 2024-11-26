@@ -49,17 +49,19 @@ The produced test statistics is supposed to follow a chi squared distribution un
 References: 
 * [Graffeo2016](@cite) Grafféo, Nathalie and Castell, Fabienne and Belot, Aurélien and Giorgi, Roch (2016). A Log-Rank-Type Test to Compare Net Survival Distributions.  
 """
-struct GraffeoTest
-    ∂N::Array{Float64, 3}
-    ∂V::Array{Float64, 3}
-    ∂Z::Array{Float64, 3}
-    D::Array{Float64, 3}
-    R::Array{Float64, 3}
-    ∂VZ::Array{Float64, 4}
+struct GraffeoTest{Method}
+    method::Method
+    t::Array{Float64,1}
+    ∂N::Array{Float64, 2}
+    ∂V::Array{Float64, 2}
+    ∂Z::Array{Float64, 2}
+    D::Array{Float64, 2}
+    R::Array{Float64, 2}
+    ∂VZ::Array{Float64, 3}
     stat::Float64
     df::Int64
     pval::Float64
-    function GraffeoTest(T, Δ, age, year, rate_preds, strata, group, ratetable)
+    function GraffeoTest(method::M, T, Δ, age, year, rate_preds, strata, group, ratetable)  where M<:NPNSMethod
 
         # This version of the test is HIGHLY INNEFICIENT. 
         # We should avoid allocating that much memory. 
@@ -70,16 +72,15 @@ struct GraffeoTest
         # get stratas and groups, count them.  
         stratas = unique(strata)
         groups  = unique(group)
-        nstrata = length(stratas)
         ngroups = length(groups)
 
         # Allocate: 
-        ∂N  = zeros(nstrata, ngroups, length(grid))
-        ∂V  = zeros(nstrata, ngroups, length(grid))
-        ∂Z  = zeros(nstrata, ngroups, length(grid))
-        D   = zeros(nstrata, ngroups, length(grid))
-        R   = zeros(nstrata, ngroups, length(grid))
-        ∂VZ = zeros(nstrata, ngroups, ngroups, length(grid))
+        ∂N  = zeros(ngroups, length(grid))
+        ∂V  = zeros(ngroups, length(grid))
+        ∂Z  = zeros(ngroups, length(grid))
+        D   = zeros(ngroups, length(grid))
+        R   = zeros(ngroups, length(grid))
+        ∂VZ = zeros(ngroups, ngroups, length(grid))
 
         num_excess   = zero(grid)
         num_pop      = zero(grid)
@@ -92,58 +93,62 @@ struct GraffeoTest
         for s in eachindex(stratas)
             for g in eachindex(groups)
                 idx = (group .== groups[g]) .&& (strata .== stratas[s])
-
                 num_excess   .= 0
                 num_pop      .= 0
                 num_variance .= 0
                 den_pop      .= 0
                 den_excess   .= 0
-                Λ!(PoharPermeMethod, num_excess, den_excess, num_pop, den_pop, num_variance, T[idx], Δ[idx], age[idx], year[idx], rate_preds[idx,:], ratetable, grid, ∂t)
-                ∂N[s, g, :] .= num_excess.- num_pop
-                ∂V[s, g, :] .= num_variance
-                D[s, g, :]  .= den_excess
+                Λ!(method, num_excess, den_excess, num_pop, den_pop, num_variance, T[idx], Δ[idx], age[idx], year[idx], rate_preds[idx,:], ratetable, grid, ∂t)
+                ∂N[g, :] .= num_excess .- num_pop
+                ∂V[g, :] .= num_variance
+                D[g, :]  .= den_excess
             end
-        end
-
-        # renormalize on groups, be carefull for zeros. 
-        R .= ifelse.(sum(D,dims=2) .== 0, 0, D ./ sum(D,dims=2))
-        ∂Z .= ∂N .- R .* sum(∂N,dims=2)
+            
+            R .= ifelse.(sum(D,dims=1) .== 0, 0, D ./ sum(D,dims=1))
+            ∂Z .= ∂N .- R .* sum(∂N,dims=1)
         
-        # Compute test variance on each strata
-        for s in eachindex(stratas)
+            # Compute test variance
             for ℓ in eachindex(groups)
                 for g in eachindex(groups)
                     for h in eachindex(groups)
                         for t in eachindex(grid)
-                            ∂VZ[s, g, h,t] += ((g==ℓ) - R[s, g, t]) * ((h==ℓ) - R[s, h, t]) .* ∂V[s, ℓ, t]
+                            ∂VZ[g, h,t] += ((g==ℓ) - R[g, t]) * ((h==ℓ) - R[h, t]) .* ∂V[ℓ, t]
                         end
                     end
                 end
             end
         end
 
-        # Cumulate accross time and stratas
-        Z =  dropdims(sum(∂Z, dims=(1,3)), dims=(1,3))
-        VZ = dropdims(sum(∂VZ, dims=(1,4)), dims=(1,4))
+        # Cumulate accross time
+        Z =  dropdims(sum(∂Z, dims=2), dims=2)
+        VZ = dropdims(sum(∂VZ, dims=3), dims=3)
 
         # Finally compute the stat and p-values:
         stat = dot(Z[1:end-1],(VZ[1:end-1,1:end-1] \ Z[1:end-1])) # test statistic
         df = ngroups-1 # number of degree of freedom of the chi-square test
         pval = ccdf(Chisq(df), stat[1]) # Obtained p-value. 
-        return new(∂N, ∂V, ∂Z, D, R, ∂VZ, stat[1], df, pval)
+        return new{M}(method,grid,∂N, ∂V, ∂Z, D, R, ∂VZ, stat[1], df, pval)
     end
 end
 
-function Base.show(io::IO, test::GraffeoTest)
-    println(io, "Grafféo's log-rank-type-test")
-    df = DataFrame(test_statistic = test.stat, degrees_of_freedom = test.df, p_value = test.pval)
-    show(io, df)
+struct GraffeoTestHolder{T}
+    m::T
 end
 
-# The fitting and formula interfaces should be here. 
+GraffeoTest(T, Δ, age, year, rate_preds, strata, group, ratetable) = GraffeoTest(PoharPermeMethod(),T, Δ, age, year, rate_preds, strata, group, ratetable)
 
-function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {E<:GraffeoTest}
+GraffeoTest()                                    = GraffeoTestHolder(PoharPermeMethod())
+GraffeoTest(m::M)      where M<:NPNSMethod       = GraffeoTestHolder(m)
+GraffeoTest{M}()       where M<:NPNSMethod       = GraffeoTestHolder(M())
+GraffeoTest(::Type{M}) where M<:NPNSMethod       = GraffeoTestHolder(M())
+GraffeoTest(::Type{NPNSEstimator{M}}) where M<:NPNSMethod       = GraffeoTestHolder(M())
+GraffeoTest(C::Cop)    where Cop<:Copulas.Copula = GraffeoTest(GenPoharPermeMethod(C))
 
+StatsBase.fit(X::GraffeoTestHolder{M}, formula, df, rt) where M<:NPNSMethod   = StatsBase.fit(GraffeoTest, X.m,                formula, df, rt)
+StatsBase.fit(::Type{GraffeoTest},     formula, df, rt)                       = StatsBase.fit(GraffeoTest(PoharPermeMethod()), formula, df, rt)
+StatsBase.fit(::Type{GraffeoTest{M}},  formula, df, rt) where {M<:NPNSMethod} = StatsBase.fit(GraffeoTest, M(),                formula, df, rt)
+
+function StatsBase.fit(GTH::GraffeoTestHolder{M}, formula::FormulaTerm, df::DataFrame, rt::RateTables.AbstractRateTable) where {M<:NPNSMethod}
     terms = StatsModels.termvars(formula.rhs)
     tf = typeof(formula.rhs)
     types = (tf <: AbstractTerm) ? [tf] : typeof.(formula.rhs)
@@ -155,5 +160,27 @@ function StatsBase.fit(::Type{E}, formula::FormulaTerm, df::DataFrame, rt::RateT
     resp = modelcols(apply_schema(formula,schema(df)).lhs,df)
     rate_predictors = _get_rate_predictors(rt,df)
     
-    return GraffeoTest(resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), strata, group, rt)
+    return GraffeoTest(GTH.m, resp[:,1], resp[:,2], df.age, df.year, select(df,rate_predictors), strata, group, rt)
 end
+
+# A show function: 
+function Base.show(io::IO, test::GraffeoTest)
+    println(io, "Grafféo's log-rank-type-test (Method: $(test.method))")
+    df = DataFrame(test_statistic = test.stat, degrees_of_freedom = test.df, p_value = test.pval)
+    show(io, df)
+end
+
+# Potential other extraction methods: 
+function statistic(X::GraffeoTest, at_time_T)
+    # Cumulate accross time
+    i_T = findlast(X.t .<= at_time_T)
+    Z =  dropdims(sum(X.∂Z[:,1:i_T], dims=2), dims=2)
+    Γ = dropdims(sum(X.∂Γ[:,:,1:i_T], dims=3), dims=3)
+    stat = dot(Z[1:end-1],Γ[1:end-1,1:end-1] \ Z[1:end-1]) # test statistic
+    return stat
+end 
+function pvalue(X::GraffeoTest, at_time_T)
+    stat = statistic(X, at_time_T)
+    df = size(X.∂Z,1)-1 # number of degree of freedom of the chi-square test
+    return ccdf(Chisq(df), stat[1]) # Obtained p-value.
+end  

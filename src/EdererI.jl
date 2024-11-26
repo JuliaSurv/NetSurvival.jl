@@ -15,7 +15,7 @@ To call this function:
 """
 const EdererI = NPNSEstimator{EdererIMethod}
 
-function Λ!(::Type{EdererIMethod}, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
+function Λ!(::EdererIMethod, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
     Tmax= Int(maximum(T))
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])
