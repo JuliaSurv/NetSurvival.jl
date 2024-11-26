@@ -105,7 +105,7 @@ struct GraffeoTest{Method}
             end
             
             R .= ifelse.(sum(D,dims=1) .== 0, 0, D ./ sum(D,dims=1))
-            ∂Z .= ∂N .- R .* sum(∂N,dims=1)
+            ∂Z .+= ∂N .- R .* sum(∂N,dims=1)
         
             # Compute test variance
             for ℓ in eachindex(groups)

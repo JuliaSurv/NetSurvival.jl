@@ -1,11 +1,11 @@
 struct GenPoharPermeMethod{CopulaType} <:NPNSMethod 
     C::CopulaType
     function GenPoharPermeMethod(C::Copulas.Copula{2})
-        # if isa(C, IndependentCopula)
-        #     return PoharPermeMethod()
-        # else
+        if isa(C, IndependentCopula)
+            return PoharPermeMethod()
+        else
             return new{typeof(C)}(C)
-        # end
+        end
     end
 end
 GenPoharPermeMethod() = GenPoharPermeMethod(IndependentCopula(2))
@@ -61,7 +61,7 @@ function _𝒞ₐₗₗ(C,u,v)
     return r.value, r.partials[1], r.partials[2]
 end
 function _mk_∂Λₑ(C, args...)
-    return Roots.find_zero(x -> _equation(x, C, args...), 0.0, Roots.Order1())
+    Roots.find_zero(x -> _equation(x, C, args...), 0.0, Roots.Order1())
 end
 function _equation(∂Λₑ, C, Sₑ₋, Sₚ, ∂Sₚ, ∂Nⱼ)
     # This function expect only indivs with Yⱼ == 1 to be passed
@@ -97,7 +97,7 @@ function _mk_∂Λₑ(::IndependentCopula, Sₑ₋, Sₚ, ∂Sₚ, ∂Nⱼ)
         numer += ∂Nⱼ[i] * wᵢ + ∂Sₚ[i] * wᵢ * wᵢ
         denom += wᵢ
     end
-    return numer/denom
+    return ifelse(denom>0, numer/denom, 0.0) 
 end
 function _eq_var(::IndependentCopula, Sₑ, Sₚ, ∂Nⱼ)
     ∂Vₑ, Dₑ, r = zero(Sₑ), zero(Sₑ), zero(Sₑ)
