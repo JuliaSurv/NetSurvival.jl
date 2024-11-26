@@ -24,14 +24,14 @@ function mk_grid(times,prec)
     return unique(sort([(1:prec:M)..., times..., M]))::Vector{Float64}
 end
 function Λ(m::M, T, Δ, age, year, rate_preds, ratetable, grid) where M<:NPNSMethod
-    num_excess   = zero(grid)
-    num_pop      = zero(grid)
-    num_variance = zero(grid)
-    den_pop      = zero(grid)
-    den_excess   = zero(grid)
+    ∂Nₒ   = zero(grid)
+    ∂Nₚ      = zero(grid)
+    ∂V = zero(grid)
+    Yₚ      = zero(grid)
+    Yₒ   = zero(grid)
     ∂t = [diff(grid)...,1.0]
-    Λ!(m, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
-    return num_excess ./ den_excess, num_pop ./ den_pop, num_variance ./ (den_excess.^2)
+    Λ!(m, ∂Nₒ, Yₒ, ∂Nₚ, Yₚ, ∂V, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
+    return ∂Nₒ ./ Yₒ, ∂Nₚ ./ Yₚ, ∂V ./ (Yₒ.^2)
 end
 
 function _get_rate_predictors(rt,df)

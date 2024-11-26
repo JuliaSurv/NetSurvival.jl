@@ -82,26 +82,26 @@ struct GraffeoTest{Method}
         R   = zeros(ngroups, length(grid))
         ∂VZ = zeros(ngroups, ngroups, length(grid))
 
-        num_excess   = zero(grid)
-        num_pop      = zero(grid)
-        num_variance = zero(grid)
-        den_pop      = zero(grid)
-        den_excess   = zero(grid)
+        ∂Nₒ = zero(grid)
+        ∂Nₚ = zero(grid)
+        ∂Vₑ = zero(grid)
+        Yₚ  = zero(grid)
+        Yₒ = zero(grid)
         ∂t = [diff(grid)...,1.0]
 
         # Compute Pohar Perme numerator and denominators on each strata&group (s,g)
         for s in eachindex(stratas)
             for g in eachindex(groups)
                 idx = (group .== groups[g]) .&& (strata .== stratas[s])
-                num_excess   .= 0
-                num_pop      .= 0
-                num_variance .= 0
-                den_pop      .= 0
-                den_excess   .= 0
-                Λ!(method, num_excess, den_excess, num_pop, den_pop, num_variance, T[idx], Δ[idx], age[idx], year[idx], rate_preds[idx,:], ratetable, grid, ∂t)
-                ∂N[g, :] .= num_excess .- num_pop
-                ∂V[g, :] .= num_variance
-                D[g, :]  .= den_excess
+                ∂Nₒ .= 0
+                ∂Nₚ .= 0
+                ∂Vₑ  .= 0
+                Yₚ  .= 0
+                Yₒ  .= 0
+                Λ!(method, ∂Nₒ, Yₒ, ∂Nₚ, Yₚ, ∂Vₑ, T[idx], Δ[idx], age[idx], year[idx], rate_preds[idx,:], ratetable, grid, ∂t)
+                ∂N[g, :] .= ∂Nₒ .- ∂Nₚ
+                ∂V[g, :] .= ∂Vₑ
+                D[g, :]  .= Yₒ
             end
             
             R .= ifelse.(sum(D,dims=1) .== 0, 0, D ./ sum(D,dims=1))
