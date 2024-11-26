@@ -18,7 +18,7 @@ end
 
 function mk_grid(times,prec)
     M = maximum(times)
-    return unique(sort([(1:prec:M)..., times..., M]))
+    return unique(sort(vcat(1:prec:M, times, M)))
 end
 function Λ(::Type{M}, T, Δ, age, year, rate_preds, ratetable, grid) where M<:NPNSMethod
     num_excess   = zero(grid)
