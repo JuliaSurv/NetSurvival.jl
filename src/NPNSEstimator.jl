@@ -84,3 +84,14 @@ function Base.show(io::IO, npe::E) where E <: NPNSEstimator
         print(io, "$(E)(t ∈ $(extrema(npe.grid)))")
     end
 end
+
+function (S::NPNSEstimator)(t)
+    i_t = findlast(S.grid .<= t)
+    isnothing(i_t) && return one(t)
+    return S.Sₑ[i_t]
+end
+function variance(S::NPNSEstimator, t)
+    i_t = findlast(S.grid .<= t)
+    isnothing(i_t) && return zero(t)
+    return sqrt(S.σₑ[i_t])
+end
