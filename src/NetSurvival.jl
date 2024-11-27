@@ -29,7 +29,7 @@ include("GraffeoTest.jl")
 export PoharPerme, EdererI, EdererII, Hakulinen, GenPoharPerme
 export CrudeMortality
 export Nessie, nessie
-export fit, confint, variance
+export fit, confint, variance, statistic, pvalue
 export GraffeoTest
 export Surv, Strata
 export colrec
