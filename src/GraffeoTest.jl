@@ -175,7 +175,7 @@ function statistic(X::GraffeoTest, at_time_T)
     # Cumulate accross time
     i_T = findlast(X.t .<= at_time_T)
     Z =  dropdims(sum(X.∂Z[:,1:i_T], dims=2), dims=2)
-    Γ = dropdims(sum(X.∂Γ[:,:,1:i_T], dims=3), dims=3)
+    Γ = dropdims(sum(X.∂VZ[:,:,1:i_T], dims=3), dims=3)
     stat = dot(Z[1:end-1],Γ[1:end-1,1:end-1] \ Z[1:end-1]) # test statistic
     return stat
 end 
