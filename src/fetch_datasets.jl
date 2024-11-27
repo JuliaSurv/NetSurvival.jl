@@ -10,6 +10,6 @@ colrec = let
         time = colrec.time,
         status = colrec.stat.==1,
         stage = colrec.stage,
-        site = colrec.site,
+        site = Symbol.(colrec.site),
     )
 end

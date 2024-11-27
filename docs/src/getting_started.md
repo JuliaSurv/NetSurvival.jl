@@ -131,6 +131,31 @@ While the estimated lifepsan is directly taken from the `expectation` function.
 nessie
 ```
 
+## Relaxing the independence assumption
+
+The independence assumption of the random vector $(E,P)$ can be relaxed by specifying a dependence structure for this random vector, defined by a copula from [Copulas.jl](https://github.com/lrnv/Copulas.jl). The description of the underlying method to compute the net survival, its variance and associated log-rank tests under these dependence assumptions are given in [Laverny2024](@cite).
+
+The generalization of the Pohar Perme estimator with a given copula `C::Copulas.Copula` can be used as follows: 
+
+```julia
+C = FrankCopula(2,-10)
+fit(GenPoharPerme(C), @formula(Surv(time, status)~ x1 + x2), data, ratetable)
+fit(GraffeoTest(C), @formula(Surv(time, status)~ x1 + x2), data, ratetable)
+```
+
+By default, `GraffeoTest(C::Copula)` uses `GenPoharPerme(C)` as a method to compute net survival in each category, but this modification also allows to use other methods, such as: 
+
+```julia
+fit(GraffeoTest(Ederer1()), @formula(Surv(time, status)~ x1 + x2), data, ratetable)
+```
+
+Even if these results are not supported by any theoretical work and are probably meaningless, it is fun to to see that the code goes through, thanks to the modularity of Julia's dispatch, even on routes that were not designed for.
+
+```@docs
+GenPoharPerme
+```
+
+
 ## References
 
 ```@bibliography

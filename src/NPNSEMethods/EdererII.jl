@@ -15,19 +15,19 @@ To call this function:
 """
 const EdererII = NPNSEstimator{EdererIIMethod}
 
-function Λ!(::Type{EdererIIMethod}, num_excess, den_excess, num_pop, den_pop, num_variance, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
+function Λ!(::EdererIIMethod, ∂Nₒ, Yₒ, ∂Nₚ, Yₚ, ∂V, T, Δ, age, year, rate_preds, ratetable, grid, ∂t)
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])
         rtᵢ = ratetable[rate_preds[i,:]...]
         for j in 1:Tᵢ
             λₚ          = daily_hazard(rtᵢ, age[i] + grid[j], year[i] + grid[j])
             ∂Λₚ         = λₚ * ∂t[j]
-            den_excess[j] += 1
-            den_pop[j] += 1
-            num_pop[j] += ∂Λₚ
+            Yₒ[j] += 1
+            Yₚ[j] += 1
+            ∂Nₚ[j] += ∂Λₚ
         end
-        num_excess[Tᵢ]   += Δ[i]  
-        num_variance[Tᵢ]   += Δ[i]  
+        ∂Nₒ[Tᵢ]   += Δ[i]  
+        ∂V[Tᵢ]   += Δ[i]  
     end
 end
 
