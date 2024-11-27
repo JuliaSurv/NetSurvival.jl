@@ -93,5 +93,5 @@ end
 function variance(S::NPNSEstimator, t)
     i_t = findlast(S.grid .<= t)
     isnothing(i_t) && return zero(t)
-    return S.σₑ[i_t]
+    return S.σₑ[i_t]^2
 end
