@@ -18,7 +18,7 @@ References:
 """
 const PoharPerme = NPNSEstimator{PoharPermeMethod}
 
-function Λ!(::Type{PoharPermeMethod}, ∂Nₑ, Yₑ, ∂Nₚ, Yₚ, ∂V, T, Δ, age, date, rate_preds, ratetable, grid, ∂t)
+function Λ!(::PoharPermeMethod, ∂Nₒ, Yₒ, ∂Nₚ, Yₚ, ∂V, T, Δ, age, date, rate_preds, ratetable, grid, ∂t)
     for i in eachindex(age)
         Tᵢ = searchsortedlast(grid, T[i])
         Λₚ, wₚ, rtᵢ = 0.0, 1.0, ratetable[rate_preds[i,:]...]
@@ -28,10 +28,10 @@ function Λ!(::Type{PoharPermeMethod}, ∂Nₑ, Yₑ, ∂Nₚ, Yₚ, ∂V, T, Δ
             Λₚ     += ∂Λₚ
             wₚ      = exp(Λₚ)
             ∂Nₚ[j] += ∂Λₚ * wₚ
-            Yₑ[j] += wₚ
+            Yₚ[j] += wₚ
         end
-        ∂Nₑ[Tᵢ] += wₚ * Δ[i]
+        ∂Nₒ[Tᵢ] += wₚ * Δ[i]
         ∂V[Tᵢ]  += wₚ^2 * Δ[i]
     end
-    Yₚ .= Yₑ
+    Yₒ .= Yₚ
 end
