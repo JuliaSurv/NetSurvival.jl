@@ -155,11 +155,15 @@ Finally, for this estimator, we have that of the 0.64 patients that have died, 0
 We will plot the Pohar Perme method only.
 
 ```@example 2
-conf_int = confint(pp; level = 0.05)
-lower_bounds = [lower[1] for lower in conf_int]
-upper_bounds = [upper[2] for upper in conf_int] 
+function mkribbon(pp)
+    S = pp.Sₑ
+    ci = confint(pp; level = 0.05)
+    l,u = getindex.(ci, 1), getindex.(ci,2)
+    rb = (S - l, u - S)
+    return rb
+end
 
-p1 = plot(pp.grid, pp.Sₑ, ribbon=(pp.Sₑ - lower_bounds, upper_bounds - pp.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = false)
+p1 = plot(pp.grid, pp.Sₑ, ribbon=mkribbon(pp), xlab = "Time (days)", ylab = "Net survival", label = false)
 
 p2 = plot(pp.grid, crude_pp.Mₑ, label = "Excess Mortality Rate")
 p2 = plot!(pp.grid, crude_pp.Mₚ, label = "Population Mortality Rate")
@@ -212,32 +216,28 @@ When plotting both we get:
 
 
 ```@example 2
-conf_int_men = confint(pp_males; level = 0.05)
-lower_bounds_men = [lower[1] for lower in conf_int_men]
-upper_bounds_men = [upper[2] for upper in conf_int_men] 
+plot1 = plot(pp_males.grid, pp_males.Sₑ, ribbon=mkribbon(pp_males), xlab = "Time (days)", ylab = "Net survival", label = "men")
+plot1 = plot!(plot1, pp_females.grid, pp_females.Sₑ, ribbon=mkribbon(pp_females), label = "women")
 
-conf_int_women = confint(pp_females; level = 0.05)
-lower_bounds_women = [lower[1] for lower in conf_int_women]
-upper_bounds_women = [upper[2] for upper in conf_int_women]
-
-conf_int_under65 = confint(pp_young; level = 0.05)
-lower_bounds_under65 = [lower[1] for lower in conf_int_under65]
-upper_bounds_under65 = [upper[2] for upper in conf_int_under65] 
-
-conf_int_65 = confint(pp_old; level = 0.05)
-lower_bounds_65 = [lower[1] for lower in conf_int_65]
-upper_bounds_65 = [upper[2] for upper in conf_int_65] 
-
-plot1 = plot(pp_males.grid, pp_males.Sₑ, ribbon=(pp_males.Sₑ - lower_bounds_men, upper_bounds_men - pp_males.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "men")
-plot1 = plot!(pp_females.grid, pp_females.Sₑ, ribbon=(pp_females.Sₑ - lower_bounds_women, upper_bounds_women - pp_females.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "women")
-
-plot2 = plot(pp_young.grid, pp_young.Sₑ, ribbon=(pp_young.Sₑ - lower_bounds_under65, upper_bounds_under65 - pp_young.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "Under 65")
-plot2 = plot!(pp_old.grid, pp_old.Sₑ, ribbon=(pp_old.Sₑ - lower_bounds_65, upper_bounds_65 - pp_old.Sₑ), xlab = "Time (days)", ylab = "Net survival", label = "65 and up")
+plot2 = plot(pp_young.grid, pp_young.Sₑ, ribbon=mkribbon(pp_young), xlab = "Time (days)", ylab = "Net survival", label = "Under 65")
+plot2 = plot!(pp_old.grid, pp_old.Sₑ, ribbon=mkribbon(pp_old), label = "65 and up")
 
 plot(plot1, plot2, layout = (1, 2))
 ```
 
 Visually, it is almost immediately understood that there are no worthy differences between the two sexes whereas the `age65` variable seems to play a big role.
+
+The same kind of graph can be made on the stage: 
+```@example 2
+pp3 = fit(PoharPerme, @formula(Surv(time,status)~stage), colrec, slopop)
+plot3 = plot(xlab = "Time (days)", ylab = "Net survival",title="Net survival per cancer stages")
+for i in 1:nrow(pp3)
+    e = pp3[i,:estimator]
+    plot!(plot3, e.grid, e.Sₑ, ribbon=mkribbon(e), label=pp3[i,:stage])
+end
+plot(plot3)
+```
+
 
 
 ## Estimated sample size and life expectancy 
