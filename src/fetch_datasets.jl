@@ -11,7 +11,7 @@ The `colrec` dataset provides an example of relative survival dataset from slove
 - `stage`: Cancer stage, can be 1,2,3 or 99 (unknown),
 - `site`: Cancer site, can be `:rectum` or `:colon`.
 
-The 5971 patients were diagnosied with colon or rectal cancer in 1994-2000. The original source of the dataset is the [`relsurv` R package](https://CRAN.R-project.org/package=relsurv). Data were provided by the Slovene Cancer Registry, and the `age`,`time` and `year` variables were randmly perturbed to make the identification of patients impossible. Due to this perturbation, no medical conclusion should be made from results extracted from this dataset.
+The 5971 patients were diagnosied with colon or rectal cancer in 1994-2000. The original source of the dataset is the [`relsurv` R package](https://CRAN.R-project.org/package=relsurv). Data were provided by the Slovene Cancer Registry, and the `age`,`time` and `year` variables were randomly perturbed to make the identification of patients impossible. Due to this perturbation, no medical conclusion should be made from results extracted from this dataset.
 
 References: 
 * [Pavlik2018](@cite) Pohar Perme, Maja  and Pavlic, Klemen (2018). Nonparametric relative survival analysis with the R package relsurv. Journal of Statistical Software
