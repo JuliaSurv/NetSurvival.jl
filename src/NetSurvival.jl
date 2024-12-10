@@ -32,7 +32,7 @@ export Nessie, nessie
 export fit, confint, variance, statistic, pvalue
 export GraffeoTest
 export Surv, Strata
-export colrec
+export colrec, ccolon
 export @formula
 
 end
