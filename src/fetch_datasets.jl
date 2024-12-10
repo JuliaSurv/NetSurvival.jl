@@ -11,14 +11,12 @@ The `colrec` dataset provides an example of relative survival dataset from slove
 - `stage`: Cancer stage, can be 1,2,3 or 99 (unknown),
 - `site`: Cancer site, can be `:rectum` or `:colon`.
 
-The 5971 patients were diagnosied with colon or rectal cancer in 1994-2000. The original source of the dataset is the [`relsurv` R package](https://CRAN.R-project.org/package=relsurv). Data were provided by the Slovene Cancer Registry, and the `age`,`time` and `year` variables were randomly perturbed to make the identification of patients impossible. Due to this perturbation, no medical conclusion should be made from results extracted from this dataset.
+The 5971 patients were diagnosed with colon or rectal cancer in 1994-2000. The original source of the dataset is the [`relsurv` R package](https://CRAN.R-project.org/package=relsurv). Data were provided by the Slovene Cancer Registry, and the `age`,`time` and `year` variables were randomly perturbed to make the identification of patients impossible. Due to this perturbation, no medical conclusion should be made from results extracted from this dataset.
 
 References: 
 * [Pavlik2018](@cite) Pohar Perme, Maja  and Pavlic, Klemen (2018). Nonparametric relative survival analysis with the R package relsurv. Journal of Statistical Software
-* [Zadnik2012](@cite) Zadnik V, Primic Žakelj M, Krajc M (2012). Cancer Burden in Slovenia in Comparison with
-the Burden in Other European Countries. Zdravniški Vestnik
-* [Zadnik2016](@cite) Zadnik V, Žagar T, Primic Žakelj M (2016). Cancer Patients’ Survival: Standard Calculation
-Methods and Some Considerations Regarding Their Interpretation. Zdravstveno Varstvo
+* [Zadnik2012](@cite) Zadnik V, Primic Žakelj M, Krajc M (2012). Cancer Burden in Slovenia in Comparison with the Burden in Other European Countries. Zdravniški Vestnik
+* [Zadnik2016](@cite) Zadnik V, Žagar T, Primic Žakelj M (2016). Cancer Patients’ Survival: Standard Calculation Methods and Some Considerations Regarding Their Interpretation. Zdravstveno Varstvo
 """
 colrec = let 
     colrec = CSV.read(
@@ -49,7 +47,7 @@ The `ccolon` dataset provides an example of relative survival dataset from franc
 - `stage`: interger from 0 to 3, correspnding to Cancer TNM (tumor node metastatis) stages at diagnosis, either I, II, III, IIIb or IV. 
 - `side`: The primary tumor location, either `:right` or `:left` of the colon.
 
-This dataset has been studied in [Giorgi2003](@cite), [Wolski2020](@cite) and [Laverny2024](@cite). It contains population-based survival data on cases of colorectal cancer from the Registry of Digestive Cancers in Burgundy, France, diagnosed between 1976 and 1990. The `year` variable was randomly perturbed, and patients were censored 1) after 10 years of followup and 2) on the 31 decembre 1994 based on this preturbed year information, for anonymity purposes. Due to this perturbation, no medical conclusion should be made from results extracted from this dataset.
+This dataset has been studied in [Giorgi2003](@cite), [Wolski2020](@cite) and [Laverny2024](@cite). It contains population-based survival data on cases of colorectal cancer from the Registry of Digestive Cancers in Burgundy, France, diagnosed between 1976 and 1990. The `year` variable was randomly perturbed, and patients were censored 1) after 10 years of followup and 2) on the 31 December 1994 based on this perturbed year information, for anonymity purposes. Hence, no medical conclusion should be made from results extracted from this dataset.
 
 References: 
 * [Giorgi2003](@cite) Giorgi, Roch and Abrahamowicz, Michal and Quantin, Catherine and Bolard, Philippe and Esteve, Jacques and Gouvernet, Joanny and Faivre, Jean. A relative survival regression model using B-spline functions to model non-proportional hazards. Statistics in medicine
