@@ -63,11 +63,11 @@ ccolon = let
     )
     DataFrame(
         time = ccolon.time,
-        status = colrec.stat.==1,
+        status = ccolon.status.==1,
         age = ccolon.age,
-        year = trunc.((1960*365.241) .+ ccolon.diag),
+        year = 365.241 * ccolon.year,
         sex = Symbol.(ccolon.sex),
-        stage = colrec.stage,
-        side = ifelse.(ccolon.rightside.==1, :right, :left),
+        stage = ccolon.stage,
+        side = ifelse.(ccolon.rightside .== 1.0, :right, :left),
     )
 end
