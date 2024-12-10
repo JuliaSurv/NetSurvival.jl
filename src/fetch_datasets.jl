@@ -7,9 +7,9 @@ The `colrec` dataset provides an example of relative survival dataset from slove
 - `status`, boolean: observed death (1) or censored (0),
 - `age`, in days: age at diagnosis,
 - `year`, in days since 0000-00-00: date of diagnosis,
-- `sex`: `:male` or `:female`,
-- `stage`: Cancer stage, can be 1,2,3 or 99 (unknown),
-- `site`: Cancer site, can be `:rectum` or `:colon`.
+- `sex`, `:male` or `:female`,
+- `stage`, cancer stage, can be 1,2,3 or 99 (unknown),
+- `site`, cancer site, can be `:rectum` or `:colon`.
 
 The 5971 patients were diagnosed with colon or rectal cancer in 1994-2000. The original source of the dataset is the [`relsurv` R package](https://CRAN.R-project.org/package=relsurv). Data were provided by the Slovene Cancer Registry, and the `age`,`time` and `year` variables were randomly perturbed to make the identification of patients impossible. Due to this perturbation, no medical conclusion should be made from results extracted from this dataset.
 
@@ -43,9 +43,9 @@ The `ccolon` dataset provides an example of relative survival dataset from franc
 - `status`, boolean: observed death (1) or censored (0),
 - `age`, in days: age at diagnosis,
 - `year`, in days since 0000-00-00: date of diagnosis,
-- `sex`: `:male` or `:female`,
-- `stage`: interger from 0 to 3, correspnding to Cancer TNM (tumor node metastatis) stages at diagnosis, either I, II, III, IIIb or IV. 
-- `side`: The primary tumor location, either `:right` or `:left` of the colon.
+- `sex`, `:male` or `:female`,
+- `stage`, interger from 0 to 3, correspnding to Cancer TNM (tumor node metastatis) stages at diagnosis, either I, II, III, IIIb or IV. 
+- `side`, the primary tumor location, either `:right` or `:left` of the colon.
 
 This dataset has been studied in [Giorgi2003](@cite), [Wolski2020](@cite) and [Laverny2024](@cite). It contains population-based survival data on cases of colorectal cancer from the Registry of Digestive Cancers in Burgundy, France, diagnosed between 1976 and 1990. The `year` variable was randomly perturbed, and patients were censored 1) after 10 years of followup and 2) on the 31 December 1994 based on this perturbed year information, for anonymity purposes. Hence, no medical conclusion should be made from results extracted from this dataset.
 
