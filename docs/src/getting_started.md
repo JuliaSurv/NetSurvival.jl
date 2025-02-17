@@ -54,7 +54,7 @@ With these definitions and assumptions in mind, we will now present the four dif
 
 where, in the variances, it is understood that when no more individuals are at risk $0/0$ gives $0$. 
 
-The Pohar Perme estimator [PoharPerme2012](@cite) is the newest addition to relative survival analysis between the four methods, particularly designed to handle situations where covariates may change over time. It is trusted from the field (see e.g. [PermePavlik2018](@cite) and [CharvatBelot2021](@cite)) that only this estimator should really be used, the other ones being included mostly for historical reasons and comparisons. 
+The Pohar Perme estimator [PoharPerme2012](@cite) is the newest addition to relative survival analysis between the four methods, particularly designed to handle situations where covariates may change over time. It is trusted from the field (see e.g. [Pavlik2018](@cite) and [CharvatBelot2021](@cite)) that only this estimator should really be used, the other ones being included mostly for historical reasons and comparisons. 
 
 
 ```@docs
@@ -129,6 +129,40 @@ While the estimated lifepsan is directly taken from the `expectation` function.
 
 ```@docs
 nessie
+```
+
+## Relaxing the independence assumption
+
+The independence assumption of the random vector $(E,P)$ can be relaxed by specifying a dependence structure for this random vector, defined by a copula from [Copulas.jl](https://github.com/lrnv/Copulas.jl). The description of the underlying method to compute the net survival, its variance and associated log-rank tests under these dependence assumptions are given in [Laverny2025](@cite).
+
+The generalization of the Pohar Perme estimator with a given copula `C::Copulas.Copula` can be used as follows: 
+
+```julia
+C = FrankCopula(2,-10)
+fit(GenPoharPerme(C), @formula(Surv(time, status)~ x1 + x2), data, ratetable)
+fit(GraffeoTest(C), @formula(Surv(time, status)~ x1 + x2), data, ratetable)
+```
+
+By default, `GraffeoTest(C::Copula)` uses `GenPoharPerme(C)` as a method to compute net survival in each category, but this modification also allows to use other methods, such as: 
+
+```julia
+fit(GraffeoTest(Ederer1()), @formula(Surv(time, status)~ x1 + x2), data, ratetable)
+```
+
+Even if these results are not supported by any theoretical work and are probably meaningless, it is fun to to see that the code goes through, thanks to the modularity of Julia's dispatch, even on routes that were not designed for.
+
+```@docs
+GenPoharPerme
+```
+
+
+## Available Datasets
+
+Two classroom datasets are provided in the package: 
+
+```@docs
+colrec
+ccolon
 ```
 
 ## References

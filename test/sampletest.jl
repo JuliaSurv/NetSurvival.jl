@@ -1,9 +1,5 @@
 @testitem "Assess all NPNSEstimators" begin
     using RateTables, NetSurvival, RCall, DataFrames
-    function mk_r_model(r_method)
-
-        return t::Vector{Float64},s::Vector{Float64},e::Vector{Float64}
-    end
     function test_surv(r_method,::Type{E},df, rt, args...) where E
 
         # Main instance: 
@@ -172,4 +168,23 @@ end
     @test all(abs.(err_male)   .<= 0.01)
     @test all(abs.(err_female) .<= 0.01)
     @test all(abs.(err_povp)   .<= 0.01)
+end
+
+
+@testitem "Asses GenPPE" begin
+    using RateTables
+    using Copulas
+
+
+    TruePP = GenPoharPerme()
+    MockPP = reinterpret(NetSurvival.GenPoharPermeMethod{IndependentCopula{2}},(IndependentCopula(2),))
+    
+    m0 = fit(TruePP, @formula(Surv(time,status)~1), colrec, slopop)
+    m1 = fit(MockPP, @formula(Surv(time,status)~1), colrec, slopop)
+    @assert m0.Sₑ ≈ m1.Sₑ
+    @assert m0.σₑ ≈ m1.σₑ
+
+    t0 = fit(GraffeoTest, @formula(Surv(time,status)~stage), colrec, slopop)
+    t1 = fit(GraffeoTest(MockPP), @formula(Surv(time,status)~stage), colrec, slopop)
+    @assert t0.stat ≈ t1.stat
 end
