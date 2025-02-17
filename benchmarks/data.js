@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739808526726,
+  "lastUpdate": 1739808540688,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -1930,6 +1930,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "GraffeoTest/colrec x slopop - explicit",
             "value": 208170647,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=6172144\nallocs=62216\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "41898282+github-actions[bot]@users.noreply.github.com",
+            "name": "github-actions[bot]",
+            "username": "github-actions[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10feff78014c22688a3f3decf86632fb3390331a",
+          "message": "CompatHelper: add new compat entry for Copulas at version 0.1, (keep existing compat) (#84)\n\nCo-authored-by: CompatHelper Julia <compathelper_noreply@julialang.org>",
+          "timestamp": "2025-02-17T17:07:23+01:00",
+          "tree_id": "de1fa9721b835ba240a1077c5cf08f1f1f3428f1",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/10feff78014c22688a3f3decf86632fb3390331a"
+        },
+        "date": 1739808539865,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 207056475,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=3815680\nallocs=62041\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 218427709,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7273760\nallocs=111921\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 207585776,
             "unit": "ns",
             "extra": "gctime=0\nmemory=6172144\nallocs=62216\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
