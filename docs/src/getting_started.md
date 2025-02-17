@@ -133,7 +133,7 @@ nessie
 
 ## Relaxing the independence assumption
 
-The independence assumption of the random vector $(E,P)$ can be relaxed by specifying a dependence structure for this random vector, defined by a copula from [Copulas.jl](https://github.com/lrnv/Copulas.jl). The description of the underlying method to compute the net survival, its variance and associated log-rank tests under these dependence assumptions are given in [Laverny2024](@cite).
+The independence assumption of the random vector $(E,P)$ can be relaxed by specifying a dependence structure for this random vector, defined by a copula from [Copulas.jl](https://github.com/lrnv/Copulas.jl). The description of the underlying method to compute the net survival, its variance and associated log-rank tests under these dependence assumptions are given in [Laverny2025](@cite).
 
 The generalization of the Pohar Perme estimator with a given copula `C::Copulas.Copula` can be used as follows: 
 

@@ -20,7 +20,7 @@ This method estimates net survival probabilities under the generalized pohar per
 Note that `GenPoharPerme(::IndependenceCopula)` simply returns `PoharPerme`.
 
 References: 
-* [Laverny2024](@cite) Laverny, O,  Grafféo, N and Giorgi, R: Non parametric estimation of net survival under dependence assumption. Working paper. 
+* [Laverny2025](@cite) Laverny, O., Grafféo, N., & Giorgi, R. (2025). Non-parametric estimation of net survival under dependence between death causes. arXiv preprint arXiv:2502.09273.
 """
 const GenPoharPerme = NPNSEstimator{GenPoharPermeMethod}
 GenPoharPerme(C::Copulas.Copula{2}) = GenPoharPermeMethod(C::Copulas.Copula{2})
