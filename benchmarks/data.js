@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737970258440,
+  "lastUpdate": 1739798615910,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -1806,6 +1806,48 @@ window.BENCHMARK_DATA = {
             "value": 213355902,
             "unit": "ns",
             "extra": "gctime=0\nmemory=8525056\nallocs=62353\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "oskar.laverny@univ-amu.fr",
+            "name": "Oskar Laverny",
+            "username": "lrnv"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cb7e148eb7359bc014c571ddbfc73f90c61ade10",
+          "message": "[Feat] Add dependence structures (#76)\n\n* Large rewrite\n\n* Add mockup test and fix typo\n\n* up tests to check on lts and 1\n\n* Proofread docs\n\n* Move methods to own folder\n\n* prettyfy the notations\n\n* Adding two methods to see if things fails.\n\n* error one too much sqrt in the variance\n\n* export stuff\n\n* typo\n\n* add square to the variance\n\n* Add a new dataset and document datasets\n\n* up\n\n* Bump version to 0.1.2\n\n* typo\n\n* typos\n\n* typo\n\n* up disclaimer message\n\n* Update the reference to the paper",
+          "timestamp": "2025-02-17T14:20:04+01:00",
+          "tree_id": "111b5d3af5d9db49271dad770910d900932f31bb",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/cb7e148eb7359bc014c571ddbfc73f90c61ade10"
+        },
+        "date": 1739798615104,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 204559284,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=3815680\nallocs=62041\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 216220690,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7273760\nallocs=111921\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 209813349.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=6172144\nallocs=62216\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
         ]
       }
