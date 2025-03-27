@@ -50,7 +50,7 @@ With these definitions and assumptions in mind, we will now present the four dif
 | Ederer I    | [Ederer1961](@cite)     | $\frac{\sum_i N_i(s)}{\sum_i Y_i(s)} - \frac{\sum_i S_{P_i}(s)\partial\Lambda_{P_i}(s)}{\sum_i S_{P_i}(s)}$ | $\frac{\sum_i N_i(s)}{\left(\sum_i Y_i(s)\right)^2}$ |
 | Ederer II   | [Ederer1959](@cite)     | $\frac{\sum_i N_i(s)}{\sum_i Y_i(s)} - \frac{\sum_i Y_i(s)\partial\Lambda_{P_i}(s)}{\sum_i Y_i(s)}$ | $\frac{\sum_i N_i(s)}{\left(\sum_i Y_i(s)\right)^2}$ |
 | Hakulinen   | [Hakulinen1977](@cite)  | $\frac{\sum_i N_i(s)}{\sum_i Y_i(s)} - \frac{\sum_i \frac{Y_i(s)}{ S_{P_i}(s)}\partial\Lambda_{P_i}(s)}{\sum_i \frac{Y_i(s)}{ S_{P_i}(s)}}$ | $\frac{\sum_i N_i(s)}{\left(\sum_i Y_i(s)\right)^2}$ |
-| Pohar Perme | [PoharPerme2012](@cite) | $\frac{\sum_i \frac{\partial N_i(s)}{S_{P_i}(s)} - \sum_i \frac{Y_i(s)}{S_{P_i}(s)}\partial\Lambda_{P_i}(s)}{\sum_i \frac{Y_i(s)}{S_{P_i}(s)}}$ | $\frac{\sum_{i=1}^n \frac{\partial N_i(s)}{S^2_{P_i}}}{\left(\sum_i \frac{Y_i(s)}{S_{p_i}(s)}\right)^2}$ |
+| Pohar Perme | [PoharPerme2012](@cite) | $\frac{\sum_i \frac{\partial N_i(s)}{S_{P_i}(s)} - \sum_i \frac{Y_i(s)}{S_{P_i}(s)}\partial\Lambda_{P_i}(s)}{\sum_i \frac{Y_i(s)}{S_{P_i}(s)}}$ | $\frac{\sum_{i=1}^n \frac{\partial N_i(s)}{S^2_{P_i}(s)}}{\left(\sum_i \frac{Y_i(s)}{S_{p_i}(s)}\right)^2}$ |
 
 where, in the variances, it is understood that when no more individuals are at risk $0/0$ gives $0$. 
 
