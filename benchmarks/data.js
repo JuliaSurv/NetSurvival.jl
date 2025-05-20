@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747734382584,
+  "lastUpdate": 1747734415611,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -2098,6 +2098,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "GraffeoTest/colrec x slopop - explicit",
             "value": 207539287,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=6172600\nallocs=62216\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "oskar.laverny@univ-amu.fr",
+            "name": "Oskar Laverny",
+            "username": "lrnv"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "64b68379d153b4ffb5fab048c3deaa5c0358ea34",
+          "message": "Update getting_started.md (#79)",
+          "timestamp": "2025-05-20T11:43:10+02:00",
+          "tree_id": "c9ec5e98367fbf1db7869f927dc24fbd25ea6a53",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/64b68379d153b4ffb5fab048c3deaa5c0358ea34"
+        },
+        "date": 1747734414547,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 204250331,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=3815920\nallocs=62041\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 218825616,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7274360\nallocs=111921\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 208259262,
             "unit": "ns",
             "extra": "gctime=0\nmemory=6172600\nallocs=62216\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
