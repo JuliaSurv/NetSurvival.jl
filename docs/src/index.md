@@ -25,11 +25,10 @@ Some key features in `NetSurvival.jl` are:
 
 ## Installation
 
-The package is not yet available on Julia's general registry, and thus can be installed through the following command:
+The package is available on Julia's general registry, and thus can be installed through the following command:
 
 ```julia
-using Pkg
-Pkg.add("https://github.com/JuliaSurv/NetSurvival.jl.git")
+] add NetSurvival
 ```
 
 See the rest of this documentation to have a glimpse of the functionalities!
