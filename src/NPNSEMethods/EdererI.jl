@@ -29,7 +29,9 @@ function Λ!(::EdererIMethod, ∂Nₒ, Yₒ, ∂Nₚ, Yₚ, ∂V, T, Δ, age, ye
             ∂Nₚ[j] += (Sₚ * ∂Λₚ)
             Yₚ[j] += Sₚ
         end
-        Yₒ[j] += Tᵢ
+        for j in 1:Tᵢ
+            Yₒ[j] += 1
+        end
         ∂Nₒ[Tᵢ]   += Δ[i]
         ∂V[Tᵢ]   += Δ[i]    
     end
