@@ -6,7 +6,6 @@ using LinearAlgebra
 using StatsAPI
 using StatsBase
 using Tables
-using Base.Cartesian
 using CSV
 using RateTables
 using StatsModels
