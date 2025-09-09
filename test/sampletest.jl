@@ -1,5 +1,5 @@
 @testitem "Assess all NPNSEstimators" begin
-    using RateTables, NetSurvival, RCall, DataFrames
+    using RateTables, NetSurvival, RCall, DataFrames, Distributions, Random
     function test_surv(r_method,::Type{E},df, rt, args...) where E
 
         # Main instance: 
@@ -49,7 +49,7 @@
 end
 
 @testitem "Check Pohar Perme vs the truth on a large simulated dataset." begin 
-    using RateTables, NetSurvival, RCall, DataFrames
+    using RateTables, NetSurvival, RCall, DataFrames, Distributions, Random
     const YEARS = 365.241
     function sampler(age_min, age_max)
         # Population mortality distribution: 
@@ -71,7 +71,7 @@ end
     n=15000
     df = DataFrame((sampler(35, 75) for i in 1:n)) 
     model = fit(PoharPerme, @formula(Surv(time,status)~1), df, slopop)
-    truth = ccdf(Exponential(10YEARS), model.grid)
+    truth = ccdf.(Ref(Exponential(10YEARS)), model.grid)
     @test maximum(abs.(model.Sₑ .- truth)) < 0.05 # coresponds to a KS test, to esnure that we match the truth. 
     
 
@@ -79,7 +79,7 @@ end
     n=5000
     df = DataFrame((sampler(35, 75) for i in 1:n)) 
     model = fit(PoharPerme, @formula(Surv(time,status)~1), df, slopop)
-    truth = ccdf(Exponential(10YEARS), model.grid)
+    truth = ccdf.(Ref(Exponential(10YEARS)), model.grid)
     @rput df
     R"""
         df$year = as.Date(paste(trunc(df$year/365.241), 01, 01), "%Y %m %d")
