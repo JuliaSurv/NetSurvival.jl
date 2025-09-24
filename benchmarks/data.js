@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757349123215,
+  "lastUpdate": 1758702001348,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -2310,6 +2310,48 @@ window.BENCHMARK_DATA = {
             "value": 207335233,
             "unit": "ns",
             "extra": "gctime=0\nmemory=6172600\nallocs=62216\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "oskar.laverny@univ-amu.fr",
+            "name": "Oskar Laverny",
+            "username": "lrnv"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "877ac8510177852958b613b6b8e7488b16496ca1",
+          "message": "Modifications from JSS review (#91)\n\n* Correct Ederer 1 according to review B.5.5: Why do you run a for loop through 1:T_i and adding 1 to Y_O each time, rather than just adding T_i to Y_O?\n\n* Correct mk_grid according to review B.5.6\n\n* oops revert ederer changes\n\n* typo\n\n* Add tests to check Pohar Perme w.r.t. the truth\n\n* Add a lot of theoretical test",
+          "timestamp": "2025-09-24T11:15:06+03:00",
+          "tree_id": "b39d89e615d7666ffd8aaff66f00ac3c1255b189",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/877ac8510177852958b613b6b8e7488b16496ca1"
+        },
+        "date": 1758702000178,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 204905338,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=3646776\nallocs=62031\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 219515973,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7031528\nallocs=111909\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
+          },
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 211712328,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=6003456\nallocs=62206\nparams={\"gctrial\":true,\"time_tolerance\":0.05,\"evals_set\":false,\"samples\":10000,\"evals\":1,\"gcsample\":false,\"seconds\":5,\"overhead\":0,\"memory_tolerance\":0.01}"
           }
         ]
       }
