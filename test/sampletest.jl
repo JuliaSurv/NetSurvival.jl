@@ -1,5 +1,5 @@
 @testitem "Assess all NPNSEstimators" begin
-    using RateTables, NetSurvival, RCall, DataFrames
+    using RateTables, NetSurvival, RCall, DataFrames, Distributions, Random
     function test_surv(r_method,::Type{E},df, rt, args...) where E
 
         # Main instance: 
@@ -46,6 +46,55 @@
 
     # Hakulinen is unfortunately broken.
     @test_broken test_surv("hakulinen",   Hakulinen,  colrec, slopop)
+end
+
+@testitem "Check Pohar Perme vs the truth on a large simulated dataset." begin 
+    using RateTables, NetSurvival, RCall, DataFrames, Distributions, Random
+    const YEARS = 365.241
+    function sampler(age_min, age_max)
+        # Population mortality distribution: 
+        age  = (age_min + rand() * (age_max-age_min))YEARS
+        year = rand(1990:2009)YEARS
+        sex  = rand((:male,:female))
+        P    = Life(slopop[sex], age, year)
+
+        # A bit of random censoring + administrative censoring at 15 years: 
+        e = rand(Exponential(10YEARS))
+        p = rand(P)
+        c = min(rand(Exponential(20YEARS)), 15YEARS)
+        t = min(e,p,c)
+        δ = c > t # 0 means censored
+        return (time=t, status=δ, age=age, year=year, sex=sex,)
+    end
+
+    # A test on a large sample to check we match the truth (convergence of Pohar Perme)
+    n=15000
+    df = DataFrame((sampler(35, 75) for i in 1:n)) 
+    model = fit(PoharPerme, @formula(Surv(time,status)~1), df, slopop)
+    truth = ccdf.(Ref(Exponential(10YEARS)), model.grid)
+    @test maximum(abs.(model.Sₑ .- truth)) < 0.05 # coresponds to a KS test, to esnure that we match the truth. 
+    
+
+    # A test on a smaller sample to check again that we match relsurv on a simulated dataset. 
+    n=5000
+    df = DataFrame((sampler(35, 75) for i in 1:n)) 
+    model = fit(PoharPerme, @formula(Surv(time,status)~1), df, slopop)
+    truth = ccdf.(Ref(Exponential(10YEARS)), model.grid)
+    @rput df
+    R"""
+        df$year = as.Date(paste(trunc(df$year/365.241), 01, 01), "%Y %m %d")
+        df$sex = as.integer(df$sex == "male")+1
+        df$status=as.integer(df$status)
+        rez = relsurv::rs.surv(survival::Surv(time, status) ~ 1, 
+        rmap=list(age = age, sex =sex, year = year), 
+        data = df, 
+        ratetable = relsurv::slopop, 
+        method = "pohar-perme", 
+        add.times=1:max(df$time))
+        rr = rez$surv
+    """
+    r_est = @rget rr
+    @test mean(abs.(model.Sₑ .- r_est)) < 0.01
 end
 
 
