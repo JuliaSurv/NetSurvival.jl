@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776682278108,
+  "lastUpdate": 1776682281800,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -2476,6 +2476,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "PoharPerme/colrec x slopop - explicit",
             "value": 194491511.5,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=3628416\nallocs=62035\nparams={\"evals\":1,\"evals_set\":false,\"gcsample\":false,\"gctrial\":true,\"memory_tolerance\":0.01,\"overhead\":0,\"samples\":10000,\"seconds\":5,\"time_tolerance\":0.05}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7c0b1706e4d46e9485212c272735f5ff7cf41e67",
+          "message": "Bump codecov/codecov-action from 5.5.2 to 6.0.0 (#98)\n\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2026-04-20T12:47:00+02:00",
+          "tree_id": "b2d3d0ae0ed15c719bb1b4b78ebd9c95f74fa93f",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/7c0b1706e4d46e9485212c272735f5ff7cf41e67"
+        },
+        "date": 1776682280608,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 205751633,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=5985096\nallocs=62211\nparams={\"evals\":1,\"evals_set\":false,\"gcsample\":false,\"gctrial\":true,\"memory_tolerance\":0.01,\"overhead\":0,\"samples\":10000,\"seconds\":5,\"time_tolerance\":0.05}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 222437302,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7092568\nallocs=111989\nparams={\"evals\":1,\"evals_set\":false,\"gcsample\":false,\"gctrial\":true,\"memory_tolerance\":0.01,\"overhead\":0,\"samples\":10000,\"seconds\":5,\"time_tolerance\":0.05}"
+          },
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 206592526,
             "unit": "ns",
             "extra": "gctime=0\nmemory=3628416\nallocs=62035\nparams={\"evals\":1,\"evals_set\":false,\"gcsample\":false,\"gctrial\":true,\"memory_tolerance\":0.01,\"overhead\":0,\"samples\":10000,\"seconds\":5,\"time_tolerance\":0.05}"
           }
