@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776682281800,
+  "lastUpdate": 1776682285257,
   "repoUrl": "https://github.com/JuliaSurv/NetSurvival.jl",
   "entries": {
     "Benchmark": [
@@ -2518,6 +2518,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "PoharPerme/colrec x slopop - explicit",
             "value": 206592526,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=3628416\nallocs=62035\nparams={\"evals\":1,\"evals_set\":false,\"gcsample\":false,\"gctrial\":true,\"memory_tolerance\":0.01,\"overhead\":0,\"samples\":10000,\"seconds\":5,\"time_tolerance\":0.05}"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "16d90a4c41d85a1633ff499f67b6e4405fd3a441",
+          "message": "Bump julia-actions/cache from 2 to 3 (#96)\n\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2026-04-20T12:47:05+02:00",
+          "tree_id": "cc6c557fecee40263d4e9131b18d17a601408b9f",
+          "url": "https://github.com/JuliaSurv/NetSurvival.jl/commit/16d90a4c41d85a1633ff499f67b6e4405fd3a441"
+        },
+        "date": 1776682284278,
+        "tool": "julia",
+        "benches": [
+          {
+            "name": "GraffeoTest/colrec x slopop - explicit",
+            "value": 194740615,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=5985096\nallocs=62211\nparams={\"evals\":1,\"evals_set\":false,\"gcsample\":false,\"gctrial\":true,\"memory_tolerance\":0.01,\"overhead\":0,\"samples\":10000,\"seconds\":5,\"time_tolerance\":0.05}"
+          },
+          {
+            "name": "PoharPerme/colrec x frpop - formula",
+            "value": 212700964,
+            "unit": "ns",
+            "extra": "gctime=0\nmemory=7092568\nallocs=111989\nparams={\"evals\":1,\"evals_set\":false,\"gcsample\":false,\"gctrial\":true,\"memory_tolerance\":0.01,\"overhead\":0,\"samples\":10000,\"seconds\":5,\"time_tolerance\":0.05}"
+          },
+          {
+            "name": "PoharPerme/colrec x slopop - explicit",
+            "value": 191412793,
             "unit": "ns",
             "extra": "gctime=0\nmemory=3628416\nallocs=62035\nparams={\"evals\":1,\"evals_set\":false,\"gcsample\":false,\"gctrial\":true,\"memory_tolerance\":0.01,\"overhead\":0,\"samples\":10000,\"seconds\":5,\"time_tolerance\":0.05}"
           }
