@@ -22,6 +22,7 @@ include("NPNSEMethods/EdererI.jl")
 include("NPNSEMethods/EdererII.jl")
 include("NPNSEMethods/Hakulinen.jl")
 include("NPNSEMethods/GenPoharPerme.jl")
+include("GeneralizedInference.jl")
 include("CrudeMortality.jl")
 include("GraffeoTest.jl")
 

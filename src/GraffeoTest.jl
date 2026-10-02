@@ -63,6 +63,10 @@ struct GraffeoTest{Method}
     pval::Float64
     function GraffeoTest(method::M, T, Δ, age, year, rate_preds, strata, group, ratetable)  where M<:NPNSMethod
 
+        if method isa GenPoharPermeMethod
+            return new{M}(method, _generalized_graffeo(method, T, Δ, age, year, rate_preds, strata, group, ratetable)...)
+        end
+
         # This version of the test is HIGHLY INNEFICIENT. 
         # We should avoid allocating that much memory. 
         # But for the moment we simply want to check that it is working correctly. 

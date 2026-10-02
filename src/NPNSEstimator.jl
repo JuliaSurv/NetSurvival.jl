@@ -10,7 +10,7 @@ struct NPNSEstimator{Method} <: StatisticalModel
         grid = mk_grid(T,1) # precision is always 1 ? 
         ∂Λₒ, ∂Λₚ, ∂σₑ = Λ(m, T, Δ, age, year, rate_preds, ratetable, grid)
         ∂Λₑ = ∂Λₒ .- ∂Λₚ
-        Sₑ = clamp.(cumprod(1 .- ∂Λₑ),0,Inf)
+        Sₑ = m isa GenPoharPermeMethod ? exp.(-cumsum(∂Λₑ)) : clamp.(cumprod(1 .- ∂Λₑ),0,Inf)
         σₑ = sqrt.(cumsum(∂σₑ))
         return new{Method}(Sₑ, ∂Λₑ, ∂Λₒ, ∂Λₚ, σₑ, grid)
     end
